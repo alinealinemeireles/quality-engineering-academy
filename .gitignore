@@ -1,0 +1,9 @@
+# fonte: o notebook nao e versionado (8,6 MB). Comente a linha se quiser inclui-lo.
+manual.ipynb
+
+shots/
+node_modules/
+__pycache__/
+*.pyc
+.DS_Store
+Thumbs.db

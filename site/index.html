@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="pt-PT" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Academy · Qualidade, Lean Six Sigma e Quality Analytics</title>
+<meta name="description" content="Plataforma de formação em Engenharia da Qualidade, Lean Six Sigma e Quality Analytics, com laboratório Python no navegador.">
+<meta name="theme-color" content="#0f3a4a">
+<link rel="stylesheet" href="assets/app.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%230f3a4a'/><path d='M8 21l5-11 3.4 7.2L19 14l5 7z' fill='none' stroke='%2354c8b0' stroke-width='2.2' stroke-linejoin='round' stroke-linecap='round'/></svg>">
+<script>
+  // Registo de conteudo. Os ficheiros de content/ chamam ACADEMY.reg(...).
+  window.ACADEMY = {
+    data: Object.create(null),
+    _waiters: Object.create(null),
+    reg: function (name, payload) {
+      this.data[name] = payload;
+      var w = this._waiters[name];
+      if (w) { delete this._waiters[name]; w.forEach(function (f) { f(payload); }); }
+    }
+  };
+  // tema antes da primeira pintura
+  try {
+    var t = localStorage.getItem('academy.theme');
+    if (t === 'dark' || (!t && matchMedia('(prefers-color-scheme: dark)').matches))
+      document.documentElement.setAttribute('data-theme', 'dark');
+  } catch (e) {}
+</script>
+</head>
+<body>
+
+<a class="skip" href="#main">Saltar para o conteúdo</a>
+
+<header class="topbar">
+  <button class="icon-btn nav-toggle" id="navToggle" aria-label="Abrir menu" aria-expanded="false">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+  </button>
+  <a class="brand" href="#/">
+    <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true">
+      <rect width="32" height="32" rx="7" fill="currentColor"/>
+      <path d="M8 21l5-11 3.4 7.2L19 14l5 7z" fill="none" stroke="#54c8b0" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/>
+    </svg>
+    <span class="brand-txt"><b>ACADEMY</b><small>Quality · Lean · Data</small></span>
+  </a>
+
+  <form class="search" id="searchForm" role="search">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg>
+    <input id="searchInput" type="search" placeholder="Buscar no manual…  (/)" aria-label="Buscar no manual" autocomplete="off">
+  </form>
+
+  <button class="icon-btn" id="themeBtn" aria-label="Alternar tema claro/escuro">
+    <svg class="ico-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M19.1 4.9l-1.8 1.8M6.7 17.3l-1.8 1.8"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5z"/></svg>
+  </button>
+</header>
+
+<div class="shell">
+  <nav class="sidebar" id="sidebar" aria-label="Percursos de formação"></nav>
+  <div class="scrim" id="scrim" hidden></div>
+  <main id="main" tabindex="-1"></main>
+</div>
+
+<script src="assets/hl.js"></script>
+<script src="content/manifest.js"></script>
+<script src="content/bank.js"></script>
+<script src="assets/app.js"></script>
+<script src="assets/lab.js" defer></script>
+</body>
+</html>
