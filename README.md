@@ -121,8 +121,8 @@ para `main`. Depois do primeiro push:
 1. **Settings → Pages → Source: GitHub Actions**
 2. O site fica em `https://<utilizador>.github.io/<repositorio>/`
 
-O repositório tem cerca de 8 MB (3,6 MB de conteúdo + 3,8 MB de imagens + vendor), dentro do
-confortável para o Pages.
+A pasta `site/` tem cerca de 14 MB (3,6 MB de conteúdo, 3,8 MB de imagens, 4,8 MB de bibliotecas
+locais), bem dentro do confortável para o Pages.
 
 ---
 
