@@ -21,6 +21,7 @@ CHDIR = os.path.join(SITE, 'content', 'ch')
 sys.path.insert(0, HERE)
 from curriculum import TRACKS, EXTRA_CHAPTERS  # noqa: E402
 from parse import structure  # noqa: E402
+import figures  # noqa: E402
 
 MD = markdown.Markdown(extensions=[
     'tables', 'fenced_code', 'attr_list', 'md_in_html', 'sane_lists',
@@ -96,6 +97,16 @@ def md2html(src):
     html = restore_math(html, store)
     # tabelas responsivas
     html = html.replace('<table>', '<div class="table-wrap"><table>').replace('</table>', '</table></div>')
+    # blocos plotly -> div renderizavel
+    html = re.sub(
+        r'<pre><code class="language-plotly">\s*([\w-]+)\s*</code></pre>',
+        lambda m: ('<figure class="viz-figure"><div class="plotly-fig" data-fig="%s">'
+                   '</div></figure>' % m.group(1)),
+        html, flags=re.S)
+    # blocos py-r -> separadores Python / R
+    html = re.sub(
+        r'<pre><code class="language-py-r">(.*?)</code></pre>',
+        lambda m: codetabs(unesc(m.group(1))), html, flags=re.S)
     # blocos mermaid -> div renderizavel
     html = re.sub(
         r'<pre><code class="language-mermaid">(.*?)</code></pre>',
@@ -121,6 +132,48 @@ LANG_LABEL = {'sql': 'SQL', 'dax': 'DAX', 'r': 'R', 'bash': 'Shell', 'json': 'JS
 def unesc(s):
     return (s.replace('&lt;', '<').replace('&gt;', '>')
              .replace('&quot;', '"').replace('&#39;', "'").replace('&amp;', '&'))
+
+
+
+TAB_LANG = {'python': 'Python', 'r': 'R', 'sql': 'SQL', 'dax': 'DAX / Power BI',
+            'excel': 'Excel', 'vba': 'VBA'}
+
+
+def codetabs(block):
+    """Converte um bloco `py-r` em separadores de linguagem.
+
+    Formato:
+        --- python
+        <codigo>
+        --- r
+        <codigo>
+    """
+    parts = re.split(r'^---\s+(\w[\w-]*)\s*$', block, flags=re.M)
+    langs = []
+    for i in range(1, len(parts), 2):
+        langs.append((parts[i].strip().lower(), parts[i + 1].strip('\n')))
+    if not langs:
+        return '<pre><code class="language-python">%s</code></pre>' % esc(block)
+    uid = 'ct%d' % (abs(hash(block)) % 10 ** 8)
+    tabs, panes = [], []
+    for i, (lang, code) in enumerate(langs):
+        label = TAB_LANG.get(lang, lang.upper())
+        on = ' on' if i == 0 else ''
+        tabs.append('<button type="button" class="ct-tab%s" role="tab" '
+                    'aria-selected="%s" id="%s-t%d">%s</button>'
+                    % (on, 'true' if i == 0 else 'false', uid, i, label))
+        run = ('<button class="btn-run" type="button">Executar</button>'
+               if lang == 'python' else '')
+        panes.append(
+            '<div class="ct-pane"%s role="tabpanel" aria-labelledby="%s-t%d">'
+            '<div class="codeblock" data-lang="%s"><div class="codebar">'
+            '<span class="lang">%s</span>%s'
+            '<button class="btn-copy" type="button">Copiar</button></div>'
+            '<pre><code class="language-%s">%s</code></pre>'
+            '<div class="code-out" hidden></div></div></div>'
+            % ('' if i == 0 else ' hidden', uid, i, lang, label, run, lang, esc(code)))
+    return ('<div class="codetabs"><div class="ct-bar" role="tablist">%s</div>%s</div>'
+            % (''.join(tabs), ''.join(panes)))
 
 
 CODE_TPL = ('<div class="codeblock" data-lang="python">'
@@ -324,6 +377,11 @@ def main():
                                       'part': 'Abertura', 'html': fbody, 'toc': ftoc,
                                       'stats': {'code': 0, 'fig': 0, 'words': len(TAG_RE.sub(' ', fbody).split())}}))
 
+    # graficos interativos
+    figs = figures.build()
+    with open(os.path.join(SITE, 'content', 'figs.js'), 'w', encoding='utf-8') as f:
+        f.write(js_module('figs', figs))
+
     # banco de questoes
     bank = parse_bank(cells, range(1262, 1290))
     with open(os.path.join(SITE, 'content', 'bank.js'), 'w', encoding='utf-8') as f:
@@ -335,6 +393,7 @@ def main():
         'tracks': manifest_tracks,
         'search': search_index,
         'bankSize': len(bank),
+        'figCount': len(figs),
         'chapterCount': len(built),
     }
     with open(os.path.join(SITE, 'content', 'manifest.js'), 'w', encoding='utf-8') as f:

@@ -5,39 +5,49 @@
 
 :root {
   color-scheme: light;
-  --surface-0: #f4f6f7;
-  --surface-1: #fcfcfb;
-  --surface-2: #eef2f4;
-  --surface-3: #e3e9ec;
-  --line:      #d8e0e4;
-  --line-soft: #e8edf0;
+  /* superficies: cinza chumbo esbatido */
+  --surface-0: #eceff1;
+  --surface-1: #fafbfc;
+  --surface-2: #e2e7ea;
+  --surface-3: #d2dadf;
+  --line:      #c3ced4;
+  --line-soft: #dce3e7;
 
-  --ink:       #0b1b22;
-  --ink-2:     #48606c;
-  --ink-3:     #6d838e;
+  /* tinta: chumbo */
+  --ink:       #18242a;
+  --ink-2:     #44545c;
+  --ink-3:     #6c7e87;
 
-  --accent:      #0f6f8c;
-  --accent-ink:  #0b5468;
-  --accent-soft: #e4f0f4;
+  /* acento: azul petroleo */
+  --accent:      #12657a;
+  --accent-ink:  #0d4d5e;
+  --accent-soft: #dceaee;
+  --gun:         #2c3a41;
+  --gun-2:       #3b4b53;
 
-  --good:  #1f7a52;
-  --warn:  #b07000;
-  --bad:   #b03a30;
-  --good-soft: #e6f2eb;
-  --warn-soft: #fbf1dd;
-  --bad-soft:  #fbeae8;
+  --good:  #1c7050;
+  --warn:  #94690c;
+  --bad:   #a63a2e;
+  --good-soft: #e0efe8;
+  --warn-soft: #f7efdb;
+  --bad-soft:  #f9e8e5;
 
-  --series-1: #2a78d6;
+  /* series de grafico: paleta categorica validada, petroleo no slot 1 */
+  --series-1: #0a7d9d;
   --series-2: #eb6834;
-  --series-3: #1baf7a;
+  --series-3: #7b5fc4;
   --series-4: #eda100;
   --series-5: #e87ba4;
   --series-6: #008300;
 
+  /* trilhas — opcao A: rampa ordinal de petroleo (validada --ordinal) */
+  --trk-1: #1c3949; --trk-2: #235064; --trk-3: #2a687f;
+  --trk-4: #2e819a; --trk-5: #319bb5; --trk-6: #32b7d0;
+
   --radius: 12px;
   --radius-s: 8px;
-  --shadow-1: 0 1px 2px rgba(11,27,34,.06), 0 2px 8px rgba(11,27,34,.05);
-  --shadow-2: 0 2px 6px rgba(11,27,34,.08), 0 12px 28px rgba(11,27,34,.10);
+  --shadow-1: 0 1px 2px rgba(24,36,42,.07), 0 2px 8px rgba(24,36,42,.06);
+  --shadow-2: 0 2px 6px rgba(24,36,42,.09), 0 12px 28px rgba(24,36,42,.12);
   --sans: "Segoe UI", Inter, system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
   --mono: "JetBrains Mono", "Cascadia Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
   --sidebar-w: 288px;
@@ -45,39 +55,50 @@
   --read: 74ch;
 }
 
+/* trilhas — opcao B: paleta categorica (mesma dos graficos) */
+:root[data-tp="cat"] {
+  --trk-1: var(--series-1); --trk-2: var(--series-2); --trk-3: var(--series-3);
+  --trk-4: var(--series-4); --trk-5: var(--series-5); --trk-6: var(--series-6);
+}
+
 :root[data-theme="dark"] {
   color-scheme: dark;
-  --surface-0: #12171a;
-  --surface-1: #1a2126;
-  --surface-2: #202a30;
-  --surface-3: #29353c;
-  --line:      #33424a;
-  --line-soft: #263138;
+  --surface-0: #141a1d;
+  --surface-1: #1c2429;
+  --surface-2: #242e34;
+  --surface-3: #2d393f;
+  --line:      #384750;
+  --line-soft: #263036;
 
-  --ink:       #eef3f5;
-  --ink-2:     #a9bcc5;
-  --ink-3:     #7e939d;
+  --ink:       #e6edf0;
+  --ink-2:     #a2b3bb;
+  --ink-3:     #788992;
 
-  --accent:      #43b0cf;
-  --accent-ink:  #7fcde3;
-  --accent-soft: #14313c;
+  --accent:      #3fa5bd;
+  --accent-ink:  #74c8dc;
+  --accent-soft: #10333d;
+  --gun:         #232e34;
+  --gun-2:       #2f3d45;
 
-  --good:  #3fa878;
-  --warn:  #d9a13c;
-  --bad:   #e07b71;
-  --good-soft: #16302a;
-  --warn-soft: #33290f;
-  --bad-soft:  #38201d;
+  --good:  #43a97c;
+  --warn:  #cfa14a;
+  --bad:   #dd7d70;
+  --good-soft: #14312a;
+  --warn-soft: #322810;
+  --bad-soft:  #37201d;
 
-  --series-1: #3987e5;
+  --series-1: #2f9ec0;
   --series-2: #d95926;
-  --series-3: #199e70;
+  --series-3: #9085e9;
   --series-4: #c98500;
   --series-5: #d55181;
   --series-6: #2f9e2f;
 
-  --shadow-1: 0 1px 2px rgba(0,0,0,.3), 0 2px 8px rgba(0,0,0,.24);
-  --shadow-2: 0 2px 6px rgba(0,0,0,.34), 0 14px 30px rgba(0,0,0,.4);
+  --trk-1: #305264; --trk-2: #38687e; --trk-3: #3f7f98;
+  --trk-4: #4497b2; --trk-5: #48b0cb; --trk-6: #4bcae4;
+
+  --shadow-1: 0 1px 2px rgba(0,0,0,.34), 0 2px 8px rgba(0,0,0,.26);
+  --shadow-2: 0 2px 6px rgba(0,0,0,.38), 0 14px 30px rgba(0,0,0,.44);
 }
 
 * { box-sizing: border-box; }
@@ -198,7 +219,7 @@ main { min-width: 0; padding: 28px clamp(16px, 4vw, 44px) 120px; }
 .mod-link .mnum { color: var(--ink-3); font-variant-numeric: tabular-nums; font-size: 12px; margin-right: 5px; }
 .mod-link.done .mnum::after { content: " ✓"; color: var(--good); }
 
-.scrim { position: fixed; inset: var(--topbar-h) 0 0; background: rgba(4,12,16,.45); z-index: 49; }
+.scrim { position: fixed; inset: var(--topbar-h) 0 0; background: rgba(12,18,21,.5); z-index: 49; }
 
 /* ---------- tipografia de pagina ---------- */
 .page { max-width: 1080px; margin: 0 auto; }
@@ -214,7 +235,7 @@ h1 { font-size: clamp(24px, 3.3vw, 33px); line-height: 1.2; margin: 0 0 8px; let
 
 /* ---------- dashboard ---------- */
 .hero {
-  background: linear-gradient(135deg, var(--accent) 0%, #0b4d63 55%, #0a3a4c 100%);
+  background: linear-gradient(118deg, var(--gun) 0%, var(--gun-2) 26%, var(--accent) 74%, #0b4a5b 100%);
   color: #fff; border-radius: 16px; padding: clamp(22px, 3.4vw, 34px);
   margin-bottom: 26px; box-shadow: var(--shadow-2); position: relative; overflow: hidden;
 }
@@ -223,7 +244,7 @@ h1 { font-size: clamp(24px, 3.3vw, 33px); line-height: 1.2; margin: 0 0 8px; let
   border-radius: 50%; background: radial-gradient(circle, rgba(84,200,176,.28), transparent 68%);
 }
 .hero h1 { color: #fff; margin-bottom: 10px; }
-.hero p { color: #cfe6ee; margin: 0 0 20px; max-width: 62ch; }
+.hero p { color: #c6dde5; margin: 0 0 20px; max-width: 62ch; }
 .hero-cta { display: flex; flex-wrap: wrap; gap: 10px; position: relative; }
 
 .btn {
@@ -568,3 +589,65 @@ mark { background: color-mix(in srgb, var(--series-4) 40%, transparent); color: 
   color: var(--ink); font-size: 16px; cursor: pointer; z-index: 301;
 }
 .zoom-x:hover { background: var(--surface-3); }
+
+/* ---------- graficos interativos (Plotly) ---------- */
+.viz-figure { margin: 1.8em 0; }
+.plotly-fig {
+  background: var(--surface-1); border: 1px solid var(--line);
+  border-radius: var(--radius); padding: 10px 12px 6px; min-height: 300px;
+}
+.plotly-host { width: 100%; min-height: 380px; }
+.viz-fallback { padding: 34px 20px; text-align: center; color: var(--ink-3); font-size: 14px; }
+.js-plotly-plot .modebar { background: transparent !important; }
+.js-plotly-plot .modebar-btn path { fill: var(--ink-3) !important; }
+.js-plotly-plot .modebar-btn:hover path { fill: var(--accent) !important; }
+.js-plotly-plot .slider-rail-line { fill: var(--surface-3) !important; }
+.js-plotly-plot .slider-grip-rect { fill: var(--accent) !important; stroke: none !important; }
+.js-plotly-plot .slider-tick-line { stroke: var(--line) !important; }
+.js-plotly-plot text { fill: var(--ink-2) !important; }
+.plotly-fig .plotly-notifier { display: none; }
+
+/* ---------- tooltip de infografico ---------- */
+.infotip {
+  position: fixed; z-index: 400; max-width: 320px; pointer-events: none;
+  background: var(--surface-1); color: var(--ink); border: 1px solid var(--line);
+  border-radius: 9px; padding: 9px 13px; font-size: 13.2px; line-height: 1.5;
+  box-shadow: var(--shadow-2); opacity: 0; transform: translateY(4px);
+  transition: opacity .13s, transform .13s;
+}
+.infotip.on { opacity: 1; transform: none; }
+.infotip b { color: var(--accent-ink); }
+[data-tip] { cursor: help; }
+svg [data-tip] { transition: opacity .12s; }
+svg [data-tip]:hover, svg [data-tip]:focus { opacity: .82; outline: none; }
+.prose [data-tip]:not(svg *) {
+  border-bottom: 1.5px dotted var(--accent); text-decoration: none;
+}
+
+/* ---------- separadores Python / R ---------- */
+.codetabs { margin: 1.6em 0; }
+.ct-bar {
+  display: flex; gap: 4px; padding: 4px; border: 1px solid var(--line);
+  border-bottom: 0; border-radius: var(--radius-s) var(--radius-s) 0 0;
+  background: var(--surface-2);
+}
+.ct-tab {
+  border: 0; background: none; color: var(--ink-3); font: inherit; font-size: 13px;
+  font-weight: 600; padding: 6px 15px; border-radius: 6px; cursor: pointer;
+}
+.ct-tab:hover { color: var(--ink); background: var(--surface-3); }
+.ct-tab.on { background: var(--surface-1); color: var(--accent-ink); box-shadow: var(--shadow-1); }
+.codetabs .codeblock { margin: 0; border-radius: 0 0 var(--radius-s) var(--radius-s); }
+.codetabs .codebar { border-radius: 0; }
+
+/* ---------- cartoes de indicador dentro do texto ---------- */
+.kpi-row { display: grid; gap: 10px; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); margin: 1.5em 0; }
+.kpi {
+  background: var(--surface-1); border: 1px solid var(--line);
+  border-left: 3px solid var(--c, var(--accent)); border-radius: var(--radius-s);
+  padding: 12px 14px;
+}
+.kpi .kpi-k { font-size: 11px; letter-spacing: .05em; text-transform: uppercase; color: var(--ink-3); font-weight: 700; }
+.kpi .kpi-v { font-size: clamp(17px, 1.6vw, 23px); overflow-wrap: normal; hyphens: auto; font-weight: 700; line-height: 1.15; margin-top: 3px; font-variant-numeric: tabular-nums; }
+.kpi .kpi-s { font-size: 12.4px; color: var(--ink-3); margin-top: 2px; line-height: 1.4; }
+.kpi.ok { --c: var(--good); } .kpi.warn { --c: var(--warn); } .kpi.bad { --c: var(--bad); }

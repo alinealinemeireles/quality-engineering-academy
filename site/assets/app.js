@@ -84,10 +84,15 @@
     });
   });
 
+  var TRK_IDX = {};
+  MAN.tracks.forEach(function (t, i) { TRK_IDX[t.id] = i + 1; });
   function trackColor(t) {
-    return document.documentElement.getAttribute('data-theme') === 'dark'
-      ? (t.colorDark || t.color) : t.color;
+    // a cor vem do CSS (var --trk-N), para que o tema e a opcao de paleta mandem
+    return 'var(--trk-' + (TRK_IDX[t.id] || 1) + ')';
   }
+  var CAP_ALIAS = { 900: '40-A', 901: '40-B', 902: '71-A' };
+  function capLabel(n) { return CAP_ALIAS[n] || n; }
+
   function modProgress(m) {
     var d = m.chapters.filter(function (c) { return isRead(c.id); }).length;
     return { done: d, total: m.chapters.length, pct: pct(d, m.chapters.length) };
@@ -241,6 +246,7 @@
 
   function enhance(root) {
     renderMath(root); renderMermaid(root); highlight(root); zoomable(root);
+    if (window.ACADEMY_VIZ) window.ACADEMY_VIZ.all(root);
     $$('.btn-copy', root).forEach(function (b) {
       b.addEventListener('click', function () {
         var code = $('code', b.closest('.codeblock'));
@@ -279,7 +285,7 @@
 
     MAN.tracks.forEach(function (t) {
       h += '<details class="trk" data-track="' + t.id + '">';
-      h += '<summary class="trk-head" style="--c:' + t.color + '">' +
+      h += '<summary class="trk-head" style="--c:' + trackColor(t) + '">' +
            '<i class="trk-dot"></i><span>' + esc(t.title) + '</span>' + ico('chev', 'chev') + '</summary>';
       h += '<div class="trk-mods">';
       t.modules.forEach(function (m, i) {
@@ -346,6 +352,7 @@
     var nextId = CHLIST.find(function (id) { return !isRead(id); });
     var next = nextId ? CH[nextId] : null;
     var codeCount = 140, figCount = 192;
+    var vizCount = MAN.figCount || 0;
 
     var h = '<div class="page">';
     h += '<div class="hero">';
@@ -365,6 +372,7 @@
     h += tile('Percursos', String(MAN.tracks.length), 'trilhas de formação');
     h += tile('Exercícios de código', String(codeCount), 'blocos Python executáveis');
     h += tile('Figuras e esquemas', String(figCount), 'diagramas do manual');
+    h += tile('Gráficos interativos', String(vizCount), 'com hover e deslizadores');
     h += tile('Banco de questões', String(MAN.bankSize), 'CQE + CSSBB, autorais');
     h += '</div>';
 
@@ -458,7 +466,7 @@
            '" style="--c:' + c + '"><span class="mod-n">' + (done ? '✓' : (i + 1)) + '</span>' +
            '<span><span class="mod-t">' + esc(ch.title) +
            (ch.new ? ' <span class="badge new">novo</span>' : '') + '</span>' +
-           '<span class="mod-s">Capítulo ' + (ch.num >= 900 ? '40-A' : ch.num) + ' do manual</span></span>' +
+           '<span class="mod-s">Capítulo ' + capLabel(ch.num) + ' do manual</span></span>' +
            '<span class="mod-right">' + (done ? 'concluída' : 'por ler') + '</span></a>';
     });
     h += '</div>';
@@ -499,7 +507,7 @@
       else h += esc(d.part || '');
       h += '</div>';
       h += '<div class="eyebrow" style="--c:' + c + '"><i class="dot"></i>' +
-           (d.num ? 'Capítulo ' + (d.num >= 900 ? '40-A' : d.num) : 'Abertura') +
+           (d.num ? 'Capítulo ' + capLabel(d.num) : 'Abertura') +
            (d.new ? ' · escrito para a edição web' : '') + '</div>';
       h += '<h1>' + esc(d.title) + '</h1>';
 
@@ -779,7 +787,7 @@
         h += '<a class="hit" href="#/aula/' + x.c.id + '"><div class="h-t">' +
              hl(x.c.t, words) + '</div><div class="h-m">' +
              esc(t ? t.title : '') + ' › ' + esc(m ? m.title : '') +
-             ' · Capítulo ' + (x.c.n >= 900 ? '40-A' : x.c.n) +
+             ' · Capítulo ' + capLabel(x.c.n) +
              (isRead(x.c.id) ? ' · <span style="color:var(--good)">concluída</span>' : '') +
              '</div></a>';
       });
@@ -905,6 +913,7 @@
     document.documentElement.setAttribute('data-theme', d ? 'light' : 'dark');
     Store.set('academy.theme', d ? 'light' : 'dark');
     mermaidReady = false;
+    if (window.ACADEMY_VIZ) window.ACADEMY_VIZ.retheme();
     $$('.mermaid[data-done]').forEach(function (n) {
       n.removeAttribute('data-done');
       n.textContent = n.getAttribute('data-src') || '';

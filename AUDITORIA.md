@@ -93,14 +93,15 @@ O que faltava era mesmo só a camada BPMN/Bizagi.
 
 | Tema | Estado | Nota |
 |---|---|---|
-| Diagrama de esparguete (*spaghetti*) | ausente | Ferramenta de layout, complementa o VSM |
-| Makigami | ausente | Mapeamento de processos administrativos |
-| Diagrama de tartaruga (*turtle*) | ausente | Exigido em auditoria IATF 16949 |
-| Código R | ausente | 140 blocos Python, zero R |
+| Diagrama de esparguete (*spaghetti*) | **resolvido** | Capítulo 40-B, com gráfico interativo e cálculo de distância |
+| Makigami | **resolvido** | Capítulo 40-B, com as 7 camadas e gráfico de rácio VA |
+| Diagrama de tartaruga (*turtle*) | **resolvido** | Capítulo 40-B, com infográfico e mapa de auditoria |
+| Código R | **parcial** | 40-B e 71-A trazem R (e Excel/DAX) ao lado do Python; falta nos restantes |
 | Datasets | inline no código | Ficheiros CSV separados permitiriam exercícios abertos |
 
-Os três primeiros são ferramentas de mapeamento que caberiam naturalmente no módulo `lss-05`,
-junto ao Capítulo 40-A.
+Os três primeiros foram escritos no **Capítulo 40-B**, no módulo `lss-05`, a seguir ao 40-A.
+O código em R foi acrescentado aos capítulos 40-B e 71-A em separadores lado a lado com o Python;
+os restantes 140 blocos do manual continuam só em Python.
 
 ---
 
