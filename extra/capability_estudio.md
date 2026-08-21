@@ -360,6 +360,56 @@ $$\sigma_{processo} = \sqrt{\sigma_{observado}^2 - \sigma_{medição}^2}$$
 
 ---
 
+## 9 · Duas leituras rápidas: a garagem e o Sixpack
+
+Duas formas de explicar Cp/Cpk sem uma fórmula à vista — úteis para uma reunião com quem não vive
+de estatística no dia a dia.
+
+**A analogia do carro na garagem.** Cp mede se o carro cabe; Cpk mede se ele cabe *no lugar certo*.
+
+| Cenário | Cp | Cpk | Leitura |
+|---|---|---|---|
+| Garagem larga, carro bem centrado | alto | alto | Excelente — folga dos dois lados |
+| Garagem larga, carro encostado de um lado | alto | baixo | O processo tem capacidade de sobra, só está mal posicionado — ajuste de centragem resolve |
+| Garagem justa, carro centrado | ≈ 1 | ≈ 1 | Cabe, mas sem margem — qualquer variação a mais bate na parede |
+| Garagem estreita | baixo | baixo | Não cabe, não importa a posição — o problema é a dispersão, não a centragem |
+
+É a mesma leitura da tabela da seção 1, só que sem gráfico — funciona em qualquer conversa de
+corredor.
+
+**O que o Capability Sixpack do Minitab mostra, painel a painel.** Quem usa Minitab não vê os
+índices isolados — vê seis gráficos lado a lado, e cada um responde a uma pergunta diferente:
+
+| Painel | Pergunta que responde |
+|---|---|
+| Carta X̄ (ou I, para individuais) | O processo está centrado e estável ao longo do tempo? |
+| Carta R (ou AM) | A dispersão dentro do subgrupo está sob controlo? |
+| Histograma de capacidade + curva normal | A forma dos dados é compatível com os limites de especificação? |
+| Gráfico de probabilidade normal | Os dados são razoavelmente normais? (Anderson-Darling, secção 7) |
+| Últimos 20 subgrupos | Há alguma deriva recente que a carta completa dilui? |
+| Capacidade dentro/global | Cp/Cpk (curto prazo) lado a lado com Pp/Ppk (longo prazo) |
+
+O ponto de desenho por trás do Sixpack é exatamente o argumento deste capítulo: **nunca mostrar o
+índice sem mostrar a carta ao lado**. Um Cpk bonito ao lado de uma carta fora de controlo é o sinal
+mais confiável de que algo está errado no relatório, não no processo.
+
+**Uma quinta letra que aparece em contexto automotivo: Cm e Cmk.** Antes de o processo entrar em
+produção, muitas normas (IATF, VDA) exigem um estudo de **capacidade de máquina** — poucas peças,
+curtíssimo prazo, condições controladas — separado do estudo de capacidade de processo.
+
+| Índice | O que avalia | Nº de peças típico | Quando se usa |
+|---|---|---|---|
+| **Cm / Cmk** | A máquina sozinha, no melhor cenário possível | 50–100 peças consecutivas | Aprovação de máquina nova, antes de qualquer variação de turno/lote entrar em jogo |
+| **Cp / Cpk** | O processo já em operação normal, mas em curto prazo | 25 subgrupos × 5 peças (125 medições) | Processo estabilizado, decisão de rotina |
+| **Pp / Ppk** | O desempenho real ao longo do tempo, todas as fontes de variação incluídas | 100+ medições, cobrindo turnos e lotes | PPAP, relatório para o cliente |
+
+A progressão importa: **Cm/Cmk avalia a máquina; Cp/Cpk avalia o processo; Pp/Ppk avalia o que o
+cliente de facto recebe.** Aprovar a máquina não substitui validar o processo, e validar o processo
+em curto prazo não substitui medir o desempenho real ao longo do tempo — são três perguntas
+diferentes, respondidas em três momentos diferentes do ciclo APQP.
+
+---
+
 ### Erros comuns
 
 1. **Calcular capabilidade num processo instável.** O erro nº 1, e o mais caro.

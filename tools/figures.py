@@ -554,6 +554,219 @@ def fig_voc_antes_depois():
     reg('voc-antes-depois', data, layout)
 
 
+# =============================================================================
+# OEE AVANCADO
+# =============================================================================
+def fig_oee_waterfall():
+    """Cascata de perdas do OEE num turno de 480 minutos.
+
+    Implementada com barras + `base` (em vez do trace 'waterfall') porque o bundle
+    cartesian do Plotly usado no site nao inclui o modulo waterfall/scatterpolar.
+    """
+    x = ['Tempo<br>planejado', 'Perda de<br>disponibilidade', 'Perda de<br>performance',
+         'Perda de<br>qualidade', 'Tempo totalmente<br>produtivo']
+    cum0 = 480
+    cum1 = cum0 - 60
+    cum2 = cum1 - 20
+    cum3 = cum2 - 40  # == 360, confere com o total final
+    y = [480, 60, 20, 40, 360]
+    base = [0, cum1, cum2, cum3, 0]
+    cores = ['@series-1', '@bad', '@bad', '@bad', '@good']
+    hover = [
+        'Tempo planejado do turno<br><b>480 min</b>',
+        'Paradas não planejadas (quebras, falta de material)<br><b>-60 min</b> · Disponibilidade 87,5%',
+        'Microparadas e redução de velocidade<br><b>-20 min</b> · Performance 95,2%',
+        'Refugo e retrabalho (40 de 400 peças)<br><b>-40 min</b> · Qualidade 90,0%',
+        'Tempo totalmente produtivo<br><b>360 min · OEE 75,0%</b>',
+    ]
+    data = [{
+        'type': 'bar', 'x': x, 'y': y, 'base': base,
+        'marker': {'color': cores, 'line': {'color': '@surface-1', 'width': 1.5}},
+        'text': ['480', '-60', '-20', '-40', '360'],
+        'textposition': 'outside',
+        'hovertext': hover, 'hoverinfo': 'text',
+    }]
+    layout = {
+        'title': {'text': 'Para onde foram os 120 minutos? — a cascata do OEE (turno de 480 min, OEE 75%)'},
+        'xaxis': ax(''),
+        'yaxis': ax('Minutos do turno', range=[0, 520]),
+        'showlegend': False,
+        'margin': {'l': 60, 'r': 24, 't': 52, 'b': 60},
+    }
+    reg('oee-waterfall', data, layout)
+
+
+def fig_oee_sku():
+    """OEE agregado semanal vs decomposicao por SKU — a media esconde a instabilidade."""
+    x = ['Agregado<br>semanal', 'SKU A', 'SKU B', 'SKU C', 'SKU D']
+    y = [73, 65, 83, 60, 74]
+    cores = ['@ink-3', '@bad', '@warn', '@bad', '@warn']
+    causas = [
+        'Disponibilidade 89% × Performance 84% × Qualidade 97% — o número que vai ao relatório',
+        'Gap de velocidade: 234 de 300 un/min esperadas · 1 quebra · 9 microparadas',
+        'Scrap concentrado: 675 kg de refugo, desvio de cor e dimensão',
+        'Ramp-up longo após changeover: 63%→79% ao longo de 3 horas · 9 microparadas',
+        '3 quebras · 22 microparadas (box jam, troca de bobina, rasgo de plástico)',
+    ]
+    data = [{
+        'type': 'bar', 'x': x, 'y': y,
+        'marker': {'color': cores},
+        'text': [f'{v}%' for v in y], 'textposition': 'outside',
+        'customdata': causas,
+        'hovertemplate': '<b>%{x}</b><br>OEE %{y}%<br>%{customdata}<extra></extra>',
+    }]
+    layout = {
+        'title': {'text': 'OEE semanal 73% esconde quatro histórias diferentes'},
+        'xaxis': ax(''),
+        'yaxis': ax('OEE (%)', range=[0, 100]),
+        'showlegend': False,
+        'margin': {'l': 54, 'r': 24, 't': 52, 'b': 56},
+        'shapes': [{'type': 'line', 'x0': 0, 'x1': 1, 'xref': 'paper', 'y0': 73, 'y1': 73,
+                    'line': {'color': '@ink-3', 'width': 1.2, 'dash': 'dot'}}],
+        'annotations': [{'x': 0.99, 'y': 76, 'xref': 'paper', 'text': 'média semanal 73%',
+                         'showarrow': False, 'xanchor': 'right',
+                         'font': {'size': 10.5, 'color': '@ink-3'}}],
+    }
+    reg('oee-sku', data, layout)
+
+
+# =============================================================================
+# 5S E GESTAO VISUAL
+# =============================================================================
+def fig_5s_radar():
+    """Auditoria 5S por pilar: onde a disciplina cai primeiro.
+
+    Barra horizontal (em vez de radar/scatterpolar) porque o bundle cartesian do
+    Plotly usado no site nao inclui o modulo de graficos polares.
+    """
+    pilares = ['Sustain\n(Sustentar)', 'Shine\n(Limpar)', 'Sort\n(Separar)',
+               'Standardize\n(Padronizar)', 'Set in Order\n(Ordenar)']
+    atual = [58, 75, 78, 80, 82]
+
+    def cor(v):
+        return '@bad' if v < 70 else ('@warn' if v < 85 else '@good')
+    cores = [cor(v) for v in atual]
+    data = [{
+        'type': 'bar', 'orientation': 'h', 'x': atual, 'y': pilares,
+        'marker': {'color': cores},
+        'text': [f'{v}/100' for v in atual], 'textposition': 'outside',
+        'hovertemplate': '<b>%{y}</b><br>%{x}/100<extra></extra>',
+    }]
+    layout = {
+        'title': {'text': 'Auditoria 5S por pilar — Sustain é sempre o elo mais fraco'},
+        'xaxis': ax('Pontuação da auditoria (0–100)', range=[0, 112]),
+        'yaxis': ax(''),
+        'showlegend': False,
+        'margin': {'l': 116, 'r': 30, 't': 52, 'b': 46},
+        'shapes': [{'type': 'line', 'x0': 90, 'x1': 90, 'y0': 0, 'y1': 1, 'yref': 'paper',
+                    'line': {'color': '@ink-3', 'width': 1.4, 'dash': 'dash'}}],
+        'annotations': [{'x': 90, 'y': 1.05, 'yref': 'paper', 'showarrow': False,
+                         'text': 'meta 90', 'font': {'size': 10.5, 'color': '@ink-3'}}],
+    }
+    reg('5s-radar', data, layout)
+
+
+def fig_5s_pareto():
+    """Pareto de achados numa auditoria 5S."""
+    causas = ['Itens fora\ndo lugar', 'Sujeira\nacumulada', 'Falta de\nidentificação',
+              'Excesso de\nmaterial', 'Sem padrão\nvisual', 'Outros']
+    n = [34, 22, 16, 11, 9, 6]
+    total = sum(n)
+    cum = np.cumsum(n) / total * 100
+    cores = ['@bad', '@warn', '@series-4', '@series-3', '@series-2', '@ink-3']
+    data = [
+        {'type': 'bar', 'name': 'Achados', 'x': causas, 'y': n,
+         'marker': {'color': cores}, 'yaxis': 'y',
+         'text': [str(v) for v in n], 'textposition': 'outside',
+         'hovertemplate': '<b>%{x}</b><br>%{y} achados<extra></extra>'},
+        {'type': 'scatter', 'mode': 'lines+markers', 'name': '% acumulado',
+         'x': causas, 'y': np.round(cum, 1).tolist(), 'yaxis': 'y2',
+         'line': {'color': '@series-1', 'width': 2.4},
+         'marker': {'size': 7, 'color': '@series-1'},
+         'hovertemplate': '<b>%{x}</b><br>%{y:.0f}% acumulado<extra></extra>'},
+    ]
+    layout = {
+        'title': {'text': 'Pareto de 98 achados numa auditoria 5S — onde focar primeiro'},
+        'xaxis': ax(''),
+        'yaxis': ax('Nº de achados', range=[0, 38]),
+        'yaxis2': ax('% acumulado', overlaying='y', side='right',
+                     range=[0, 105], showgrid=False, ticksuffix='%'),
+        'showlegend': False,
+        'margin': {'l': 54, 'r': 54, 't': 52, 'b': 60},
+        'shapes': [{'type': 'line', 'x0': 0, 'x1': 1, 'xref': 'paper',
+                    'y0': 80, 'y1': 80, 'yref': 'y2',
+                    'line': {'color': '@ink-3', 'width': 1.2, 'dash': 'dot'}}],
+        'annotations': [{'x': 0.01, 'y': 83.5, 'xref': 'paper', 'yref': 'y2',
+                         'text': 'linha dos 80%', 'showarrow': False, 'xanchor': 'left',
+                         'font': {'size': 10, 'color': '@ink-3'}}],
+    }
+    reg('5s-pareto', data, layout)
+
+
+# =============================================================================
+# RESOLUCAO ESTRUTURADA DE PROBLEMAS
+# =============================================================================
+def fig_capa_pareto():
+    """Pareto de nao-conformidades antes de abrir um 8D."""
+    causas = ['Material fora\nde especificação', 'Erro de\nsetup', 'Falha de\ntreino',
+              'Desvio de\nprocedimento', 'Instrumento não\ncalibrado', 'Outros']
+    n = [31, 24, 18, 13, 9, 5]
+    total = sum(n)
+    cum = np.cumsum(n) / total * 100
+    cores = ['@bad', '@warn', '@series-4', '@series-3', '@series-2', '@ink-3']
+    data = [
+        {'type': 'bar', 'name': 'Não conformidades', 'x': causas, 'y': n,
+         'marker': {'color': cores}, 'yaxis': 'y',
+         'text': [str(v) for v in n], 'textposition': 'outside',
+         'hovertemplate': '<b>%{x}</b><br>%{y} ocorrências<extra></extra>'},
+        {'type': 'scatter', 'mode': 'lines+markers', 'name': '% acumulado',
+         'x': causas, 'y': np.round(cum, 1).tolist(), 'yaxis': 'y2',
+         'line': {'color': '@series-1', 'width': 2.4},
+         'marker': {'size': 7, 'color': '@series-1'},
+         'hovertemplate': '<b>%{x}</b><br>%{y:.0f}% acumulado<extra></extra>'},
+    ]
+    layout = {
+        'title': {'text': 'Pareto de 100 não conformidades — onde investigar antes de abrir o 8D'},
+        'xaxis': ax(''),
+        'yaxis': ax('Nº de ocorrências', range=[0, 34]),
+        'yaxis2': ax('% acumulado', overlaying='y', side='right',
+                     range=[0, 105], showgrid=False, ticksuffix='%'),
+        'showlegend': False,
+        'margin': {'l': 54, 'r': 54, 't': 52, 'b': 60},
+        'shapes': [{'type': 'line', 'x0': 0, 'x1': 1, 'xref': 'paper',
+                    'y0': 80, 'y1': 80, 'yref': 'y2',
+                    'line': {'color': '@ink-3', 'width': 1.2, 'dash': 'dot'}}],
+        'annotations': [{'x': 0.01, 'y': 83.5, 'xref': 'paper', 'yref': 'y2',
+                         'text': 'linha dos 80%', 'showarrow': False, 'xanchor': 'left',
+                         'font': {'size': 10, 'color': '@ink-3'}}],
+    }
+    reg('capa-pareto', data, layout)
+
+
+def fig_capa_recorrencia():
+    """Correcao rapida vs causa raiz: recorrencia do mesmo problema em 6 meses."""
+    meses = ['Mês 1', 'Mês 2', 'Mês 3', 'Mês 4', 'Mês 5', 'Mês 6']
+    correcao = [8, 7, 9, 8, 7, 9]
+    causa_raiz = [8, 5, 3, 1, 1, 0]
+    data = [
+        {'type': 'scatter', 'mode': 'lines+markers', 'name': 'Só correção (troca a peça)',
+         'x': meses, 'y': correcao, 'line': {'color': '@bad', 'width': 2.4},
+         'marker': {'size': 8, 'color': '@bad'},
+         'hovertemplate': '<b>%{x}</b><br>%{y} recorrências<extra>correção</extra>'},
+        {'type': 'scatter', 'mode': 'lines+markers', 'name': 'Ação corretiva (causa raiz)',
+         'x': meses, 'y': causa_raiz, 'line': {'color': '@good', 'width': 2.4},
+         'marker': {'size': 8, 'color': '@good'},
+         'hovertemplate': '<b>%{x}</b><br>%{y} recorrências<extra>causa raiz</extra>'},
+    ]
+    layout = {
+        'title': {'text': 'O mesmo problema, dois tratamentos — recorrência ao longo de 6 meses'},
+        'xaxis': ax(''),
+        'yaxis': ax('Recorrências no mês', range=[0, 10.5]),
+        'legend': {'orientation': 'h', 'y': -0.18, 'x': 0},
+        'margin': {'l': 50, 'r': 24, 't': 52, 'b': 70},
+    }
+    reg('capa-recorrencia', data, layout)
+
 
 def build():
     fig_voc_pareto()
@@ -568,6 +781,12 @@ def build():
     fig_va_nva()
     fig_handoffs()
     fig_ferramenta_matriz()
+    fig_oee_waterfall()
+    fig_oee_sku()
+    fig_5s_radar()
+    fig_5s_pareto()
+    fig_capa_pareto()
+    fig_capa_recorrencia()
     return FIGS
 
 

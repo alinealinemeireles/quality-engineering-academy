@@ -209,6 +209,41 @@ demorada, mas na que tem menos recurso disponível.
 > **Camunda Modeler** e **bpmn.io** (ambos gratuitos e de código aberto, com BPMN 2.0 XML nativo),
 > e **draw.io** para desenho rápido sem validação semântica.
 
+### BPMN vs. EPC vs. fluxograma simples: três notações, três públicos
+
+Nem todo mapa precisa de BPMN. A pergunta a fazer antes de abrir o Bizagi é "quem vai ler isto, e
+para quê" — as três notações mais comuns em ambiente industrial resolvem problemas diferentes:
+
+| Notação | Elementos | Para quem | Ponto forte | Ponto fraco |
+|---|---|---|---|---|
+| **Fluxograma simples** | Início/fim, atividade, decisão | Diretoria, comunicação rápida | Qualquer pessoa lê em 10 segundos | Não representa exceções, tempo ou responsável com rigor |
+| **EPC** (Event-driven Process Chain) | Evento → função → evento, conectores lógicos E/OU | Ambientes SAP/ERP, arquitetura de processos | Liga processo a sistema de informação de forma nativa | Menos difundida fora do ecossistema SAP; sem semântica de execução |
+| **BPMN 2.0** | Eventos, atividades, gateways, raias, artefactos | Analistas de processo, TI, automação | Padrão internacional, base para automação (RPA/BPMS) | Curva de aprendizagem maior; excesso de detalhe assusta público não técnico |
+
+A prática mais eficaz não é escolher uma e abandonar as outras — é traduzir entre elas conforme a
+audiência muda: **fluxograma simples para aprovar com a diretoria**, **BPMN completo para a equipa
+de projeto e para TI**. O erro comum é mostrar o BPMN completo, com todas as exceções e gateways,
+numa reunião de aprovação executiva — a reação típica é "isto está complicado demais", quando o
+problema não é o processo, é o nível de detalhe errado para aquela plateia.
+
+### Mapeamento vs. modelagem: dois níveis de detalhe, dois objetivos
+
+"Mapear o processo" e "modelar o processo" são usados como sinónimos, mas descrevem etapas
+diferentes de maturidade:
+
+| | Mapeamento | Modelagem |
+|---|---|---|
+| **O que é** | Levantamento manual do fluxo real — post-its, entrevistas, cronómetro | Representação formal e padronizada, normalmente em ferramenta (BPMN/Bizagi) |
+| **Fonte** | Observação direta e entrevista com quem executa | O mapeamento já validado, redesenhado com notação e regras formais |
+| **Formato típico** | Post-its num quadro, rascunho, checklist | Diagrama BPMN com raias, gateways, eventos, exportável e versionável |
+| **Serve para** | Entender o processo real, capturar variação e exceção que ninguém documentou | Comunicar, documentar formalmente, servir de base para automação |
+
+A sequência que funciona é sempre a mesma: **mapear primeiro (sujo, manual, no gemba), modelar
+depois (limpo, formal, na ferramenta)**. Pular direto para a modelagem — abrir o Bizagi sem ter
+caminhado o processo com quem o executa — é a causa mais comum de mapas bonitos que não descrevem
+nada real. É o mesmo erro do primeiro item da lista de "Erros comuns" mais abaixo, só que cometido
+antes mesmo de a ferramenta entrar em cena.
+
 ### Onde o mapeamento entra no DMAIC
 
 ```mermaid
