@@ -203,7 +203,6 @@
           });
           Array.prototype.forEach.call(panes, function (p, j) { p.hidden = i !== j; });
           if (window.ACADEMY_HL) window.ACADEMY_HL(box);
-          if (window.ACADEMY_LAB) window.ACADEMY_LAB.wire(box);
         });
       });
     });

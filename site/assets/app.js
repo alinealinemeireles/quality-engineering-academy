@@ -279,7 +279,6 @@
     var h = '';
     h += '<a class="side-link" href="#/" data-r="/">' + ico('home') + 'Painel</a>';
     h += '<a class="side-link" href="#/competencias" data-r="/competencias">' + ico('map') + 'Mapa de competências</a>';
-    h += '<a class="side-link" href="#/laboratorio" data-r="/laboratorio">' + ico('beaker') + 'Laboratório Python</a>';
     h += '<a class="side-link" href="#/certificacao" data-r="/certificacao">' + ico('award') + 'Banco de certificação</a>';
     h += '<a class="side-link" href="#/aula/cap-000" data-r="/aula/cap-000">' + ico('book') + 'Abertura do manual</a>';
     h += '<div class="side-h">Percursos</div>';
@@ -352,26 +351,24 @@
     var g = globalProgress();
     var nextId = CHLIST.find(function (id) { return !isRead(id); });
     var next = nextId ? CH[nextId] : null;
-    var codeCount = 140, figCount = 192;
+    var figCount = 192;
     var vizCount = MAN.figCount || 0;
 
     var h = '<div class="page">';
     h += '<div class="hero">';
     h += '<h1>Formação em Engenharia da Qualidade, Lean Six Sigma e Quality Analytics</h1>';
     h += '<p>' + MAN.chapterCount + ' capítulos organizados em ' + MAN.tracks.length +
-         ' percursos, com laboratório Python no navegador, ' + MAN.bankSize +
+         ' percursos, com exemplos de código em Python, R, SQL e DAX, ' + MAN.bankSize +
          ' questões autorais de certificação e mapa de competências.</p>';
     h += '<div class="hero-cta">';
     if (next) h += '<a class="btn ghost" href="#/aula/' + next.ch.id + '">Continuar: ' +
                    esc(next.ch.title.length > 42 ? next.ch.title.slice(0, 42) + '…' : next.ch.title) + ' →</a>';
     h += '<a class="btn ghost" href="#/competencias">Mapa de competências</a>';
-    h += '<a class="btn ghost" href="#/laboratorio">Abrir laboratório</a>';
     h += '</div></div>';
 
     h += '<div class="tiles">';
     h += tile('Progresso global', g.pct + '%', g.done + ' de ' + g.total + ' aulas');
     h += tile('Percursos', String(MAN.tracks.length), 'trilhas de formação');
-    h += tile('Exercícios de código', String(codeCount), 'blocos Python executáveis');
     h += tile('Figuras e esquemas', String(figCount), 'diagramas do manual');
     h += tile('Gráficos interativos', String(vizCount), 'com hover e deslizadores');
     h += tile('Banco de questões', String(MAN.bankSize), 'CQE + CSSBB, autorais');
@@ -553,7 +550,6 @@
           if (el2) el2.scrollIntoView({ behavior: 'smooth', block: 'start' });
         });
       });
-      wireLab(main);
       observeToc();
     });
   }
@@ -897,8 +893,6 @@
     if (path === '/certificacao') return viewBank();
     if (path === '/competencias') return viewComp();
     if (path === '/progresso') return viewProgress();
-    if (path === '/laboratorio') return (window.ACADEMY_LAB ? window.ACADEMY_LAB.view(show) : show(
-      '<div class="page"><div class="empty">Laboratório indisponível.</div></div>'));
     if (path === '/busca') return viewSearch(decodeURIComponent(qs.replace(/^q=/, '')));
     return viewHome();
   }
@@ -944,11 +938,6 @@
     }
     if (e.key === 'Escape') { closeNav(); document.activeElement.blur(); }
   });
-
-  // expor para lab.js
-  window.ACADEMY_CORE = { show: show, enhance: enhance, esc: esc, $: $, $$: $$, el: el };
-  function wireLab(root) { if (window.ACADEMY_LAB) window.ACADEMY_LAB.wire(root); }
-  window.ACADEMY_WIRE = wireLab;
 
   route();
 })();

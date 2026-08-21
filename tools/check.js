@@ -55,8 +55,6 @@ const BASE = 'http://localhost:8899/';
   await shot('#/busca?q=cpk', '09-busca');
   console.log('hits:', await page.locator('.hit').count());
 
-  await shot('#/laboratorio', '10-lab');
-
   // tema escuro
   await page.goto(BASE, { waitUntil: 'domcontentloaded' });
   await page.waitForTimeout(600);

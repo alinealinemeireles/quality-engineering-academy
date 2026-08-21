@@ -118,7 +118,7 @@ body {
 
 svg { fill: none; stroke: currentColor; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
 /* SVGs de conteudo trazem os proprios atributos: nao herdam o estilo dos icones */
-.brand-mark, .prose svg, figure svg, .mermaid svg, .zoom-in svg, .code-out svg {
+.brand-mark, .prose svg, figure svg, .mermaid svg, .zoom-in svg {
   stroke: none; stroke-width: initial; stroke-linecap: initial; stroke-linejoin: initial; fill: initial;
 }
 
@@ -377,13 +377,8 @@ h1 { font-size: clamp(24px, 3.3vw, 33px); line-height: 1.2; margin: 0 0 8px; let
   font: inherit; font-size: 12.2px; font-weight: 600; padding: 4px 11px; border-radius: 7px; cursor: pointer;
 }
 .codebar button:hover { background: var(--surface-3); color: var(--ink); }
-.codebar .btn-run { color: var(--good); border-color: color-mix(in srgb, var(--good) 34%, transparent); }
 .codeblock pre { margin: 0; padding: 14px 15px; overflow-x: auto; }
 .codeblock code { font-family: var(--mono); font-size: 13.4px; line-height: 1.62; background: none; border: 0; padding: 0; white-space: pre; }
-.code-out { border-top: 1px solid var(--line); background: var(--surface-2); padding: 12px 15px; font-family: var(--mono); font-size: 12.9px; white-space: pre-wrap; }
-.code-out .err { color: var(--bad); }
-.code-out img { max-width: 100%; border-radius: 6px; margin: 8px 0 0; background: #fff; }
-.code-out .muted { color: var(--ink-3); }
 
 /* matematica */
 .math-block { margin: 1.3em 0; overflow-x: auto; text-align: center; }
@@ -488,23 +483,6 @@ mark { background: color-mix(in srgb, var(--series-4) 40%, transparent); color: 
 .hbar .track { height: 18px; background: var(--surface-3); border-radius: 5px; overflow: hidden; }
 .hbar .track > i { display: block; height: 100%; background: var(--c); border-radius: 0 4px 4px 0; }
 .hbar .val { text-align: right; font-variant-numeric: tabular-nums; color: var(--ink-2); font-weight: 600; }
-
-/* ---------- laboratorio ---------- */
-.lab-status {
-  display: flex; align-items: center; gap: 9px; font-size: 13.2px; color: var(--ink-2);
-  padding: 10px 14px; background: var(--surface-2); border: 1px solid var(--line);
-  border-radius: var(--radius-s); margin-bottom: 16px;
-}
-.lab-status .pulse { width: 9px; height: 9px; border-radius: 50%; background: var(--ink-3); flex: 0 0 auto; }
-.lab-status.ready .pulse { background: var(--good); }
-.lab-status.loading .pulse { background: var(--warn); animation: pulse 1.1s infinite; }
-.lab-status.err .pulse { background: var(--bad); }
-@keyframes pulse { 0%,100% { opacity: 1 } 50% { opacity: .25 } }
-.editor {
-  width: 100%; min-height: 260px; font-family: var(--mono); font-size: 13.4px; line-height: 1.62;
-  padding: 14px; border: 1px solid var(--line); border-radius: var(--radius-s);
-  background: var(--surface-1); color: var(--ink); resize: vertical; tab-size: 4;
-}
 
 /* notas / avisos */
 .note {

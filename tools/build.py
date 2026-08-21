@@ -165,26 +165,21 @@ def codetabs(block):
         tabs.append('<button type="button" class="ct-tab%s" role="tab" '
                     'aria-selected="%s" id="%s-t%d">%s</button>'
                     % (on, 'true' if i == 0 else 'false', uid, i, label))
-        run = ('<button class="btn-run" type="button">Executar</button>'
-               if lang == 'python' else '')
         panes.append(
             '<div class="ct-pane"%s role="tabpanel" aria-labelledby="%s-t%d">'
             '<div class="codeblock" data-lang="%s"><div class="codebar">'
-            '<span class="lang">%s</span>%s'
+            '<span class="lang">%s</span>'
             '<button class="btn-copy" type="button">Copiar</button></div>'
-            '<pre><code class="language-%s">%s</code></pre>'
-            '<div class="code-out" hidden></div></div></div>'
-            % ('' if i == 0 else ' hidden', uid, i, lang, label, run, lang, esc(code)))
+            '<pre><code class="language-%s">%s</code></pre></div></div>'
+            % ('' if i == 0 else ' hidden', uid, i, lang, label, lang, esc(code)))
     return ('<div class="codetabs"><div class="ct-bar" role="tablist">%s</div>%s</div>'
             % (''.join(tabs), ''.join(panes)))
 
 
 CODE_TPL = ('<div class="codeblock" data-lang="python">'
             '<div class="codebar"><span class="lang">Python</span>'
-            '<button class="btn-run" type="button">Executar</button>'
             '<button class="btn-copy" type="button">Copiar</button></div>'
-            '<pre><code class="language-python">{code}</code></pre>'
-            '<div class="code-out" hidden></div></div>')
+            '<pre><code class="language-python">{code}</code></pre></div>')
 
 
 def esc(s):

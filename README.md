@@ -4,7 +4,7 @@ Plataforma de formação em HTML/CSS/JS gerada a partir do *Manual de Engenharia
 Lean Six Sigma e Quality Analytics — 4ª edição (2026)*.
 
 Não é um e-book com menus: o manual é a **fonte de conhecimento**, e a aplicação é a **estrutura
-de aprendizagem** — trilhas, módulos, aulas, laboratório, avaliação e mapa de competências.
+de aprendizagem** — trilhas, módulos, aulas, avaliação e mapa de competências.
 
 **Abrir:** `site/index.html` em qualquer navegador. Não precisa de servidor, não precisa de
 instalação, funciona offline.
@@ -18,7 +18,7 @@ instalação, funciona offline.
 | Capítulos | 155 (151 do manual + 4 escritos de raiz) |
 | Percursos (trilhas) | 6 |
 | Módulos | 62 |
-| Blocos Python executáveis | 140 |
+| Blocos de código (Python/R/SQL/DAX) | 140 |
 | Figuras e diagramas | 192 |
 | Gráficos interativos (Plotly) | 12, com hover e deslizadores |
 | Questões de certificação | 112 (CQE + CSSBB, autorais) |
@@ -34,9 +34,6 @@ instalação, funciona offline.
 
 ### Funcionalidades
 
-- **Laboratório Python real no navegador** (Pyodide/WebAssembly): numpy, pandas, scipy,
-  matplotlib carregam por omissão; statsmodels e scikit-learn a pedido. Os blocos de código dos
-  capítulos são **editáveis e executáveis** — clique em `Executar`.
 - **Avaliação por módulo** com feedback imediato e análise dos distratores; mínimo recomendado 70%.
 - **Mapa de competências** — mostra o que ainda falta, não só o que foi feito.
 - **Progresso** guardado no navegador, com exportação/importação em JSON.
@@ -67,7 +64,6 @@ instalação, funciona offline.
 │   ├── index.html
 │   ├── assets/
 │   │   ├── app.css  app.js   ← núcleo: router, progresso, quiz, busca
-│   │   ├── lab.js            ← laboratório Pyodide
 │   │   ├── viz.js            ← Plotly, tooltips de infográfico, separadores de código
 │   │   ├── hl.js             ← realce de sintaxe (4 KB, offline)
 │   │   └── vendor/           ← KaTeX + Mermaid + Plotly locais (sem CDN)
@@ -130,17 +126,13 @@ locais), bem dentro do confortável para o Pages.
 
 ## Notas técnicas
 
-**Offline.** Tudo é servido de ficheiros locais — KaTeX e Mermaid estão em `assets/vendor/`, não em
-CDN. A **única** dependência de rede é o Pyodide, que só é descarregado quando se executa código
-Python pela primeira vez (~15 MB, depois fica em cache do navegador).
+**Offline.** Tudo é servido de ficheiros locais — KaTeX, Mermaid e Plotly estão em
+`assets/vendor/`, não em CDN. Não há qualquer dependência de rede depois da primeira carga.
 
-**R, Excel e Power BI.** Aparecem em separadores ao lado do Python, com botão de copiar, para correr
-no RStudio, no Excel ou no Power BI. Executar R no navegador exigiria o webR, consideravelmente mais
-pesado que o Pyodide, e não compensa para uso de estudo.
-
-**Python executável.** O botão *Executar* nos blocos Python usa Pyodide e funciona também no GitHub
-Pages (é tudo estático). É opcional: nenhum conteúdo depende dele — os gráficos são pré-calculados e
-os resultados numéricos estão no texto.
+**Python, R, Excel e Power BI.** Aparecem lado a lado em separadores, com botão de copiar, como
+referência para correr no VSCode, no RStudio, no Excel ou no Power BI. Nenhum código é executado no
+navegador — os gráficos são pré-calculados em `tools/figures.py` e os resultados numéricos já estão
+no texto, exatamente como os teria depois de correr o bloco correspondente.
 
 **Paleta.** Cinza chumbo → azul petróleo. As trilhas usam uma **rampa ordinal de petróleo**
 validada (`--ordinal`: monotonia de luminosidade, gaps ≥ 0,06, extremo claro acima de 2:1 sobre a
