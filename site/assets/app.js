@@ -8,6 +8,7 @@
   var A = window.ACADEMY;
   var MAN = A.data.manifest;
   var BANK = A.data.bank || [];
+  var T = window.ACADEMY_I18N.t;
 
   /* ---------- utilidades ---------- */
   var $ = function (s, r) { return (r || document).querySelector(s); };
@@ -119,10 +120,8 @@
     var s = document.createElement('script');
     s.src = 'content/ch/' + id + '.js';
     s.onerror = function () {
-      A.reg(id, { id: id, title: 'Capítulo indisponível', part: '', html:
-        '<div class="note warn"><b>Não foi possível carregar este capítulo.</b> ' +
-        'Verifique se a pasta <code>content/ch/</code> acompanha o ficheiro ' +
-        '<code>index.html</code>.</div>', toc: [], stats: {} });
+      A.reg(id, { id: id, title: T('chapter.unavailable.title'), part: '', html:
+        '<div class="note warn">' + T('chapter.unavailable.body') + '</div>', toc: [], stats: {} });
     };
     document.head.appendChild(s);
   }
@@ -216,7 +215,7 @@
         if (f.hasAttribute('data-zoom')) return;
         f.setAttribute('data-zoom', '1');
         var b = el('button', { className: 'zoom-btn', type: 'button',
-                               title: 'Ampliar figura', 'aria-label': 'Ampliar figura' },
+                               title: T('fig.zoom'), 'aria-label': T('fig.zoom') },
                    '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/>' +
                    '<path d="M15.5 15.5L21 21M8 10.5h5M10.5 8v5"/></svg>');
         var wrap = el('div', { className: 'zoom-host' });
@@ -227,10 +226,10 @@
   }
 
   function openZoom(fig) {
-    var ov = el('div', { className: 'zoom-ov', role: 'dialog', 'aria-label': 'Figura ampliada' });
+    var ov = el('div', { className: 'zoom-ov', role: 'dialog', 'aria-label': T('fig.zoomed') });
     var inner = el('div', { className: 'zoom-in' });
     inner.innerHTML = fig.innerHTML || fig.outerHTML;
-    var close = el('button', { className: 'zoom-x', type: 'button', 'aria-label': 'Fechar' }, '✕');
+    var close = el('button', { className: 'zoom-x', type: 'button', 'aria-label': T('fig.close') }, '✕');
     ov.appendChild(close); ov.appendChild(inner);
     document.body.appendChild(ov);
     document.body.style.overflow = 'hidden';
@@ -253,7 +252,7 @@
         var code = $('code', b.closest('.codeblock'));
         var txt = code ? code.textContent : '';
         if (navigator.clipboard) navigator.clipboard.writeText(txt);
-        var o = b.textContent; b.textContent = 'Copiado ✓';
+        var o = b.textContent; b.textContent = T('copy.done');
         setTimeout(function () { b.textContent = o; }, 1400);
       });
     });
@@ -277,11 +276,11 @@
   function buildSidebar() {
     var nav = $('#sidebar');
     var h = '';
-    h += '<a class="side-link" href="#/" data-r="/">' + ico('home') + 'Painel</a>';
-    h += '<a class="side-link" href="#/competencias" data-r="/competencias">' + ico('map') + 'Mapa de competências</a>';
-    h += '<a class="side-link" href="#/certificacao" data-r="/certificacao">' + ico('award') + 'Banco de certificação</a>';
-    h += '<a class="side-link" href="#/aula/cap-000" data-r="/aula/cap-000">' + ico('book') + 'Abertura do manual</a>';
-    h += '<div class="side-h">Percursos</div>';
+    h += '<a class="side-link" href="#/" data-r="/">' + ico('home') + T('nav.home') + '</a>';
+    h += '<a class="side-link" href="#/competencias" data-r="/competencias">' + ico('map') + T('nav.competencies') + '</a>';
+    h += '<a class="side-link" href="#/certificacao" data-r="/certificacao">' + ico('award') + T('nav.certification') + '</a>';
+    h += '<a class="side-link" href="#/aula/cap-000" data-r="/aula/cap-000">' + ico('book') + T('nav.opening') + '</a>';
+    h += '<div class="side-h">' + T('nav.tracks') + '</div>';
 
     MAN.tracks.forEach(function (t) {
       h += '<details class="trk" data-track="' + t.id + '">';
@@ -294,8 +293,8 @@
       });
       h += '</div></details>';
     });
-    h += '<div class="side-h">Dados</div>';
-    h += '<a class="side-link" href="#/progresso" data-r="/progresso">' + ico('gear') + 'Progresso e backup</a>';
+    h += '<div class="side-h">' + T('nav.data') + '</div>';
+    h += '<a class="side-link" href="#/progresso" data-r="/progresso">' + ico('gear') + T('nav.progress') + '</a>';
     nav.innerHTML = h;
     syncSidebar();
   }
@@ -355,17 +354,17 @@
 
     var h = '<div class="page">';
     h += '<div class="hero">';
-    h += '<h1>' + (started ? 'Continue o seu percurso' : 'Formação em Engenharia da Qualidade, Lean Six Sigma e Quality Analytics') + '</h1>';
-    h += '<p>' + g.done + ' de ' + g.total + ' aulas concluídas, em ' + MAN.tracks.length + ' percursos.' +
-         (started ? '' : ' Escolha um percurso abaixo para começar.') + '</p>';
+    h += '<h1>' + (started ? T('home.title.continue') : T('home.title.start')) + '</h1>';
+    h += '<p>' + T('home.subtitle', { done: g.done, total: g.total, n: MAN.tracks.length }) +
+         (started ? '' : T('home.subtitle.cta')) + '</p>';
     h += '<div class="meter lg" style="max-width:420px;margin-bottom:18px"><i style="width:' + g.pct + '%"></i></div>';
     h += '<div class="hero-cta">';
-    if (next) h += '<a class="btn ghost" href="#/aula/' + next.ch.id + '">' + (started ? 'Continuar' : 'Começar') + ': ' +
+    if (next) h += '<a class="btn ghost" href="#/aula/' + next.ch.id + '">' + (started ? T('home.continue') : T('home.start')) + ': ' +
                    esc(next.ch.title.length > 42 ? next.ch.title.slice(0, 42) + '…' : next.ch.title) + ' →</a>';
-    h += '<a class="btn ghost" href="#/competencias">Mapa de competências</a>';
+    h += '<a class="btn ghost" href="#/competencias">' + T('nav.competencies') + '</a>';
     h += '</div></div>';
 
-    h += '<h2 style="font-size:20px;margin:6px 0 14px">Meus percursos</h2>';
+    h += '<h2 style="font-size:20px;margin:6px 0 14px">' + T('home.mytracks') + '</h2>';
     h += '<div class="trk-cards">';
     MAN.tracks.forEach(function (t) {
       var p = trackProgress(t), c = trackColor(t);
@@ -374,8 +373,8 @@
       h += '<summary>';
       h += '<i class="trk-dot" style="background:' + c + '"></i>';
       h += '<span class="trk-info"><h3>' + esc(t.title) +
-           (t.library ? ' <span class="badge">biblioteca</span>' : '') + '</h3>' +
-           '<span class="trk-sub">' + esc(t.subtitle) + ' · ' + t.modules.length + ' módulos</span></span>';
+           (t.library ? ' <span class="badge">' + T('home.library') + '</span>' : '') + '</h3>' +
+           '<span class="trk-sub">' + esc(t.subtitle) + ' · ' + t.modules.length + ' ' + T('home.modules') + '</span></span>';
       h += '<span class="trk-meter-wrap">' + meter(p.pct, c) + '</span>';
       h += '<span class="trk-pct">' + p.pct + '%</span>';
       h += ico('chev', 'chev');
@@ -386,17 +385,16 @@
         h += '<a class="mod-row' + (mp.pct === 100 ? ' done' : '') + '" href="#/modulo/' + m.id + '" style="--c:' + c + '">' +
              '<span class="mod-n">' + (mp.pct === 100 ? '✓' : String(i + 1).padStart(2, '0')) + '</span>' +
              '<span><span class="mod-t">' + esc(m.title) +
-             (m.chapters.some(function (x) { return x.new; }) ? ' <span class="badge new">novo</span>' : '') +
-             '</span><span class="mod-s">' + m.chapters.length + ' aulas</span></span>' +
+             (m.chapters.some(function (x) { return x.new; }) ? ' <span class="badge new">' + T('home.new') + '</span>' : '') +
+             '</span><span class="mod-s">' + m.chapters.length + ' ' + T('home.lessons') + '</span></span>' +
              '<span class="mod-right">' + mp.done + '/' + mp.total + '</span></a>';
       });
       h += '</div></details>';
     });
     h += '</div>';
 
-    h += '<div class="note info" style="margin-top:26px"><b>Fonte.</b> Todo o conteúdo vem do ' +
-         esc(MAN.source) + (Store.persistent ? '' :
-         ' <br><b>Atenção:</b> este navegador não está a guardar o progresso (modo privado ou restrição de armazenamento). Use a exportação em JSON na página <a href="#/progresso">Progresso e backup</a>.') +
+    h += '<div class="note info" style="margin-top:26px">' + T('home.source', { src: esc(MAN.source) }) +
+         (Store.persistent ? '' : T('home.storage.warn', { link: '<a href="#/progresso">' + T('nav.progress') + '</a>' })) +
          '</div>';
     h += '</div>';
     show(h);
@@ -413,11 +411,11 @@
     if (!t) return viewHome();
     var c = trackColor(t), p = trackProgress(t);
     var h = '<div class="page"><div class="page-head">';
-    h += '<div class="eyebrow" style="--c:' + c + '"><i class="dot"></i>Percurso ' + esc(t.code) + '</div>';
+    h += '<div class="eyebrow" style="--c:' + c + '"><i class="dot"></i>' + T('track.eyebrow', { code: esc(t.code) }) + '</div>';
     h += '<h1>' + esc(t.title) + '</h1><p class="lede">' + esc(t.subtitle) + '</p>';
     h += '<div style="max-width:420px;margin-top:16px">' + meter(p.pct, c) +
-         '<div style="font-size:13px;color:var(--ink-3)">' + p.done + ' de ' + p.total +
-         ' aulas concluídas · ' + p.pct + '%</div></div>';
+         '<div style="font-size:13px;color:var(--ink-3)">' +
+         T('track.progress', { done: p.done, total: p.total, pct: p.pct }) + '</div></div>';
     h += '</div><div class="mod-list">';
     t.modules.forEach(function (m, i) {
       var mp = modProgress(m);
@@ -425,11 +423,11 @@
            '" style="--c:' + c + '">' +
            '<span class="mod-n">' + (mp.pct === 100 ? '✓' : String(i + 1).padStart(2, '0')) + '</span>' +
            '<span><span class="mod-t">' + esc(m.title) +
-           (m.chapters.some(function (x) { return x.new; }) ? ' <span class="badge new">novo</span>' : '') +
-           '</span><span class="mod-s">' + m.chapters.length + ' aulas · ' +
+           (m.chapters.some(function (x) { return x.new; }) ? ' <span class="badge new">' + T('home.new') + '</span>' : '') +
+           '</span><span class="mod-s">' + m.chapters.length + ' ' + T('home.lessons') + ' · ' +
            esc(m.competencies.slice(0, 3).join(' · ')) + '</span></span>' +
            '<span class="mod-right">' + mp.done + '/' + mp.total + '<br><span class="badge lvl' + m.level +
-           '">nível ' + m.level + '</span></span></a>';
+           '">' + T('module.level', { n: m.level }) + '</span></span></a>';
     });
     h += '</div></div>';
     show(h);
@@ -443,9 +441,9 @@
     var qz = P.quiz[m.id];
 
     var h = '<div class="page"><div class="page-head">';
-    h += '<div class="crumb"><a href="#/">Painel</a> › <a href="#/trilha/' + t.id + '">' +
+    h += '<div class="crumb"><a href="#/">' + T('nav.home') + '</a> › <a href="#/trilha/' + t.id + '">' +
          esc(t.title) + '</a></div>';
-    h += '<div class="eyebrow" style="--c:' + c + '"><i class="dot"></i>Módulo · nível ' + m.level + '</div>';
+    h += '<div class="eyebrow" style="--c:' + c + '"><i class="dot"></i>' + T('module.eyebrow', { level: m.level }) + '</div>';
     h += '<h1>' + esc(m.title) + '</h1>';
     h += '<div class="chips">' + m.competencies.map(function (x) {
       return '<span class="chip' + (p.pct === 100 ? ' on' : '') + '">' + esc(x) + '</span>';
@@ -454,28 +452,27 @@
          '<div style="font-size:13px;color:var(--ink-3)">' + p.done + ' de ' + p.total + ' aulas</div></div>';
     h += '</div>';
 
-    h += '<h2 style="font-size:19px;margin:22px 0 12px">Aulas</h2><div class="mod-list">';
+    h += '<h2 style="font-size:19px;margin:22px 0 12px">' + T('module.lessons.h2') + '</h2><div class="mod-list">';
     m.chapters.forEach(function (ch, i) {
       var done = isRead(ch.id);
       h += '<a class="mod-row' + (done ? ' done' : '') + '" href="#/aula/' + ch.id +
            '" style="--c:' + c + '"><span class="mod-n">' + (done ? '✓' : (i + 1)) + '</span>' +
            '<span><span class="mod-t">' + esc(ch.title) +
-           (ch.new ? ' <span class="badge new">novo</span>' : '') + '</span>' +
-           '<span class="mod-s">Capítulo ' + capLabel(ch.num) + ' do manual</span></span>' +
-           '<span class="mod-right">' + (done ? 'concluída' : 'por ler') + '</span></a>';
+           (ch.new ? ' <span class="badge new">' + T('home.new') + '</span>' : '') + '</span>' +
+           '<span class="mod-s">' + T('module.chapterof', { n: capLabel(ch.num) }) + '</span></span>' +
+           '<span class="mod-right">' + (done ? T('module.completed') : T('module.unread')) + '</span></a>';
     });
     h += '</div>';
 
     // avaliacao do modulo a partir do banco
     var qs = quizForModule(m);
     if (qs.length) {
-      h += '<h2 style="font-size:19px;margin:30px 0 12px">Avaliação do módulo</h2>';
-      h += '<div class="note">' + qs.length + ' questões relacionadas com as competências deste módulo. ' +
-           (qz ? '<b>Última tentativa: ' + qz.score + '%</b> em ' +
-                 new Date(qz.at).toLocaleDateString('pt-PT') + '.' : 'Ainda não avaliado.') +
-           ' Aproveitamento mínimo recomendado: <b>70%</b>.</div>';
+      h += '<h2 style="font-size:19px;margin:30px 0 12px">' + T('module.assessment.h2') + '</h2>';
+      var attempt = qz ? T('module.assessment.last', { score: qz.score, date: new Date(qz.at).toLocaleDateString('pt-PT') })
+                       : T('module.assessment.none');
+      h += '<div class="note">' + T('module.assessment.note', { n: qs.length, attempt: attempt }) + '</div>';
       h += '<a class="btn" style="background:' + c + '" href="#/quiz/' + m.id + '">' +
-           (qz ? 'Refazer avaliação' : 'Iniciar avaliação') + ' →</a>';
+           (qz ? T('module.assessment.retry') : T('module.assessment.start')) + ' →</a>';
     }
     h += '</div>';
     show(h);
@@ -487,7 +484,7 @@
     var t = info ? info.track : null;
     var c = t ? trackColor(t) : 'var(--accent)';
 
-    show('<div class="empty"><div class="spinner"></div>A carregar o capítulo…</div>');
+    show('<div class="empty"><div class="spinner"></div>' + T('lesson.loading') + '</div>');
 
     loadChapter(id, function (d) {
       var i = info ? info.i : -1;
@@ -502,31 +499,31 @@
       else h += esc(d.part || '');
       h += '</div>';
       h += '<div class="eyebrow" style="--c:' + c + '"><i class="dot"></i>' +
-           (d.num ? 'Capítulo ' + capLabel(d.num) : 'Abertura') +
-           (d.new ? ' · escrito para a edição web' : '') + '</div>';
+           (d.num ? T('lesson.chapter', { label: capLabel(d.num) }) : T('lesson.opening')) +
+           (d.new ? T('lesson.newedition') : '') + '</div>';
       h += '<h1>' + esc(d.title) + '</h1>';
 
       h += '<div class="lesson-bar">';
       h += '<button class="btn ' + (done ? 'sec' : '') + '" id="markBtn" style="' +
-           (done ? '' : 'background:' + c) + '">' + (done ? '✓ Concluída' : 'Marcar como concluída') + '</button>';
+           (done ? '' : 'background:' + c) + '">' + (done ? T('lesson.done') : T('lesson.markdone')) + '</button>';
       if (d.stats) h += '<span class="spacer"></span><span class="badge">' +
-        (d.stats.words || 0).toLocaleString('pt-PT') + ' palavras</span>' +
-        (d.stats.code ? '<span class="badge">' + d.stats.code + ' blocos Python</span>' : '') +
-        (d.stats.fig ? '<span class="badge">' + d.stats.fig + ' figuras</span>' : '');
+        T('lesson.words', { n: (d.stats.words || 0).toLocaleString('pt-PT') }) + '</span>' +
+        (d.stats.code ? '<span class="badge">' + T('lesson.codeblocks', { n: d.stats.code }) + '</span>' : '') +
+        (d.stats.fig ? '<span class="badge">' + T('lesson.figures', { n: d.stats.fig }) + '</span>' : '');
       h += '</div>';
 
       h += '<article class="prose" id="prose">' + d.html + '</article>';
 
       h += '<div class="pager">';
-      if (prev) h += '<a href="#/aula/' + prev.ch.id + '"><span class="dir">← Anterior</span>' +
+      if (prev) h += '<a href="#/aula/' + prev.ch.id + '"><span class="dir">' + T('lesson.prev') + '</span>' +
                      '<span class="ttl">' + esc(prev.ch.title) + '</span></a>'; else h += '<span></span>';
-      if (next) h += '<a class="next" href="#/aula/' + next.ch.id + '"><span class="dir">Seguinte →</span>' +
+      if (next) h += '<a class="next" href="#/aula/' + next.ch.id + '"><span class="dir">' + T('lesson.next') + '</span>' +
                      '<span class="ttl">' + esc(next.ch.title) + '</span></a>';
       h += '</div>';
 
       h += '</div>'; // fim coluna
       // indice
-      h += '<aside class="toc"><h4>Nesta aula</h4>';
+      h += '<aside class="toc"><h4>' + T('lesson.toc') + '</h4>';
       (d.toc || []).forEach(function (x) {
         h += '<a class="l' + x.l + '" href="#' + location.hash.slice(1) + '" data-jump="' + x.id + '">' +
              esc(x.t) + '</a>';
@@ -598,7 +595,7 @@
     var t = TRACKS[m.track], c = trackColor(t);
     var qs = quizForModule(m);
     renderQuiz({
-      title: 'Avaliação · ' + m.title,
+      title: T('quiz.title', { title: m.title }),
       crumb: '<a href="#/trilha/' + t.id + '">' + esc(t.title) + '</a> › <a href="#/modulo/' +
              m.id + '">' + esc(m.title) + '</a>',
       color: c, questions: qs,
@@ -616,32 +613,27 @@
       var counts = { CQE: 0, CSSBB: 0 };
       BANK.forEach(function (q) { counts[q.bank] = (counts[q.bank] || 0) + 1; });
       var h = '<div class="page"><div class="page-head">' +
-        '<div class="eyebrow"><i class="dot"></i>Preparação para certificação</div>' +
-        '<h1>Banco de questões</h1>' +
-        '<p class="lede">Questões autorais escritas para esta edição, com justificação da resposta ' +
-        'correta e análise dos distratores. Não reproduzem itens publicados pela ASQ.</p></div>';
-      h += '<div class="note warn"><b>Como estudar com este banco.</b> Responda sem consultar e, ' +
-           'antes de conferir, justifique por que cada uma das outras três alternativas está errada. ' +
-           'Se não conseguir, o conceito ainda não está consolidado.</div>';
+        '<div class="eyebrow"><i class="dot"></i>' + T('bank.eyebrow') + '</div>' +
+        '<h1>' + T('bank.title') + '</h1>' +
+        '<p class="lede">' + T('bank.lede') + '</p></div>';
+      h += '<div class="note warn">' + T('bank.howto') + '</div>';
       h += '<div class="cards">';
       h += '<a class="card" href="#/certificacao?cqe" style="--c:var(--series-1)"><h3>ASQ CQE</h3>' +
-           '<p>Certified Quality Engineer — distribuição proporcional ao peso do Body of Knowledge.</p>' +
-           '<div class="card-meta"><span>' + counts.CQE + ' questões</span>' +
-           '<span class="badge">iniciar</span></div></a>';
+           '<p>' + T('bank.cqe.desc') + '</p>' +
+           '<div class="card-meta"><span>' + T('bank.questions', { n: counts.CQE }) + '</span>' +
+           '<span class="badge">' + T('bank.startbtn') + '</span></div></a>';
       h += '<a class="card" href="#/certificacao?cssbb" style="--c:var(--series-2)"><h3>ASQ CSSBB</h3>' +
-           '<p>Certified Six Sigma Black Belt — DMAIC, estatística, DOE e liderança de projeto.</p>' +
-           '<div class="card-meta"><span>' + counts.CSSBB + ' questões</span>' +
-           '<span class="badge">iniciar</span></div></a>';
+           '<p>' + T('bank.cssbb.desc') + '</p>' +
+           '<div class="card-meta"><span>' + T('bank.questions', { n: counts.CSSBB }) + '</span>' +
+           '<span class="badge">' + T('bank.startbtn') + '</span></div></a>';
       h += '</div>';
-      h += '<div class="note info" style="margin-top:24px"><b>Nota.</b> Esta plataforma é <b>preparatória</b>. ' +
-           'Não emite certificação ASQ nem Lean Six Sigma reconhecida — os certificados oficiais são ' +
-           'emitidos exclusivamente pelos organismos certificadores.</div>';
+      h += '<div class="note info" style="margin-top:24px">' + T('bank.note') + '</div>';
       h += '</div>';
       return show(h);
     }
     var qs = BANK.filter(function (q) { return q.bank === bank; });
     renderQuiz({
-      title: 'Banco ' + bank, crumb: '<a href="#/certificacao">Banco de certificação</a>',
+      title: T('quiz.bank.title', { bank: bank }), crumb: '<a href="#/certificacao">' + T('nav.certification') + '</a>',
       color: bank === 'CQE' ? 'var(--series-1)' : 'var(--series-2)',
       questions: qs, showDomain: true,
       onDone: function (score) { P.quiz['bank-' + bank] = { score: score, at: Date.now(), n: qs.length }; save(); }
@@ -651,18 +643,16 @@
   function renderQuiz(cfg) {
     var qs = cfg.questions;
     if (!qs.length) {
-      return show('<div class="page"><div class="empty">Sem questões associadas a este módulo.<br>' +
-                  '<a class="btn sec" style="margin-top:16px" href="#/certificacao">Ir para o banco completo</a></div></div>');
+      return show('<div class="page"><div class="empty">' + T('quiz.empty') + '<br>' +
+                  '<a class="btn sec" style="margin-top:16px" href="#/certificacao">' + T('quiz.gotobank') + '</a></div></div>');
     }
     var answered = 0, correct = 0;
     var h = '<div class="page"><div class="page-head">';
     h += '<div class="crumb">' + cfg.crumb + '</div>';
     h += '<h1>' + esc(cfg.title) + '</h1>';
-    h += '<p class="lede">' + qs.length + ' questões. A resposta e a análise dos distratores aparecem ' +
-         'imediatamente após cada escolha.</p></div>';
-    h += '<div class="score" id="score"><span class="big" id="scoreV">—</span>' +
-         '<span style="color:var(--ink-3);font-size:13.5px">Responda para ver o aproveitamento.<br>' +
-         'Mínimo recomendado: 70%.</span></div>';
+    h += '<p class="lede">' + T('quiz.lede', { n: qs.length }) + '</p></div>';
+    h += '<div class="score" id="score"><span class="big" id="scoreV">' + T('quiz.scoredefault') + '</span>' +
+         '<span style="color:var(--ink-3);font-size:13.5px">' + T('quiz.scorehint') + '</span></div>';
     h += '<div class="quiz">';
     qs.forEach(function (q, i) {
       h += '<div class="qcard" data-q="' + i + '">';
@@ -697,9 +687,10 @@
           var s = Math.round(correct / answered * 100);
           $('#scoreV').textContent = s + '%';
           $('#scoreV').style.color = s >= 70 ? 'var(--good)' : 'var(--bad)';
-          $('#score').lastElementChild.innerHTML =
-            correct + ' certas em ' + answered + ' respondidas (de ' + qs.length + ').<br>' +
-            (s >= 70 ? 'Acima do mínimo recomendado.' : 'Abaixo dos 70% recomendados.');
+          $('#score').lastElementChild.innerHTML = T('quiz.scoreline', {
+            correct: correct, answered: answered, total: qs.length,
+            verdict: s >= 70 ? T('quiz.above') : T('quiz.below')
+          });
           if (answered === qs.length && cfg.onDone) cfg.onDone(s);
           enhance(card);
         });
@@ -712,14 +703,12 @@
      ======================================================================= */
   function viewComp() {
     var h = '<div class="page"><div class="page-head">' +
-      '<div class="eyebrow"><i class="dot"></i>Progresso</div><h1>Mapa de competências</h1>' +
-      '<p class="lede">Cada competência fica marcada quando todas as aulas do módulo que a ' +
-      'desenvolve estão concluídas. É o inverso de um certificado de presença: mostra o que ' +
-      'ainda falta.</p></div>';
+      '<div class="eyebrow"><i class="dot"></i>' + T('comp.eyebrow') + '</div><h1>' + T('comp.title') + '</h1>' +
+      '<p class="lede">' + T('comp.lede') + '</p></div>';
 
     h += '<div class="legend">' +
-      '<span><i style="--c:var(--good)"></i>Competência adquirida</span>' +
-      '<span><i style="--c:var(--surface-3)"></i>Em desenvolvimento</span></div>';
+      '<span><i style="--c:var(--good)"></i>' + T('comp.legend.done') + '</span>' +
+      '<span><i style="--c:var(--surface-3)"></i>' + T('comp.legend.pending') + '</span></div>';
 
     h += '<div class="hbars" style="margin-bottom:34px">';
     MAN.tracks.forEach(function (t) {
@@ -756,9 +745,9 @@
      ======================================================================= */
   function viewSearch(q) {
     q = (q || '').trim();
-    var h = '<div class="page"><div class="page-head"><div class="eyebrow"><i class="dot"></i>Busca</div>' +
-            '<h1>' + (q ? 'Resultados para “' + esc(q) + '”' : 'Buscar no manual') + '</h1></div>';
-    if (!q) { h += '<div class="empty">Escreva um termo na caixa de busca.</div></div>'; return show(h); }
+    var h = '<div class="page"><div class="page-head"><div class="eyebrow"><i class="dot"></i>' + T('search.eyebrow') + '</div>' +
+            '<h1>' + (q ? T('search.title.results', { q: esc(q) }) : T('search.title.empty')) + '</h1></div>';
+    if (!q) { h += '<div class="empty">' + T('search.hint') + '</div></div>'; return show(h); }
 
     var words = norm(q).split(/\s+/).filter(function (w) { return w.length > 1; });
     var hits = MAN.search.map(function (c) {
@@ -772,17 +761,16 @@
     }).filter(function (x) { return x.s > 0; }).sort(function (a, b) { return b.s - a.s; });
 
     if (!hits.length) {
-      h += '<div class="empty">Nada encontrado. Tente um termo mais curto ' +
-           '(por exemplo <code>cpk</code>, <code>kanban</code>, <code>anova</code>).</div>';
+      h += '<div class="empty">' + T('search.nohits') + '</div>';
     } else {
-      h += '<p class="lede" style="margin-bottom:16px">' + hits.length + ' capítulos.</p>';
+      h += '<p class="lede" style="margin-bottom:16px">' + T('search.count', { n: hits.length }) + '</p>';
       hits.slice(0, 60).forEach(function (x) {
         var m = MODS[x.c.m], t = TRACKS[x.c.tr];
         h += '<a class="hit" href="#/aula/' + x.c.id + '"><div class="h-t">' +
              hl(x.c.t, words) + '</div><div class="h-m">' +
              esc(t ? t.title : '') + ' › ' + esc(m ? m.title : '') +
-             ' · Capítulo ' + capLabel(x.c.n) +
-             (isRead(x.c.id) ? ' · <span style="color:var(--good)">concluída</span>' : '') +
+             ' · ' + T('lesson.chapter', { label: capLabel(x.c.n) }) +
+             (isRead(x.c.id) ? ' · <span style="color:var(--good)">' + T('module.completed') + '</span>' : '') +
              '</div></a>';
       });
     }
@@ -814,30 +802,28 @@
      ======================================================================= */
   function viewProgress() {
     var g = globalProgress();
-    var h = '<div class="page"><div class="page-head"><div class="eyebrow"><i class="dot"></i>Dados</div>' +
-      '<h1>Progresso e backup</h1><p class="lede">O progresso fica guardado apenas neste navegador. ' +
-      'Exporte um ficheiro JSON para o transportar para outro computador ou para não o perder ao ' +
-      'limpar os dados do navegador.</p></div>';
+    var h = '<div class="page"><div class="page-head"><div class="eyebrow"><i class="dot"></i>' + T('nav.data') + '</div>' +
+      '<h1>' + T('progress.title') + '</h1><p class="lede">' + T('progress.lede') + '</p></div>';
 
     h += '<div class="tiles">' +
-      tile('Aulas concluídas', g.done + ' / ' + g.total, g.pct + '% do total') +
-      tile('Avaliações feitas', String(Object.keys(P.quiz).length), 'módulos e bancos') +
-      tile('Armazenamento', Store.persistent ? 'Ativo' : 'Indisponível',
-           Store.persistent ? 'localStorage do navegador' : 'só em memória — exporte!') +
+      tile(T('progress.done.k'), g.done + ' / ' + g.total, T('progress.done.s', { pct: g.pct })) +
+      tile(T('progress.quiz.k'), String(Object.keys(P.quiz).length), T('progress.quiz.s')) +
+      tile(T('progress.storage.k'), Store.persistent ? T('progress.storage.active') : T('progress.storage.unavailable'),
+           Store.persistent ? T('progress.storage.active.s') : T('progress.storage.unavailable.s')) +
       '</div>';
 
     h += '<div style="display:flex;flex-wrap:wrap;gap:10px;margin:20px 0">' +
-      '<button class="btn" id="expBtn">Exportar progresso (JSON)</button>' +
-      '<button class="btn sec" id="impBtn">Importar ficheiro</button>' +
-      '<button class="btn sec" id="clrBtn">Apagar todo o progresso</button>' +
+      '<button class="btn" id="expBtn">' + T('progress.export') + '</button>' +
+      '<button class="btn sec" id="impBtn">' + T('progress.import') + '</button>' +
+      '<button class="btn sec" id="clrBtn">' + T('progress.clear') + '</button>' +
       '<input type="file" id="impFile" accept="application/json" hidden></div>';
 
     var qk = Object.keys(P.quiz);
     if (qk.length) {
-      h += '<h2 style="font-size:19px;margin:26px 0 12px">Avaliações</h2><div class="hbars">';
+      h += '<h2 style="font-size:19px;margin:26px 0 12px">' + T('progress.assessments.h2') + '</h2><div class="hbars">';
       qk.forEach(function (k) {
         var r = P.quiz[k];
-        var name = MODS[k] ? MODS[k].title : k.replace('bank-', 'Banco ');
+        var name = MODS[k] ? MODS[k].title : T('progress.bankname', { bank: k.replace('bank-', '') });
         var col = r.score >= 70 ? 'var(--good)' : 'var(--bad)';
         h += '<div class="hbar" style="--c:' + col + '"><span class="lab">' + esc(name) +
              '</span><span class="track"><i style="width:' + r.score + '%"></i></span>' +
@@ -861,12 +847,12 @@
         try {
           var d = JSON.parse(r.result);
           if (d && d.read) { P = d; save(); viewProgress(); }
-        } catch (err) { alert('Ficheiro inválido.'); }
+        } catch (err) { alert(T('progress.invalidfile')); }
       };
       r.readAsText(f);
     });
     $('#clrBtn').addEventListener('click', function () {
-      if (confirm('Apagar todo o progresso guardado neste navegador?')) {
+      if (confirm(T('progress.confirmclear'))) {
         P = { read: {}, quiz: {}, notes: {}, started: Date.now() };
         save(); viewProgress();
       }
@@ -897,8 +883,27 @@
   /* =======================================================================
      ARRANQUE
      ======================================================================= */
+  function applyStaticStrings() {
+    $('#skipLink').textContent = T('skip');
+    $('#navToggle').setAttribute('aria-label', T('nav.open'));
+    $('#searchInput').setAttribute('placeholder', T('search.placeholder'));
+    $('#searchInput').setAttribute('aria-label', T('search.aria'));
+    $('#themeBtn').setAttribute('aria-label', T('theme.toggle'));
+    $('#sidebar').setAttribute('aria-label', T('nav.tracks'));
+    $('#langBtn').textContent = window.ACADEMY_I18N.lang() === 'pt' ? 'EN' : 'PT';
+  }
+  applyStaticStrings();
+
   buildSidebar();
   window.addEventListener('hashchange', route);
+
+  $('#langBtn').addEventListener('click', function () {
+    var next = window.ACADEMY_I18N.lang() === 'pt' ? 'en' : 'pt';
+    window.ACADEMY_I18N.setLang(next);
+    applyStaticStrings();
+    buildSidebar();
+    route();
+  });
 
   $('#themeBtn').addEventListener('click', function () {
     var d = document.documentElement.getAttribute('data-theme') === 'dark';
