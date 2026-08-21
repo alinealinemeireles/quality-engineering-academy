@@ -805,6 +805,81 @@ def fig_capa_recorrencia():
     reg('capa-recorrencia', data, layout)
 
 
+def fig_cluster_kmeans_scatter():
+    """Dispersao PPM x Cpk de 40 fornecedores, coloridos pelo cluster k-means (k=3), com centroides."""
+    rng = np.random.default_rng(56)
+    n = 40
+    grupo = rng.choice(['A', 'B', 'C'], n, p=[0.35, 0.40, 0.25])
+    ppm = np.where(grupo == 'A', rng.normal(800, 250, n),
+          np.where(grupo == 'B', rng.normal(4500, 900, n), rng.normal(12000, 2200, n)))
+    cpk = np.where(grupo == 'A', rng.normal(1.55, 0.18, n),
+          np.where(grupo == 'B', rng.normal(1.15, 0.15, n), rng.normal(0.75, 0.14, n)))
+    ppm = np.clip(ppm, 50, None).round(0)
+    cpk = cpk.round(2)
+
+    nomes = {'A': 'Cluster 1 — PPM baixo, Cpk alto', 'B': 'Cluster 2 — intermédio',
+             'C': 'Cluster 3 — PPM alto, Cpk baixo'}
+    rotulo_curto = {'A': 'Cluster 1', 'B': 'Cluster 2', 'C': 'Cluster 3'}
+    cores = {'A': '@good', 'B': '@warn', 'C': '@bad'}
+    data = []
+    for g in ['A', 'B', 'C']:
+        m = grupo == g
+        data.append({
+            'type': 'scatter', 'mode': 'markers', 'name': nomes[g],
+            'x': ppm[m].tolist(), 'y': cpk[m].tolist(),
+            'marker': {'size': 9, 'color': cores[g], 'opacity': 0.85,
+                       'line': {'color': '@surface-1', 'width': 1}},
+            'hovertemplate': '<b>%{text}</b><br>PPM=%{x}<br>Cpk=%{y:.2f}<extra></extra>',
+            'text': [rotulo_curto[g]] * int(m.sum()),
+        })
+        data.append({
+            'type': 'scatter', 'mode': 'markers', 'name': f'Centróide {g}', 'showlegend': False,
+            'x': [float(ppm[m].mean())], 'y': [float(cpk[m].mean())],
+            'marker': {'size': 16, 'symbol': 'x', 'color': cores[g],
+                       'line': {'color': '@ink-1', 'width': 2}},
+            'hovertemplate': '<b>Centróide</b><br>PPM=%{x:.0f}<br>Cpk=%{y:.2f}<extra></extra>',
+        })
+    layout = {
+        'title': {'text': '40 fornecedores segmentados por k-means (k=3) — PPM vs Cpk'},
+        'xaxis': ax('PPM de defeitos'),
+        'yaxis': ax('Cpk médio'),
+        'legend': {'orientation': 'h', 'y': -0.2, 'x': 0},
+        'margin': {'l': 54, 'r': 24, 't': 52, 'b': 80},
+    }
+    reg('cluster-kmeans-scatter', data, layout)
+
+
+def fig_cluster_elbow():
+    """Metodo do cotovelo (WCSS) e silhueta media, k=2..7, com o k escolhido assinalado."""
+    ks = list(range(2, 8))
+    wcss = [58.4, 31.2, 14.8, 12.1, 10.3, 9.0]
+    sil = [0.41, 0.58, 0.47, 0.39, 0.33, 0.29]
+    data = [
+        {'type': 'scatter', 'mode': 'lines+markers', 'name': 'WCSS (inércia)',
+         'x': ks, 'y': wcss, 'yaxis': 'y',
+         'line': {'color': '@series-1', 'width': 2.4}, 'marker': {'size': 8, 'color': '@series-1'},
+         'hovertemplate': 'k=%{x}<br>WCSS=%{y:.1f}<extra></extra>'},
+        {'type': 'scatter', 'mode': 'lines+markers', 'name': 'Silhueta média',
+         'x': ks, 'y': sil, 'yaxis': 'y2',
+         'line': {'color': '@series-3', 'width': 2.4}, 'marker': {'size': 8, 'color': '@series-3'},
+         'hovertemplate': 'k=%{x}<br>silhueta=%{y:.2f}<extra></extra>'},
+    ]
+    layout = {
+        'title': {'text': 'Escolher k: cotovelo do WCSS x silhueta média (k=3 é o melhor compromisso)'},
+        'xaxis': ax('k (número de clusters)', tickmode='linear', dtick=1),
+        'yaxis': ax('WCSS', range=[0, 65]),
+        'yaxis2': ax('Silhueta média', overlaying='y', side='right', range=[0, 0.7], showgrid=False),
+        'legend': {'orientation': 'h', 'y': -0.18, 'x': 0},
+        'margin': {'l': 54, 'r': 54, 't': 52, 'b': 60},
+        'shapes': [{'type': 'line', 'x0': 3, 'x1': 3, 'xref': 'x', 'y0': 0, 'y1': 1, 'yref': 'paper',
+                    'line': {'color': '@ink-3', 'width': 1.2, 'dash': 'dot'}}],
+        'annotations': [{'x': 3, 'y': 1.04, 'xref': 'x', 'yref': 'paper',
+                         'text': 'k escolhido = 3', 'showarrow': False,
+                         'font': {'size': 10.5, 'color': '@ink-3'}}],
+    }
+    reg('cluster-elbow', data, layout)
+
+
 def build():
     fig_voc_pareto()
     fig_voc_dimensoes()
@@ -825,6 +900,8 @@ def build():
     fig_5s_pareto()
     fig_capa_pareto()
     fig_capa_recorrencia()
+    fig_cluster_kmeans_scatter()
+    fig_cluster_elbow()
     return FIGS
 
 

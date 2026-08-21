@@ -117,7 +117,9 @@ TRACKS = [
             {"id": "est-06", "title": "Modelação avançada", "chapters": [51, 52, 53, 54],
              "competencies": ["Regressão múltipla", "Logística", "Poisson/GLM", "Modelos mistos"], "level": 3},
             {"id": "est-07", "title": "Séries temporais e análise multivariada", "chapters": [55, 56],
-             "competencies": ["Autocorrelação", "Previsão", "PCA", "T² de Hotelling"], "level": 3},
+             "extra": ["cluster_analysis"], "featured": True,
+             "competencies": ["Autocorrelação", "Previsão", "PCA", "T² de Hotelling",
+                              "Clustering hierárquico", "K-means", "Silhueta"], "level": 3},
             {"id": "est-08", "title": "Delineamento de experimentos", "chapters": [73, 74],
              "competencies": ["Fatorial completo", "Interações", "Efeitos principais"], "level": 2},
             {"id": "est-09", "title": "Fatoriais fracionados e blocagem", "chapters": [75, 76],
@@ -245,6 +247,12 @@ EXTRA_CHAPTERS = {
         "num": 906,
         "title": "Resolução Estruturada de Problemas — 5 Porquês, 8D e CAPA",
         "source": "extra/rca_capa.md",
+        "new": True,
+    },
+    "cluster_analysis": {
+        "num": 907,
+        "title": "Análise de Clusters — Hierárquica e K-Means na Qualidade",
+        "source": "extra/cluster_analysis.md",
         "new": True,
     },
 }
