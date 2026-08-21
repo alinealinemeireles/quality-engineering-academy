@@ -416,6 +416,56 @@ def main():
                                       'part': 'Abertura', 'html': fbody, 'toc': ftoc,
                                       'stats': {'code': 0, 'fig': 0, 'words': len(TAG_RE.sub(' ', fbody).split())}}))
 
+    # traducoes EN (Parte 2 Fase 2 -- piloto): ficheiros markdown autonomos em
+    # i18n/en/, um por capitulo traduzido. Registados sob "cap-NNN.en" -- o
+    # app.js tenta essa chave quando o idioma e ingles e cai para o PT
+    # (cap-NNN) quando a traducao ainda nao existe para aquele capitulo.
+    EN_DIR = os.path.join(ROOT, 'i18n', 'en')
+    EN_TITLE_RE = re.compile(r'^##\s*Chapter\s+\d+:\s*(.+?)\s*$', re.M)
+    if os.path.isdir(EN_DIR):
+        n_en = 0
+        for fn in sorted(os.listdir(EN_DIR)):
+            m = re.match(r'^cap-(\d+)\.md$', fn)
+            if not m:
+                continue
+            num = int(m.group(1))
+            with open(os.path.join(EN_DIR, fn), encoding='utf-8') as f:
+                raw = f.read()
+            tm = EN_TITLE_RE.search(raw)
+            title = tm.group(1) if tm else f'Chapter {num}'
+            body = md2html(raw)
+            body = strip_title(body, title)
+            body, toc = add_anchors(body)
+            ncode = len(re.findall(r'class="codeblock"', body))
+            nfig = len(re.findall(r'<img |<svg ', body))
+            plain = TAG_RE.sub(' ', body)
+            src_ch = chapters.get(num, {})
+            cid = f'cap-{num:03d}'
+            payload = {
+                'id': cid, 'num': num, 'title': title,
+                'part': src_ch.get('part', ''), 'html': body, 'toc': toc,
+                'stats': {'code': ncode, 'fig': nfig, 'words': len(plain.split())},
+                'new': src_ch.get('new', False),
+            }
+            with open(os.path.join(CHDIR, cid + '.en.js'), 'w', encoding='utf-8') as f:
+                f.write(js_module(cid + '.en', payload))
+            n_en += 1
+        # abertura em ingles (capitulo 0), com o mesmo indice navegavel do PT
+        en_abertura = os.path.join(EN_DIR, 'abertura.md')
+        if os.path.exists(en_abertura):
+            with open(en_abertura, encoding='utf-8') as f:
+                fbody_en = md2html(f.read())
+            fbody_en += build_toc_html(parts)
+            fbody_en, ftoc_en = add_anchors(fbody_en)
+            with open(os.path.join(CHDIR, 'cap-000.en.js'), 'w', encoding='utf-8') as f:
+                f.write(js_module('cap-000.en', {
+                    'id': 'cap-000', 'num': 0, 'title': 'Opening',
+                    'part': 'Opening', 'html': fbody_en, 'toc': ftoc_en,
+                    'stats': {'code': 0, 'fig': 0, 'words': len(TAG_RE.sub(' ', fbody_en).split())}}))
+            n_en += 1
+        if n_en:
+            print(f'traducoes EN      : {n_en}')
+
     # graficos interativos
     figs = figures.build()
     with open(os.path.join(SITE, 'content', 'figs.js'), 'w', encoding='utf-8') as f:

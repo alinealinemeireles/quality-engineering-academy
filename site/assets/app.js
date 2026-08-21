@@ -112,7 +112,7 @@
 
   /* ---------- carregamento de capitulos sob procura ---------- */
   var loading = {};
-  function loadChapter(id, cb) {
+  function loadChapterRaw(id, cb) {
     if (A.data[id]) return cb(A.data[id]);
     (A._waiters[id] = A._waiters[id] || []).push(cb);
     if (loading[id]) return;
@@ -122,6 +122,23 @@
     s.onerror = function () {
       A.reg(id, { id: id, title: T('chapter.unavailable.title'), part: '', html:
         '<div class="note warn">' + T('chapter.unavailable.body') + '</div>', toc: [], stats: {} });
+    };
+    document.head.appendChild(s);
+  }
+  function loadChapter(id, cb) {
+    var lang = (window.ACADEMY_I18N && window.ACADEMY_I18N.lang()) || 'pt';
+    if (lang !== 'en') return loadChapterRaw(id, cb);
+    var key = id + '.en';
+    if (A.data[key]) return cb(A.data[key]);
+    (A._waiters[key] = A._waiters[key] || []).push(cb);
+    if (loading[key]) return;
+    loading[key] = true;
+    var s = document.createElement('script');
+    s.src = 'content/ch/' + key + '.js';
+    s.onerror = function () {
+      loading[key] = false;
+      // sem traducao EN para este capitulo -- usa o PT como equivalente
+      loadChapterRaw(id, function (ptData) { A.reg(key, ptData); });
     };
     document.head.appendChild(s);
   }
