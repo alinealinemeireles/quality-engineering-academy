@@ -2,9 +2,10 @@
 ## Capítulo 25-A: OEE Avançado — Decomposição de Perdas, Maturidade Digital e Dados em Tempo Real
 
 > **Nota editorial.** Capítulo interativo escrito de raiz para a edição web, como laboratório
-> avançado do Capítulo 25. Onde o capítulo original explica a fórmula, este mostra para onde os
-> minutos desaparecem, por que a média semanal mente, e o que separa uma fábrica que só reporta
-> OEE de uma que age sobre ele.
+> avançado do Capítulo 25. Recapitula a definição e as três fórmulas clássicas de OEE (seção 1),
+> para valer sozinho como referência, e depois vai além delas: mostra para onde os minutos
+> desaparecem, por que a média semanal mente, e o que separa uma fábrica que só reporta OEE de
+> uma que age sobre ele.
 
 ### A pergunta de engenharia
 
@@ -19,7 +20,59 @@ perdido" — que é a pergunta que paga a conta.
 
 ---
 
-## 1 · A cascata: para onde foram os 120 minutos?
+## 1 · Fundamentos: o que é OEE, e como se calcula cada componente
+
+**OEE (Overall Equipment Effectiveness / Eficácia Geral do Equipamento)** foi formalizado por
+Seiichi Nakajima nos anos 1960, como parte da manutenção produtiva total (TPM), na Toyota. É um
+único número que responde a uma pergunta simples e difícil: *de todo o tempo que a máquina poderia
+ter produzido peça boa à velocidade de projeto, quanto ela de facto produziu?*
+
+$$OEE = Disponibilidade \times Performance \times Qualidade$$
+
+Cada fator isola um tipo diferente de perda — e por isso os três precisam de ser medidos e
+reportados separadamente, nunca só o produto final:
+
+| Componente | Fórmula | O que mede | Perdas que captura |
+|---|---|---|---|
+| **Disponibilidade** | $\dfrac{\text{Tempo de operação}}{\text{Tempo planejado}}$ | A máquina esteve a rodar quando devia? | Avarias, trocas de produto (setup), ajustes |
+| **Performance** | $\dfrac{\text{Ciclo ideal} \times \text{Peças produzidas}}{\text{Tempo de operação}}$ | Rodou à velocidade de projeto? | Microparadas, redução de velocidade |
+| **Qualidade** | $\dfrac{\text{Peças boas}}{\text{Peças produzidas}}$ | O que produziu prestava? | Refugo, retrabalho, perdas de arranque |
+
+Esta é a base teórica clássica do TPM: as **seis grandes perdas**, duas por componente — é
+exatamente a tabela que o Capítulo 25 introduz, e que este capítulo assume como ponto de partida
+antes de ir mais fundo.
+
+**Um exemplo completo, passo a passo.** Turno de 8 horas (480 min) numa linha de embalagem:
+
+1. **Tempo planejado** = 480 min (já descontadas paradas planejadas como refeição).
+2. **Tempo de operação** = 480 − 60 min de avaria não planejada = 420 min →
+   **Disponibilidade = 420 / 480 = 87,5%**.
+3. Ciclo ideal = 1 min/peça. Em 420 min de operação, a linha produziu 400 peças (devia ter
+   produzido 420 ao ciclo ideal) →
+   **Performance = (1 × 400) / 420 = 95,2%**.
+4. Das 400 peças, 360 passaram na inspeção →
+   **Qualidade = 360 / 400 = 90,0%**.
+5. **OEE = 0,875 × 0,952 × 0,900 = 74,9% ≈ 75%.**
+
+| Faixa de OEE | Leitura |
+|---|---|
+| **< 40%** | Precisa de melhoria urgente — geralmente sinal de problema estrutural, não só de execução |
+| **40–60%** | Típico de linhas sem gestão ativa de perdas |
+| **60–85%** | Faixa comum da indústria, com espaço real de ganho |
+| **≥ 85%** | Referência de "classe mundial" para a maioria dos processos discretos |
+
+> **Por que isto importa para capability (Capítulo 71).** Um processo que para, acelera e desacelera
+> de forma imprevisível não é um processo estatisticamente estável — e capability só faz sentido
+> depois de estabilidade. Disponibilidade e Performance baixas normalmente aparecem, mais tarde,
+> como Cpk baixo: a variação que o OEE já tinha sinalizado no chão de fábrica.
+
+O restante deste capítulo assume estas três fórmulas como conhecidas e vai direto ao que o
+Capítulo 25 não tem espaço para aprofundar: **para onde exatamente os minutos e as peças se
+perdem**, e como ler esse detalhe sem ser enganado pela média.
+
+---
+
+## 2 · A cascata: para onde foram os 120 minutos?
 
 Um turno de 480 minutos. No fim, só 360 minutos produziram peça boa. Passe o rato em cada barra:
 
@@ -45,7 +98,7 @@ perdido já consumiu material, energia e tempo de máquina antes de ser descarta
 
 ---
 
-## 2 · As seis etapas de maturidade do OEE
+## 3 · As seis etapas de maturidade do OEE
 
 A mesma fórmula, em organizações muito diferentes. Passe o rato em cada degrau:
 
@@ -120,7 +173,7 @@ usa para decidir nada no mesmo turno. O salto que mais compensa é do 3 para o 4
 
 ---
 
-## 3 · Por que a média semanal mente
+## 4 · Por que a média semanal mente
 
 Cento e vinte OEE% escondidos atrás de um único número. Quatro SKUs, mesma semana, mesma linha.
 Passe o rato em cada barra:
@@ -141,7 +194,7 @@ de perda que relatório nenhum agregado captura, porque cada uma sozinha "não �
 
 ---
 
-## 4 · A árvore de causas de downtime
+## 5 · A árvore de causas de downtime
 
 Antes de decompor performance e qualidade, separe bem o que é parada **planejada** do que é
 **não planejada** — são orçamentos e responsáveis diferentes.
@@ -163,7 +216,7 @@ relatório mostra "quebra" outra vez, como se fosse um evento novo.
 
 ---
 
-## 5 · O cálculo completo, em Python, R, Excel e Power BI
+## 6 · O cálculo completo, em Python, R, Excel e Power BI
 
 ```py-r
 --- python
@@ -284,7 +337,7 @@ SWITCH (
 
 ---
 
-## 6 · Maturidade digital não é o mesmo que maturidade operacional
+## 7 · Maturidade digital não é o mesmo que maturidade operacional
 
 Uma fábrica pode ter dashboards em tempo real e ainda assim reagir mal — porque o problema nunca
 foi a falta de dados.
@@ -302,7 +355,7 @@ desempenho — mesmo com menos telas.
 
 ### Erros comuns
 
-1. **Reportar só o OEE agregado.** Esconde exatamente o que precisa de ação (seção 3).
+1. **Reportar só o OEE agregado.** Esconde exatamente o que precisa de ação (seção 4).
 2. **Confundir "quebra" com causa raiz.** "Máquina quebrou" não é uma causa — é o sintoma que ainda
    precisa do 5 Porquês (ver capítulo extra de Resolução de Problemas).
 3. **Medir performance sem ciclo ideal correto.** Se o ciclo ideal está errado, toda a cascata está

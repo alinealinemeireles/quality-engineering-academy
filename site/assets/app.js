@@ -90,7 +90,8 @@
     // a cor vem do CSS (var --trk-N), para que o tema e a opcao de paleta mandem
     return 'var(--trk-' + (TRK_IDX[t.id] || 1) + ')';
   }
-  var CAP_ALIAS = { 900: '40-A', 901: '40-B', 902: '71-A', 903: '14-A' };
+  var CAP_ALIAS = { 900: '40-A', 901: '40-B', 902: '71-A', 903: '14-A',
+                    904: '25-A', 905: '18-A', 906: '9-A' };
   function capLabel(n) { return CAP_ALIAS[n] || n; }
 
   function modProgress(m) {
