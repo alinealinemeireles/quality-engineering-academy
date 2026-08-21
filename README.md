@@ -15,12 +15,12 @@ instalação, funciona offline.
 
 | | |
 |---|---|
-| Capítulos | 154 (151 do manual + 3 escritos de raiz) |
+| Capítulos | 155 (151 do manual + 4 escritos de raiz) |
 | Percursos (trilhas) | 6 |
 | Módulos | 62 |
 | Blocos Python executáveis | 140 |
 | Figuras e diagramas | 192 |
-| Gráficos interativos (Plotly) | 9, com hover e deslizadores |
+| Gráficos interativos (Plotly) | 12, com hover e deslizadores |
 | Questões de certificação | 112 (CQE + CSSBB, autorais) |
 
 ### Percursos
@@ -55,6 +55,7 @@ instalação, funciona offline.
 | **40-A** | BPMN 2.0 e Bizagi Modeler na prática | `lss-05` | O manual só tinha BPMN em imagens, sem texto |
 | **40-B** | Esparguete, Makigami e Tartaruga | `lss-05` | Três ferramentas de mapeamento ausentes |
 | **71-A** | Estúdio de Capabilidade | `eq-10` | Laboratório interativo de Cp/Cpk/Pp/Ppk |
+| **14-A** | Voz do Cliente, Satisfação e o Elo com Lean Six Sigma | `eq-05` | Liga VoC → ISO 9001 → Lean → Six Sigma → DMAIC/PDCA num ciclo fechado |
 
 ---
 
@@ -78,7 +79,8 @@ instalação, funciona offline.
 ├── extra/                    ← capítulos escritos de raiz
 │   ├── bpmn.md               ← 40-A
 │   ├── mapeamento_extra.md   ← 40-B
-│   └── capability_estudio.md ← 71-A
+│   ├── capability_estudio.md ← 71-A
+│   └── voz_cliente.md        ← 14-A
 ├── tools/
 │   ├── parse.py              ← lê o notebook e deteta partes/capítulos
 │   ├── curriculum.py         ← matriz trilha → módulo → capítulo → competência

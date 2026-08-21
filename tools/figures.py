@@ -451,7 +451,114 @@ def fig_ferramenta_matriz():
     reg('map-matriz', data, layout)
 
 
+# =============================================================================
+# VOZ DO CLIENTE
+# =============================================================================
+def fig_voc_pareto():
+    """Pareto de reclamacoes: 100 reclamacoes de uma fabrica de embalagens."""
+    causas = ['Embalagem\ndanificada', 'Atraso', 'Quantidade\nincorreta',
+              'Documentação', 'Outros']
+    n = [42, 27, 15, 9, 7]
+    total = sum(n)
+    cum = np.cumsum(n) / total * 100
+    cores = ['@bad', '@warn', '@series-4', '@series-3', '@ink-3']
+    data = [
+        {'type': 'bar', 'name': 'Reclamações', 'x': causas, 'y': n,
+         'marker': {'color': cores}, 'yaxis': 'y',
+         'text': [str(v) for v in n], 'textposition': 'outside',
+         'hovertemplate': '<b>%{x}</b><br>%{y} reclamações<extra></extra>'},
+        {'type': 'scatter', 'mode': 'lines+markers', 'name': '% acumulado',
+         'x': causas, 'y': np.round(cum, 1).tolist(), 'yaxis': 'y2',
+         'line': {'color': '@series-1', 'width': 2.4},
+         'marker': {'size': 7, 'color': '@series-1'},
+         'hovertemplate': '<b>%{x}</b><br>%{y:.0f}% acumulado<extra></extra>'},
+    ]
+    layout = {
+        'title': {'text': 'Pareto de 100 reclamações — 69% vêm de duas causas'},
+        'xaxis': ax(''),
+        'yaxis': ax('Nº de reclamações', range=[0, 46]),
+        'yaxis2': ax('% acumulado', overlaying='y', side='right',
+                     range=[0, 105], showgrid=False, ticksuffix='%'),
+        'showlegend': False,
+        'margin': {'l': 54, 'r': 54, 't': 52, 'b': 54},
+        'shapes': [{'type': 'line', 'x0': 0, 'x1': 1, 'xref': 'paper',
+                    'y0': 80, 'y1': 80, 'yref': 'y2',
+                    'line': {'color': '@ink-3', 'width': 1.2, 'dash': 'dot'}}],
+        'annotations': [{'x': 0.01, 'y': 83.5, 'xref': 'paper', 'yref': 'y2',
+                         'text': 'linha dos 80%', 'showarrow': False, 'xanchor': 'left',
+                         'font': {'size': 10, 'color': '@ink-3'}}],
+    }
+    reg('voc-pareto', data, layout)
+
+
+def fig_voc_dimensoes():
+    """Satisfacao decomposta por dimensao da experiencia."""
+    dims = ['Documentação', 'Prazo', 'Pós-venda', 'Flexibilidade',
+            'Atendimento', 'Qualidade']
+    notas = [6.9, 7.1, 7.4, 8.1, 8.8, 9.2]
+
+    def cor(v):
+        return '@bad' if v < 7.5 else ('@warn' if v < 8.5 else '@good')
+    cores = [cor(v) for v in notas]
+    data = [{
+        'type': 'bar', 'orientation': 'h', 'x': notas, 'y': dims,
+        'marker': {'color': cores},
+        'text': [f'{v:.1f}' for v in notas], 'textposition': 'outside',
+        'hovertemplate': '<b>%{y}</b><br>nota %{x:.1f} / 10<extra></extra>',
+    }]
+    layout = {
+        'title': {'text': 'Satisfação geral 7,9 — mas decomposta conta outra história'},
+        'xaxis': ax('Nota média (0–10)', range=[0, 10.6]),
+        'yaxis': ax(''),
+        'showlegend': False,
+        'margin': {'l': 118, 'r': 34, 't': 52, 'b': 46},
+        'shapes': [{'type': 'line', 'x0': 7.9, 'x1': 7.9, 'y0': 0, 'y1': 1,
+                    'yref': 'paper', 'line': {'color': '@ink-3', 'width': 1.4,
+                                              'dash': 'dash'}}],
+        'annotations': [{'x': 7.9, 'y': 1.05, 'yref': 'paper', 'showarrow': False,
+                         'text': 'média geral 7,9', 'font': {'size': 10.5, 'color': '@ink-3'}}],
+    }
+    reg('voc-dimensoes', data, layout)
+
+
+def fig_voc_antes_depois():
+    """PPM, OTIF e satisfacao antes/depois do projeto DMAIC + Lean."""
+    metricas = ['PPM<br>(menor é melhor)', 'OTIF %', 'Satisfação /10']
+    antes = [850, 91, 7.3]
+    depois = [180, 98.7, 9.0]
+    # normalizado para 0-100 para caber no mesmo eixo, com texto real no hover
+    antes_n = [100, 91, 73]
+    depois_n = [180/850*100, 98.7, 90]
+    antes_txt = ['850 ppm', '91,0%', '7,3']
+    depois_txt = ['180 ppm', '98,7%', '9,0']
+    data = [
+        {'type': 'bar', 'name': 'Antes', 'x': metricas, 'y': antes_n,
+         'marker': {'color': '@ink-3'}, 'customdata': antes,
+         'text': antes_txt, 'textposition': 'outside',
+         'textfont': {'size': 12, 'color': '@ink-2'},
+         'hovertemplate': '<b>%{x}</b><br>Antes: %{customdata}<extra></extra>'},
+        {'type': 'bar', 'name': 'Depois', 'x': metricas, 'y': depois_n,
+         'marker': {'color': '@good'}, 'customdata': depois,
+         'text': depois_txt, 'textposition': 'outside',
+         'textfont': {'size': 12, 'color': '@good'},
+         'hovertemplate': '<b>%{x}</b><br>Depois: %{customdata}<extra></extra>'},
+    ]
+    layout = {
+        'title': {'text': 'Antes / depois do ciclo VoC → DMAIC → Lean → nova VoC'},
+        'barmode': 'group', 'bargap': 0.35, 'bargroupgap': 0.12,
+        'xaxis': ax(''),
+        'yaxis': ax('', showticklabels=False, range=[0, 205]),
+        'legend': {'orientation': 'h', 'y': -0.16, 'x': 0},
+        'margin': {'l': 30, 'r': 20, 't': 52, 'b': 74},
+    }
+    reg('voc-antes-depois', data, layout)
+
+
+
 def build():
+    fig_voc_pareto()
+    fig_voc_dimensoes()
+    fig_voc_antes_depois()
     fig_capability_studio()
     fig_cp_vs_cpk()
     fig_cpk_ppm()

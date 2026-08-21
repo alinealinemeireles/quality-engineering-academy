@@ -24,7 +24,9 @@ TRACKS = [
             {"id": "eq-04", "title": "Liderança, facilitação e comunicação", "chapters": [10, 11, 12, 13],
              "competencies": ["Liderança da qualidade", "Facilitação", "Ética ASQ"], "level": 1},
             {"id": "eq-05", "title": "Cliente, treinamento e equipes", "chapters": [14, 15, 16],
-             "competencies": ["QFD", "ADDIE", "Gestão de equipes Six Sigma"], "level": 2},
+             "extra": ["voz_cliente"], "featured": True,
+             "competencies": ["QFD", "ADDIE", "Gestão de equipes Six Sigma", "VoC vs. satisfação",
+                              "VOC → CTQ", "Matriz de ligação", "Pareto de reclamações"], "level": 2},
             {"id": "eq-06", "title": "Metrologia e sistemas de medição", "chapters": [57, 58, 59, 60, 61],
              "competencies": ["Metrologia", "Bias e linearidade", "Gage R&R"], "level": 2},
             {"id": "eq-07", "title": "Amostragem de aceitação", "chapters": [62, 63, 64],
@@ -213,6 +215,12 @@ EXTRA_CHAPTERS = {
         "num": 902,
         "title": "Estúdio de Capabilidade — Cp, Cpk, Pp, Ppk na prática",
         "source": "extra/capability_estudio.md",
+        "new": True,
+    },
+    "voz_cliente": {
+        "num": 903,
+        "title": "Voz do Cliente, Satisfação e o Elo com Lean Six Sigma",
+        "source": "extra/voz_cliente.md",
         "new": True,
     },
 }
