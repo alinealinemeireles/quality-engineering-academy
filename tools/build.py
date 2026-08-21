@@ -238,6 +238,33 @@ def add_anchors(html):
     return HEAD_RE.sub(rep, html), toc
 
 
+def build_toc_html(parts):
+    """Indice navegavel: gerado a partir da estrutura real (parts), nunca desatualiza.
+
+    Alguns numeros de capitulo aparecem mais que uma vez dentro da mesma parte (ex.:
+    134 "Raciocínio..." seguido de 134 "Exemplo resolvido") -- filtrar e marcar
+    como visto tem de acontecer no mesmo passo, senao as duas ocorrencias escapam ao
+    filtro por nenhuma delas estar em seen_num ainda quando a outra e avaliada.
+    """
+    out = ['<p>Clique em qualquer capítulo para abrir a aula.</p>']
+    seen_num = set()
+    for p in parts:
+        items = []
+        for ch in p['chapters']:
+            if ch['num'] in seen_num:
+                continue
+            seen_num.add(ch['num'])
+            items.append(ch)
+        if not items:
+            continue
+        out.append(f'<h3>{esc(p["title"])}</h3><ul>')
+        for ch in items:
+            out.append(f'<li><a href="#/aula/cap-{ch["num"]:03d}">{ch["num"]}. '
+                       f'{esc(ch["title"])}</a></li>')
+        out.append('</ul>')
+    return '\n'.join(out)
+
+
 STOP = set('de da do das dos e o a os as em um uma para por com que se na no nas nos ao aos '
            'à às como mais ou não sua seu suas seus este esta isso pode ser são foi entre '
            'the of and to in is a for that it this'.split())
@@ -367,8 +394,11 @@ def main():
         t['modules'] = mods
         manifest_tracks.append(t)
 
-    # front matter como capitulo 0
-    fbody = '\n'.join(x for x in (cell_html(cells[k]) for k in front['cells']) if x)
+    # front matter como capitulo 0 -- texto de abertura escrito a mao (extra/abertura.md)
+    # seguido do indice navegavel, gerado a partir da estrutura real dos capitulos
+    with open(os.path.join(ROOT, 'extra', 'abertura.md'), encoding='utf-8') as f:
+        fbody = md2html(f.read())
+    fbody += build_toc_html(parts)
     fbody, ftoc = add_anchors(fbody)
     with open(os.path.join(CHDIR, 'cap-000.js'), 'w', encoding='utf-8') as f:
         f.write(js_module('cap-000', {'id': 'cap-000', 'num': 0, 'title': 'Abertura do manual',
