@@ -554,6 +554,43 @@ def fig_voc_antes_depois():
     reg('voc-antes-depois', data, layout)
 
 
+def fig_voc_nps_csat_ces():
+    """NPS, CSAT e CES ao longo de um ciclo de melhoria (Define...Control)."""
+    meses = ['M1<br>Define', 'M2', 'M3<br>Analyze', 'M4', 'M5<br>Improve',
+             'M6', 'M7<br>Control']
+    nps = [12, 15, 14, 13, 14, 22, 34]                        # -100 a 100 -- reage por ultimo
+    csat = [74, 75, 73, 74, 78, 85, 89]                       # % satisfeitos -- reage no meio
+    ces = [4.2, 4.3, 4.1, 4.2, 5.3, 5.9, 6.2]                 # 1-7, maior = mais facil -- reage primeiro
+    ces_idx = [round((v - 1) / 6 * 100, 1) for v in ces]      # reescalado para 0-100
+
+    data = [
+        {'type': 'scatter', 'mode': 'lines+markers', 'name': 'NPS', 'x': meses, 'y': nps,
+         'yaxis': 'y', 'line': {'color': '@series-1', 'width': 2.4}, 'marker': {'size': 7},
+         'hovertemplate': '<b>%{x}</b><br>NPS %{y}<extra></extra>'},
+        {'type': 'scatter', 'mode': 'lines+markers', 'name': 'CSAT (%)', 'x': meses, 'y': csat,
+         'yaxis': 'y2', 'line': {'color': '@series-4', 'width': 2.4}, 'marker': {'size': 7},
+         'hovertemplate': '<b>%{x}</b><br>CSAT %{y}%<extra></extra>'},
+        {'type': 'scatter', 'mode': 'lines+markers', 'name': 'CES (índice 0-100)', 'x': meses,
+         'y': ces_idx, 'yaxis': 'y2', 'line': {'color': '@series-3', 'width': 2.4, 'dash': 'dot'},
+         'marker': {'size': 7}, 'customdata': ces,
+         'hovertemplate': '<b>%{x}</b><br>CES %{customdata:.1f} / 7 (índice %{y:.0f})<extra></extra>'},
+    ]
+    layout = {
+        'title': {'text': 'NPS, CSAT e CES no mesmo ciclo DMAIC — os três sobem juntos, com atraso'},
+        'xaxis': ax(''),
+        'yaxis': ax('NPS (-100 a 100)', range=[-10, 50]),
+        'yaxis2': ax('CSAT % · CES (índice 0-100)', overlaying='y', side='right',
+                     range=[45, 95], showgrid=False),
+        'legend': {'orientation': 'h', 'y': -0.18, 'x': 0},
+        'margin': {'l': 56, 'r': 60, 't': 52, 'b': 70},
+        'shapes': [{'type': 'line', 'x0': 3.5, 'x1': 3.5, 'y0': 0, 'y1': 1, 'yref': 'paper',
+                    'line': {'color': '@ink-3', 'width': 1.2, 'dash': 'dot'}}],
+        'annotations': [{'x': 3.5, 'y': 1.05, 'yref': 'paper', 'showarrow': False,
+                         'text': 'melhoria implementada', 'font': {'size': 10.5, 'color': '@ink-3'}}],
+    }
+    reg('voc-nps-csat-ces', data, layout)
+
+
 # =============================================================================
 # OEE AVANCADO
 # =============================================================================
@@ -772,6 +809,7 @@ def build():
     fig_voc_pareto()
     fig_voc_dimensoes()
     fig_voc_antes_depois()
+    fig_voc_nps_csat_ces()
     fig_capability_studio()
     fig_cp_vs_cpk()
     fig_cpk_ppm()

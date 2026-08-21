@@ -289,7 +289,133 @@ convergem, a prioridade fica óbvia.
 
 ---
 
-## 10 · Onde entra o DMAIC
+## 10 · NPS, CSAT e CES: as três métricas que faltavam
+
+As seções 6 e 9 mostraram *que* a satisfação precisa de ser decomposta e *que* as reclamações
+precisam de ser agregadas. Faltam os três instrumentos que a indústria de facto usa para
+transformar "perceção do cliente" num número que se acompanha mês a mês: **NPS**, **CSAT** e
+**CES**. São complementares, não concorrentes — cada um responde a uma pergunta diferente.
+
+### As três, lado a lado
+
+| | **NPS** | **CSAT** | **CES** |
+|---|---|---|---|
+| **Nome completo** | Net Promoter Score | Customer Satisfaction Score | Customer Effort Score |
+| **Criado por** | Fred Reichheld (Bain & Company), com Satmetrix | Sem autor único — deriva da pesquisa de marketing dos anos 1970-80; formalizado no índice ACSI (Claes Fornell, Universidade de Michigan) | Matthew Dixon, Karen Freeman e Nicholas Toman (CEB, hoje Gartner) |
+| **Quando** | 2003, artigo *"The One Number You Need to Grow"*, *Harvard Business Review* | ACSI lançado em 1994; a pergunta de CSAT já era comum antes disso | 2010, artigo *"Stop Trying to Delight Your Customers"*, *Harvard Business Review* |
+| **Pergunta típica** | "De 0 a 10, qual a probabilidade de recomendar [empresa/produto] a um colega?" | "Qual o seu nível de satisfação com [produto/atendimento/pedido]?" | "A empresa facilitou a resolução do meu problema?" (CES 2.0, escala de concordância) |
+| **O que mede** | Lealdade e propensão a recomendar — uma leitura de **relação**, não de um episódio isolado | Satisfação com uma **experiência ou episódio específico** (uma compra, um atendimento, uma entrega) | O **esforço** que o cliente teve de fazer para resolver algo — não se ficou feliz, se foi fácil |
+
+A diferença que mais gera confusão: CSAT pergunta "você gostou?"; CES pergunta "foi fácil?"; NPS
+pergunta "você nos recomendaria?". Um cliente pode responder sim às três, ou sim a uma e não às
+outras — e é exatamente essa divergência que carrega a informação útil.
+
+### Como se calcula cada uma
+
+**NPS.** Os respondentes (escala 0-10) dividem-se em três grupos:
+
+| Grupo | Nota | Interpretação |
+|---|---|---|
+| **Detratores** | 0-6 | Insatisfeitos; podem prejudicar a marca por indicação negativa |
+| **Neutros** | 7-8 | Satisfeitos mas indiferentes; vulneráveis à concorrência |
+| **Promotores** | 9-10 | Leais e entusiastas; promovem a marca ativamente |
+
+$$NPS = \%\text{Promotores} - \%\text{Detratores}$$
+
+O resultado varia entre **−100** e **+100** e **não é uma percentagem**, apesar de ser calculado a
+partir de percentagens — é a diferença entre duas. Exemplo: 200 respostas, 110 promotores (55%),
+60 neutros (30%), 30 detratores (15%). $NPS = 55 - 15 = 40$.
+
+**CSAT.** Escala mais comum é 1-5 (ou 1-10); "satisfeito" costuma ser definido como as duas notas
+mais altas da escala:
+
+$$CSAT = \frac{\text{nº de respostas satisfeitas}}{\text{nº total de respostas}} \times 100\%$$
+
+Exemplo: 200 respostas numa escala de 1-5, das quais 150 marcaram 4 ou 5. $CSAT =
+150/200 \times 100\% = 75\%$.
+
+**CES.** A versão CES 2.0 (2013, a mais usada hoje) pede concordância com *"A empresa facilitou a
+resolução do meu problema"*, numa escala de 1 (discordo totalmente) a 7 (concordo totalmente) —
+nesta versão, **maior é melhor** (mais fácil). A métrica é a média simples das respostas:
+
+$$CES = \frac{\sum \text{notas de esforço}}{\text{nº de respondentes}}$$
+
+Exemplo: 50 respostas somando 285 pontos. $CES = 285/50 = 5{,}7$ — perto do teto da escala,
+indicando processo de baixo esforço.
+
+> **Cuidado com a versão original de CES.** O artigo de 2010 usava escala 1-5 onde 1 = "muito
+> esforço" e 5 = "pouco esforço" (ou o inverso, dependendo da adaptação) — **confirme sempre a
+> direção da escala** antes de comparar CES entre pesquisas ou fornecedores diferentes. É o erro
+> de interpretação mais comum com esta métrica.
+
+### Quando usar cada uma
+
+| Situação | Métrica recomendada | Porquê |
+|---|---|---|
+| Medir saúde da relação de longo prazo com a marca | **NPS** | Captura lealdade, não só o último episódio |
+| Avaliar uma entrega, atendimento ou transação específica | **CSAT** | Pergunta direta sobre aquele episódio |
+| Avaliar um processo de suporte, troca ou resolução de problema | **CES** | O que prediz retenção em pós-venda é o esforço, não o encantamento |
+| Priorizar entre três, com recurso limitado | **CES primeiro** | Estudos do CEB/Gartner mostram que reduzir esforço tem mais impacto na retenção do que tentar "encantar" o cliente |
+
+### Onde encaixam no que este capítulo já cobriu
+
+NPS, CSAT e CES **não substituem** a arquitetura VoC → CTQ → processo já construída nas seções
+1-9 — são **instrumentos de medição da perceção**, o mesmo papel que a "Perceção / Satisfação" já
+ocupa no ciclo fechado da seção 7:
+
+- **CTQ ↔ CES.** Um CTQ mal definido ("resposta rápida") costuma aparecer primeiro como CES baixo
+  — o cliente sente o atrito antes de a empresa medir o tempo de resposta.
+- **Dimensões de satisfação (seção 6) ↔ CSAT por dimensão.** A tabela de satisfação decomposta é,
+  na prática, um CSAT aplicado a cada dimensão separadamente em vez de uma pergunta única.
+- **Pareto de reclamações (seção 9) ↔ Detratores do NPS.** Peça sempre o motivo da nota a quem
+  responde 0-6 — transforma-se automaticamente em dados de entrada para o mesmo Pareto.
+- **Matriz de ligação (seção 14) ↔ coluna "Satisfação".** É exatamente onde um valor de CSAT ou
+  CES por linha se encaixa.
+
+### Evolução ao longo de um ciclo de melhoria
+
+```plotly
+voc-nps-csat-ces
+```
+
+Repare no atraso: a melhoria (implementada entre M4 e M5) aparece **primeiro** no CES — o cliente
+sente o processo mais fácil quase de imediato — **depois** no CSAT, e só **depois** no NPS, que é a
+métrica mais lenta a reagir porque mede uma relação construída ao longo de várias interações, não
+um episódio isolado. Julgar um projeto de melhoria pelo NPS no mês seguinte é o erro mais comum
+nesta área: o NPS é o último a subir, não o primeiro.
+
+### Interpretando como KPI
+
+<div class="kpi-row">
+<div class="kpi bad"><div class="kpi-k">NPS &lt; 0</div><div class="kpi-v">Crítico</div><div class="kpi-s">mais detratores que promotores</div></div>
+<div class="kpi warn"><div class="kpi-k">NPS 0-30</div><div class="kpi-v">Aceitável</div><div class="kpi-s">típico da maioria das indústrias B2B</div></div>
+<div class="kpi ok"><div class="kpi-k">NPS 30-70</div><div class="kpi-v">Bom a excelente</div><div class="kpi-s">acima disso é incomum em qualquer setor</div></div>
+<div class="kpi ok"><div class="kpi-k">CSAT ≥ 80%</div><div class="kpi-v">Boa referência</div><div class="kpi-s">varia por setor — sempre comparar com a própria série histórica</div></div>
+</div>
+
+> **Faixas de referência são pontos de partida, não metas universais.** O número absoluto de NPS
+> varia enormemente por país, setor e forma de perguntar. O que importa mais do que o valor
+> isolado é a **tendência da própria série ao longo do tempo** — por isso as três métricas devem
+> ser acompanhadas em carta de tendência (como o gráfico acima), com a mesma disciplina de
+> subgrupo racional e periodicidade fixa usada em qualquer indicador de processo (Capítulo 66).
+
+**Cuidados de interpretação — os três erros mais caros:**
+
+1. **Viés de quem responde.** Pesquisas de satisfação sofrem de *non-response bias*: clientes
+   muito insatisfeitos ou muito satisfeitos respondem mais; o cliente "neutro e ocupado" fica de
+   fora. Uma taxa de resposta baixa (< 10-15%) exige cautela redobrada antes de tratar o número
+   como representativo.
+2. **Tamanho de amostra pequeno por período.** NPS com 15 respostas num mês oscila muito só por
+   ruído amostral — antes de reagir a uma queda, verifique se a diferença é maior do que a
+   variação natural esperada para aquele *n* (a mesma lógica de limites de controlo do Capítulo 67
+   aplica-se aqui, ainda que informalmente).
+3. **Comparar números de pesquisas com metodologias diferentes.** Mudar a escala, a pergunta, o
+   canal (e-mail vs. SMS vs. presencial) ou o momento da pesquisa (logo após a compra vs. 30 dias
+   depois) já muda o número, independentemente de qualquer melhoria real no processo.
+
+---
+
+## 11 · Onde entra o DMAIC
 
 O cliente reclama: *"O produto chega atrasado."* Eis o mesmo problema, agora conduzido pelo DMAIC
 (Capítulos 34 a 38):
@@ -307,7 +433,7 @@ partes, isolada, produziria.
 
 ---
 
-## 11 · Onde entra o PDCA
+## 12 · Onde entra o PDCA
 
 O PDCA fecha o sistema num nível acima do DMAIC — é o ciclo de gestão, não o ciclo de projeto:
 
@@ -320,7 +446,7 @@ mantém o sistema inteiro a girar entre projetos.
 
 ---
 
-## 12 · Exemplo completo: fábrica de embalagens
+## 13 · Exemplo completo: fábrica de embalagens
 
 O cliente diz: *"Preciso de embalagens visualmente perfeitas e entregues no prazo."*
 
@@ -354,7 +480,7 @@ internos.
 
 ---
 
-## 13 · A matriz de ligação
+## 14 · A matriz de ligação
 
 Uma ferramenta simples e poderosa para o SGQ: ligar, numa única linha, a Voz do Cliente à ação que a
 resolve.
@@ -372,7 +498,7 @@ exatamente o que um auditor procura ao entrar pela pata "Quanto?" do diagrama de
 
 ---
 
-## 14 · Seis perguntas, seis abordagens
+## 15 · Seis perguntas, seis abordagens
 
 | Conceito | Pergunta principal |
 |---|---|
@@ -388,7 +514,7 @@ mudança real.
 
 ---
 
-## 15 · O ponto mais importante
+## 16 · O ponto mais importante
 
 Evite construir um sistema em que **Pesquisa de satisfação → relatório → arquivo**. Isso é
 burocracia. Um sistema maduro é:
