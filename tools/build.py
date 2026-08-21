@@ -123,6 +123,9 @@ def md2html(src):
                    % (m.group(1), LANG_LABEL.get(m.group(1), m.group(1).upper()),
                       m.group(1), m.group(2))),
         html, flags=re.S)
+    # links internos "#capitulo-NNN" (ancoras do documento original em pagina
+    # unica) -> rota da SPA, onde cada capitulo e uma "pagina" carregada a parte
+    html = re.sub(r'href="#capitulo-(\w+)"', r'href="#/aula/cap-\1"', html)
     return html
 
 
