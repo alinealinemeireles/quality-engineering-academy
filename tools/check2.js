@@ -36,7 +36,7 @@ const BASE = 'http://localhost:8899/';
   await p.waitForTimeout(700);
   await p.goto(BASE, { waitUntil: 'domcontentloaded' });
   await p.waitForTimeout(900);
-  const prog = await p.locator('.tile .v').first().innerText();
+  const prog = await p.locator('.hero p').first().innerText();
   console.log('progresso apos marcar 1 aula:', prog);
   await p.screenshot({ path: '/root/academy/shots/16-progresso.png' });
 

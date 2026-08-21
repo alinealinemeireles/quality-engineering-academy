@@ -18,8 +18,8 @@ const BASE = 'http://localhost:8899/';
 
   await shot('', '01-painel');
   console.log('painel  h1:', await page.locator('h1').first().innerText());
-  console.log('tiles  :', await page.locator('.tile').count());
-  console.log('cards  :', await page.locator('.card').count());
+  console.log('trk-cards:', await page.locator('.trk-card').count());
+  console.log('trk aberta:', await page.locator('.trk-card[open]').count());
 
   await shot('#/trilha/lean', '02-trilha');
   console.log('modulos:', await page.locator('.mod-row').count());

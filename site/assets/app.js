@@ -351,53 +351,50 @@
     var g = globalProgress();
     var nextId = CHLIST.find(function (id) { return !isRead(id); });
     var next = nextId ? CH[nextId] : null;
-    var figCount = 192;
-    var vizCount = MAN.figCount || 0;
+    var started = g.done > 0;
 
     var h = '<div class="page">';
     h += '<div class="hero">';
-    h += '<h1>Formação em Engenharia da Qualidade, Lean Six Sigma e Quality Analytics</h1>';
-    h += '<p>' + MAN.chapterCount + ' capítulos organizados em ' + MAN.tracks.length +
-         ' percursos, com exemplos de código em Python, R, SQL e DAX, ' + MAN.bankSize +
-         ' questões autorais de certificação e mapa de competências.</p>';
+    h += '<h1>' + (started ? 'Continue o seu percurso' : 'Formação em Engenharia da Qualidade, Lean Six Sigma e Quality Analytics') + '</h1>';
+    h += '<p>' + g.done + ' de ' + g.total + ' aulas concluídas, em ' + MAN.tracks.length + ' percursos.' +
+         (started ? '' : ' Escolha um percurso abaixo para começar.') + '</p>';
+    h += '<div class="meter lg" style="max-width:420px;margin-bottom:18px"><i style="width:' + g.pct + '%"></i></div>';
     h += '<div class="hero-cta">';
-    if (next) h += '<a class="btn ghost" href="#/aula/' + next.ch.id + '">Continuar: ' +
+    if (next) h += '<a class="btn ghost" href="#/aula/' + next.ch.id + '">' + (started ? 'Continuar' : 'Começar') + ': ' +
                    esc(next.ch.title.length > 42 ? next.ch.title.slice(0, 42) + '…' : next.ch.title) + ' →</a>';
     h += '<a class="btn ghost" href="#/competencias">Mapa de competências</a>';
     h += '</div></div>';
 
-    h += '<div class="tiles">';
-    h += tile('Progresso global', g.pct + '%', g.done + ' de ' + g.total + ' aulas');
-    h += tile('Percursos', String(MAN.tracks.length), 'trilhas de formação');
-    h += tile('Figuras e esquemas', String(figCount), 'diagramas do manual');
-    h += tile('Gráficos interativos', String(vizCount), 'com hover e deslizadores');
-    h += tile('Banco de questões', String(MAN.bankSize), 'CQE + CSSBB, autorais');
-    h += '</div>';
-
-    h += '<h2 style="font-size:20px;margin:6px 0 14px">Meu percurso</h2>';
-    h += '<div class="hbars" style="margin-bottom:30px">';
+    h += '<h2 style="font-size:20px;margin:6px 0 14px">Meus percursos</h2>';
+    h += '<div class="trk-cards">';
     MAN.tracks.forEach(function (t) {
-      var p = trackProgress(t);
-      h += '<div class="hbar" style="--c:' + trackColor(t) + '">' +
-           '<span class="lab">' + esc(t.title) + '</span>' +
-           '<span class="track"><i style="width:' + p.pct + '%"></i></span>' +
-           '<span class="val">' + p.pct + '%</span></div>';
+      var p = trackProgress(t), c = trackColor(t);
+      var hasNext = next && next.track.id === t.id;
+      h += '<details class="trk-card"' + (hasNext ? ' open' : '') + ' style="--c:' + c + '">';
+      h += '<summary>';
+      h += '<i class="trk-dot" style="background:' + c + '"></i>';
+      h += '<span class="trk-info"><h3>' + esc(t.title) +
+           (t.library ? ' <span class="badge">biblioteca</span>' : '') + '</h3>' +
+           '<span class="trk-sub">' + esc(t.subtitle) + ' · ' + t.modules.length + ' módulos</span></span>';
+      h += '<span class="trk-meter-wrap">' + meter(p.pct, c) + '</span>';
+      h += '<span class="trk-pct">' + p.pct + '%</span>';
+      h += ico('chev', 'chev');
+      h += '</summary>';
+      h += '<div class="mod-list">';
+      t.modules.forEach(function (m, i) {
+        var mp = modProgress(m);
+        h += '<a class="mod-row' + (mp.pct === 100 ? ' done' : '') + '" href="#/modulo/' + m.id + '" style="--c:' + c + '">' +
+             '<span class="mod-n">' + (mp.pct === 100 ? '✓' : String(i + 1).padStart(2, '0')) + '</span>' +
+             '<span><span class="mod-t">' + esc(m.title) +
+             (m.chapters.some(function (x) { return x.new; }) ? ' <span class="badge new">novo</span>' : '') +
+             '</span><span class="mod-s">' + m.chapters.length + ' aulas</span></span>' +
+             '<span class="mod-right">' + mp.done + '/' + mp.total + '</span></a>';
+      });
+      h += '</div></details>';
     });
     h += '</div>';
 
-    h += '<h2 style="font-size:20px;margin:6px 0 14px">Percursos</h2><div class="cards">';
-    MAN.tracks.forEach(function (t) {
-      var p = trackProgress(t);
-      h += '<a class="card" href="#/trilha/' + t.id + '" style="--c:' + trackColor(t) + '">' +
-           '<h3>' + esc(t.title) + '</h3>' +
-           '<p>' + esc(t.subtitle) + '</p>' +
-           meter(p.pct, trackColor(t)) +
-           '<div class="card-meta"><span>' + t.modules.length + ' módulos · ' + p.total + ' aulas</span>' +
-           '<span class="badge">' + p.pct + '%</span></div></a>';
-    });
-    h += '</div>';
-
-    h += '<div class="note info" style="margin-top:30px"><b>Fonte.</b> Todo o conteúdo vem do ' +
+    h += '<div class="note info" style="margin-top:26px"><b>Fonte.</b> Todo o conteúdo vem do ' +
          esc(MAN.source) + (Store.persistent ? '' :
          ' <br><b>Atenção:</b> este navegador não está a guardar o progresso (modo privado ou restrição de armazenamento). Use a exportação em JSON na página <a href="#/progresso">Progresso e backup</a>.') +
          '</div>';
