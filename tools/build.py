@@ -103,6 +103,18 @@ def md2html(src):
         lambda m: ('<figure class="viz-figure"><div class="plotly-fig" data-fig="%s">'
                    '</div></figure>' % m.group(1)),
         html, flags=re.S)
+    # blocos de codigo nao-python: barra com copiar (tem de correr ANTES do
+    # bloco py-r, para nao re-envolver os panes de linguagem r/dax/sql que o
+    # codetabs() gera dentro de si mesmo)
+    html = re.sub(
+        r'<pre><code class="language-(sql|dax|r|bash|json|xml)">(.*?)</code></pre>',
+        lambda m: ('<div class="codeblock" data-lang="%s"><div class="codebar">'
+                   '<span class="lang">%s</span>'
+                   '<button class="btn-copy" type="button">Copiar</button></div>'
+                   '<pre><code class="language-%s">%s</code></pre></div>'
+                   % (m.group(1), LANG_LABEL.get(m.group(1), m.group(1).upper()),
+                      m.group(1), m.group(2))),
+        html, flags=re.S)
     # blocos py-r -> separadores Python / R
     html = re.sub(
         r'<pre><code class="language-py-r">(.*?)</code></pre>',
@@ -112,16 +124,6 @@ def md2html(src):
         r'<pre><code class="language-mermaid">(.*?)</code></pre>',
         lambda m: '<div class="mermaid-wrap"><div class="mermaid">'
                   + unesc(m.group(1)) + '</div></div>',
-        html, flags=re.S)
-    # blocos de codigo nao-python: barra com copiar
-    html = re.sub(
-        r'<pre><code class="language-(sql|dax|r|bash|json|xml)">(.*?)</code></pre>',
-        lambda m: ('<div class="codeblock" data-lang="%s"><div class="codebar">'
-                   '<span class="lang">%s</span>'
-                   '<button class="btn-copy" type="button">Copiar</button></div>'
-                   '<pre><code class="language-%s">%s</code></pre></div>'
-                   % (m.group(1), LANG_LABEL.get(m.group(1), m.group(1).upper()),
-                      m.group(1), m.group(2))),
         html, flags=re.S)
     # links internos "#capitulo-NNN" (ancoras do documento original em pagina
     # unica) -> rota da SPA, onde cada capitulo e uma "pagina" carregada a parte
@@ -176,10 +178,10 @@ def codetabs(block):
             % (''.join(tabs), ''.join(panes)))
 
 
-CODE_TPL = ('<div class="codeblock" data-lang="python">'
-            '<div class="codebar"><span class="lang">Python</span>'
+CODE_TPL = ('<div class="codeblock" data-lang="{lang}">'
+            '<div class="codebar"><span class="lang">{label}</span>'
             '<button class="btn-copy" type="button">Copiar</button></div>'
-            '<pre><code class="language-python">{code}</code></pre></div>')
+            '<pre><code class="language-{lang}">{code}</code></pre></div>')
 
 
 def esc(s):
@@ -191,7 +193,9 @@ def cell_html(cell):
     if not src.strip():
         return ''
     if cell['cell_type'] == 'code':
-        return CODE_TPL.format(code=esc(src.rstrip()))
+        is_r = src.lstrip().startswith('%%R')
+        lang, label = ('r', 'R') if is_r else ('python', 'Python')
+        return CODE_TPL.format(lang=lang, label=label, code=esc(src.rstrip()))
     return md2html(src)
 
 
@@ -294,7 +298,14 @@ Q_RE = re.compile(
 DOM_RE = re.compile(r'^###\s+(CQE|CSSBB)\s+·\s+Dom[íi]nio\s+([IVX]+)\s+—\s+(.+?)\s*$', re.M)
 
 
-def parse_bank(cells, rng):
+def parse_bank(cells, rng=None):
+    """Extrai o banco de questoes. `rng` e opcional: se omitido, localiza
+    automaticamente as celulas com perguntas (evita indices fixos, que
+    ficam desalinhados sempre que se insere/remove uma celula no notebook)."""
+    if rng is None:
+        idxs = [i for i, c in enumerate(cells)
+                if c['cell_type'] == 'markdown' and Q_RE.search(''.join(c['source']))]
+        rng = range(min(idxs), max(idxs) + 1) if idxs else range(0)
     items = []
     for i in rng:
         src = ''.join(cells[i]['source'])
@@ -411,7 +422,7 @@ def main():
         f.write(js_module('figs', figs))
 
     # banco de questoes
-    bank = parse_bank(cells, range(1262, 1290))
+    bank = parse_bank(cells)
     with open(os.path.join(SITE, 'content', 'bank.js'), 'w', encoding='utf-8') as f:
         f.write(js_module('bank', bank))
 
