@@ -1,0 +1,55 @@
+<a id="capitulo-908"></a>
+## Capítulo 10-A: Barreiras à Melhoria da Qualidade
+
+> **Nota editorial.** Capítulo escrito de raiz para a edição web, cobrindo o tópico I.I do Body of Knowledge do ASQ CQE ("Barriers to Quality Improvement"), que não tinha um capítulo dedicado nesta edição.
+
+### A pergunta de engenharia
+
+*A equipe resolveu o problema técnico, o projeto foi encerrado com sucesso e o KPI melhorou. Três meses depois, o processo voltou discretamente ao antigo jeito de trabalhar. O que faltou?*
+
+Quase sempre, faltou tratar a melhoria como uma mudança organizacional, não apenas como uma mudança técnica. Uma solução tecnicamente correta que ignora as barreiras humanas e estruturais que a cercam tem vida curta — e o engenheiro da qualidade que só sabe diagnosticar o processo, sem diagnosticar a organização ao redor dele, vai repetir o mesmo ciclo de "resolvido e voltou" indefinidamente.
+
+### Quatro categorias de barreira
+
+A literatura de gestão da qualidade — de Deming a revisões sistemáticas recentes sobre melhoria contínua em ambientes complexos — converge em quatro categorias amplas, que raramente aparecem isoladas:
+
+- **Barreiras culturais.** Resistência ou relutância a uma cultura orientada pela qualidade, e medo de culpa ou punição quando um problema é reportado — o que leva as pessoas a esconder desvios em vez de sinalizá-los. Uma cultura que pune quem levanta a mão contra um problema garante que, da próxima vez, ninguém levante a mão.
+- **Barreiras técnicas.** Falta de competência estatística e de ferramentas de melhoria entre quem precisa aplicá-las no dia a dia, e ausência de sistemas de informação da qualidade (Capítulo 87) capazes de sustentar decisões baseadas em dados.
+- **Barreiras estruturais.** Relacionadas à estrutura organizacional, aos processos e aos sistemas: silos funcionais que impedem a colaboração entre áreas, sistemas de recompensa que premiam volume ou custo isoladamente e não a qualidade, e ausência de papéis e responsabilidades claros para sustentar a melhoria depois que o projeto termina.
+- **Barreiras estratégicas.** Planejamento inadequado e objetivos mal alinhados com a estratégia do negócio — iniciativas de qualidade tratadas como um programa paralelo, desconectado do planejamento estratégico tratado no Capítulo 87, em vez de parte dele.
+
+### Quatro barreiras específicas e recorrentes
+
+Além das categorias acima, quatro barreiras específicas aparecem com tanta frequência na prática de consultoria e auditoria que merecem menção isolada:
+
+1. **Ausência de uma definição de qualidade para aquele produto ou serviço específico.** "Qualidade" sem definição operacional (menos defeitos? dentro do prazo? conformidade à especificação do cliente?) não pode ser medida, e o que não é medido não é gerenciado.
+2. **Falta de comprometimento de longo prazo da liderança.** O primeiro dos catorze pontos de Deming (Capítulo 1) já endereçava isto diretamente: sem constância de propósito por parte da liderança, qualquer iniciativa de melhoria compete com a prioridade seguinte que aparecer na agenda executiva — e perde.
+3. **Decisões tomadas por opinião em vez de dados.** Quando a cultura de decisão da organização não é orientada por fatos e dados (Capítulo 90, princípios de gestão da qualidade), a melhoria vira uma questão de quem argumenta mais alto na sala, não de quem tem a evidência mais forte.
+4. **Escassez de profissionais qualificados para liderar a melhoria.** Sem gente treinada em ferramentas de melhoria (as ferramentas cobertas na Parte V) e sem certificação que valide essa competência, cada projeto reinventa o método, com resultados inconsistentes de equipe para equipe.
+
+### Como identificar e medir o impacto
+
+Identificar barreiras exige as mesmas ferramentas de diagnóstico já cobertas noutras partes deste manual, aplicadas ao sistema organizacional em vez de ao processo técnico: a análise de stakeholders (Capítulo 87) revela quem tem poder de bloquear ou acelerar a mudança; a análise de campo de forças (Capítulo 11) separa as forças que empurram a mudança das que a travam, e é especialmente útil porque força a equipe a nomear explicitamente as barreiras, em vez de as deixar implícitas; e o diagrama de causa e efeito (Capítulo 39), normalmente aplicado a defeitos de produto, funciona igualmente bem aplicado à pergunta "por que a mudança não pegou".
+
+Medir o impacto de uma barreira, e não apenas descrevê-la, é o que distingue uma queixa genérica ("a liderança não apoia") de um achado acionável ("dos últimos cinco projetos de melhoria nesta área, três reverteram para o estado anterior dentro de seis meses, e os três têm em comum a ausência de um dono de processo formalmente designado após o encerramento do projeto").
+
+### Métodos de superação
+
+Não existe uma solução única — o método depende de qual categoria de barreira domina no caso concreto —, mas alguns princípios são transversais: comprometimento visível e sustentado da liderança (não apenas um discurso de abertura, mas revisões periódicas de progresso); alinhamento dos sistemas de recompensa e medição com os objetivos de qualidade, e não apenas com custo ou volume; investimento em treinamento e, quando aplicável, em certificação formal (o próprio Body of Knowledge do CQE é, em si, um catálogo do que um profissional de qualidade precisa saber para preencher a barreira técnica); e técnicas estruturadas de gestão da mudança — análise de stakeholders, avaliação de prontidão organizacional, planos de comunicação — em vez de assumir que uma solução tecnicamente correta se sustenta sozinha.
+
+### Exercício proposto: matriz de priorização de barreiras em Excel
+
+Construa, numa folha de cálculo, uma matriz com uma linha por barreira identificada (use a análise de campo de forças do Capítulo 11 e o diagrama de causa e efeito do Capítulo 39 como fontes) e quatro colunas: **Categoria** (cultural, técnica, estrutural, estratégica), **Impacto** (1-5, quanto atrasa ou reverte a melhoria), **Frequência** (1-5, em quantos projetos recentes ela apareceu) e **Facilidade de tratamento** (1-5, invertida: 5 = fácil de resolver). Calcule uma pontuação de prioridade com `=Impacto*Frequencia*(6-FacilidadeTratamento)` — a mesma lógica multiplicativa do número de prioridade de risco (RPN) tratado no Capítulo 81 — e ordene decrescentemente. Em **Power BI**, a mesma tabela alimenta um dashboard simples que acompanha, ao longo do tempo, quantas barreiras de cada categoria foram fechadas por trimestre — útil para mostrar à liderança que a remoção de barreiras é, ela própria, um indicador de maturidade organizacional, e não apenas um exercício teórico de diagnóstico.
+
+### Erros comuns
+
+1. **Tratar a barreira como um detalhe de implementação, não como parte do escopo do projeto.** Se a barreira não é endereçada no plano do projeto, ela não vai desaparecer sozinha quando o projeto terminar.
+2. **Confundir ausência de reclamação com ausência de barreira.** Uma cultura de medo de culpa produz silêncio, não ausência de problemas.
+3. **Aplicar a mesma solução a barreiras de categorias diferentes.** Treinamento técnico não resolve um sistema de recompensa desalinhado, e uma reestruturação de processo não resolve falta de comprometimento da liderança.
+4. **Encerrar o projeto sem transferir a responsabilidade de sustentação para um dono de processo claro.** É a barreira estrutural mais comum por trás de melhorias que revertem.
+
+*Fonte principal: ASQ Certified Quality Engineer Body of Knowledge (2022), seção I.I "Barriers to Quality Improvement". Cross-check: Quality Gurus, "Top 4 Barriers to Quality Improvement" (qualitygurus.com); revisões sistemáticas sobre barreiras culturais, técnicas, estruturais e estratégicas em programas de melhoria contínua. Verificado via pesquisa na web em 22/08/2026.*
+
+### Revisão técnica 2026 — Capítulo 908
+
+**Status:** Capítulo novo, escrito para cobrir a lacuna do tópico I.I do BOK do CQE identificada em auditoria de conteúdo de agosto de 2026.
