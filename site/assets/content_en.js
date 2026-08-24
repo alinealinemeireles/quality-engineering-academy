@@ -105,6 +105,14 @@ window.ACADEMY_CONTENT_EN = {
      home, pager, lista de aulas do modulo, resultados de busca) — a propria aula
      ja usa o titulo traduzido via o mecanismo existente de content/ch/*.en.js. */
   chapters: {
+    'cap-900': "BPMN 2.0 and Bizagi Modeler in Practice",
+    'cap-901': "Spaghetti Diagram, Makigami and Turtle Diagram — the Three That Were Missing",
+    'cap-902': "Capability Studio — Cp, Cpk, Pp, Ppk in Practice",
+    'cap-903': "Voice of the Customer, Satisfaction and the Link to Lean Six Sigma",
+    'cap-904': "Advanced OEE — Loss Decomposition, Digital Maturity and Real-Time Data",
+    'cap-905': "5S and Visual Management on the Shop Floor",
+    'cap-906': "Structured Problem Solving — 5 Whys, 8D and CAPA",
+    'cap-907': "Cluster Analysis — Hierarchical and K-Means in Quality",
     'cap-000': "Opening",
     'cap-001': "Quality Philosophies and Foundations",
     'cap-002': "What Is Six Sigma?",

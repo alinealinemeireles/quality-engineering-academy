@@ -154,7 +154,12 @@ disponível e permite exportar em JSON.
 
 ## Propriedade intelectual
 
-O conteúdo dos capítulos vem do manual da autora. O banco de questões é **autoral** e não reproduz
+O **código** (`site/assets`, `site/index.html`, `tools/`, `i18n/` enquanto infraestrutura) está sob
+licença MIT — ver [`LICENSE`](LICENSE).
+
+O **conteúdo didático** — capítulos, banco de questões, figuras e o manual de origem — não está
+coberto por essa licença. É obra autoral da Aline Meireles, com todos os direitos reservados. O
+conteúdo dos capítulos vem do manual da autora. O banco de questões é **autoral** e não reproduz
 itens publicados pela ASQ.
 
 Esta plataforma é **preparatória**. Não emite certificação ASQ nem Lean Six Sigma reconhecida — os

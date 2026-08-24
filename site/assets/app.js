@@ -596,7 +596,7 @@
       h += '<div class="eyebrow" style="--c:' + c + '"><i class="dot"></i>' +
            (d.num ? T('lesson.chapter', { label: capLabel(d.num) }) : T('lesson.opening')) +
            (d.new ? T('lesson.newedition') : '') + '</div>';
-      h += '<h1>' + esc(d.title) + '</h1>';
+      h += '<h1>' + esc(d._isEnglish ? d.title : chTitle(d.id, d.title)) + '</h1>';
 
       if (lang === 'en' && !d._isEnglish) {
         h += `
