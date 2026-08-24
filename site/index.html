@@ -3,11 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Academy · Qualidade, Lean Six Sigma e Quality Analytics</title>
-<meta name="description" content="Plataforma de formação em Engenharia da Qualidade, Lean Six Sigma e Quality Analytics, com gráficos interativos e banco de questões de certificação.">
-<meta name="theme-color" content="#0f3a4a">
+<title>Quality Engineering Academy</title>
+<meta name="description" content="Quality Engineering Academy — Engenharia da Qualidade, Lean Six Sigma e Quality Analytics. Trilhas de formação com gráficos interativos, laboratório de prática e mapa de competências.">
+<meta name="theme-color" content="#18242a">
 <link rel="stylesheet" href="assets/app.css">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%230f3a4a'/><path d='M8 21l5-11 3.4 7.2L19 14l5 7z' fill='none' stroke='%2354c8b0' stroke-width='2.2' stroke-linejoin='round' stroke-linecap='round'/></svg>">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><path d='M16 1.6 29.6 9v14L16 30.4 2.4 23V9z' fill='%2318242a'/><rect x='9.5' y='19' width='3.6' height='7' rx='.5' fill='%2354c8b0'/><rect x='14.6' y='14' width='3.6' height='12' rx='.5' fill='%2354c8b0'/><rect x='19.7' y='9' width='3.6' height='17' rx='.5' fill='%2354c8b0'/></svg>">
 <script>
   // Registo de conteudo. Os ficheiros de content/ chamam ACADEMY.reg(...).
   window.ACADEMY = {
@@ -22,6 +22,7 @@
   // tema antes da primeira pintura
   try {
     var t = localStorage.getItem('academy.theme');
+    try { t = t == null ? t : JSON.parse(t); } catch (e2) {}
     if (t === 'dark' || (!t && matchMedia('(prefers-color-scheme: dark)').matches))
       document.documentElement.setAttribute('data-theme', 'dark');
   } catch (e) {}
@@ -37,10 +38,12 @@
   </button>
   <a class="brand" href="#/">
     <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true">
-      <rect width="32" height="32" rx="7" fill="currentColor"/>
-      <path d="M8 21l5-11 3.4 7.2L19 14l5 7z" fill="none" stroke="#54c8b0" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/>
+      <path d="M16 1.6 29.6 9v14L16 30.4 2.4 23V9z" fill="currentColor"/>
+      <rect x="9.5" y="19" width="3.6" height="7" rx=".5" fill="#54c8b0"/>
+      <rect x="14.6" y="14" width="3.6" height="12" rx=".5" fill="#54c8b0"/>
+      <rect x="19.7" y="9" width="3.6" height="17" rx=".5" fill="#54c8b0"/>
     </svg>
-    <span class="brand-txt"><b>ACADEMY</b><small>Quality · Lean · Data</small></span>
+    <span class="brand-txt"><b>QUALITY ENGINEERING ACADEMY</b><small>Qualidade · Lean Six Sigma · Data</small></span>
   </a>
 
   <form class="search" id="searchForm" role="search">
@@ -64,6 +67,7 @@
 
 <script src="assets/hl.js"></script>
 <script src="assets/i18n.js"></script>
+<script src="assets/content_en.js"></script>
 <script src="content/manifest.js"></script>
 <script src="content/bank.js"></script>
 <script src="content/figs.js"></script>

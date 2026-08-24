@@ -67,8 +67,8 @@
   }
 
   /* ---------- indice de capitulos ---------- */
-  var CH = {};      // capId -> {mod, track, idx}
-  var CHLIST = [];  // ordem global de leitura
+  var CH = {};
+  var CHLIST = [];
   var MODS = {};
   var TRACKS = {};
 
@@ -88,12 +88,21 @@
   var TRK_IDX = {};
   MAN.tracks.forEach(function (t, i) { TRK_IDX[t.id] = i + 1; });
   function trackColor(t) {
-    // a cor vem do CSS (var --trk-N), para que o tema e a opcao de paleta mandem
     return 'var(--trk-' + (TRK_IDX[t.id] || 1) + ')';
   }
   var CAP_ALIAS = { 900: '40-A', 901: '40-B', 902: '71-A', 903: '14-A',
                     904: '25-A', 905: '18-A', 906: '9-A', 907: '56-A' };
   function capLabel(n) { return CAP_ALIAS[n] || n; }
+
+  /* ---------- traducao EN de titulos/subtitulos/competencias (manifest) ---------- */
+  function CEN() {
+    return window.ACADEMY_I18N.lang() === 'en' && window.ACADEMY_CONTENT_EN ? window.ACADEMY_CONTENT_EN : null;
+  }
+  function trTitle(t) { var c = CEN(); return (c && c.tracks[t.id] && c.tracks[t.id].title) || t.title; }
+  function trSub(t) { var c = CEN(); return (c && c.tracks[t.id] && c.tracks[t.id].subtitle) || t.subtitle; }
+  function modTitle(m) { var c = CEN(); return (c && c.modules[m.id] && c.modules[m.id].title) || m.title; }
+  function modComp(m) { var c = CEN(); return (c && c.modules[m.id] && c.modules[m.id].competencies) || m.competencies; }
+  function chTitle(id, fallback) { var c = CEN(); return (c && c.chapters[id]) || fallback; }
 
   function modProgress(m) {
     var d = m.chapters.filter(function (c) { return isRead(c.id); }).length;
@@ -109,9 +118,16 @@
     MAN.tracks.forEach(function (t) { var p = trackProgress(t); d += p.done; n += p.total; });
     return { done: d, total: n, pct: pct(d, n) };
   }
+  function trackPerf(t) {
+    var scores = [];
+    t.modules.forEach(function (m) { var q = P.quiz[m.id]; if (q) scores.push(q.score); });
+    if (!scores.length) return null;
+    return Math.round(scores.reduce(function (a, b) { return a + b; }, 0) / scores.length);
+  }
 
-  /* ---------- carregamento de capitulos sob procura ---------- */
+  /* ---------- carregamento de capitulos com suporte a EN ---------- */
   var loading = {};
+  
   function loadChapterRaw(id, cb) {
     if (A.data[id]) return cb(A.data[id]);
     (A._waiters[id] = A._waiters[id] || []).push(cb);
@@ -120,32 +136,50 @@
     var s = document.createElement('script');
     s.src = 'content/ch/' + id + '.js';
     s.onerror = function () {
+      loading[id] = false;
       A.reg(id, { id: id, title: T('chapter.unavailable.title'), part: '', html:
         '<div class="note warn">' + T('chapter.unavailable.body') + '</div>', toc: [], stats: {} });
     };
     document.head.appendChild(s);
   }
+
   function loadChapter(id, cb) {
     var lang = (window.ACADEMY_I18N && window.ACADEMY_I18N.lang()) || 'pt';
-    if (lang !== 'en') return loadChapterRaw(id, cb);
+    
+    if (lang === 'pt') {
+      return loadChapterRaw(id, cb);
+    }
+    
     var key = id + '.en';
     if (A.data[key]) return cb(A.data[key]);
+    
     (A._waiters[key] = A._waiters[key] || []).push(cb);
     if (loading[key]) return;
     loading[key] = true;
+    
     var s = document.createElement('script');
     s.src = 'content/ch/' + key + '.js';
     s.onerror = function () {
       loading[key] = false;
-      // sem traducao EN para este capitulo -- usa o PT como equivalente
-      loadChapterRaw(id, function (ptData) { A.reg(key, ptData); });
+      loadChapterRaw(id, function (ptData) {
+        var fallback = JSON.parse(JSON.stringify(ptData));
+        fallback.title = '[EN] ' + fallback.title;
+        fallback.html = `
+          <div class="note info" style="border-left: 4px solid var(--series-4);">
+            <strong>📘 ${T('lang.content.available')}</strong><br>
+            <a href="#" onclick="window.ACADEMY_I18N.setLang('pt'); location.reload();" style="font-weight:600;">
+              ${T('lang.switch.to.pt')}
+            </a>
+          </div>
+          ${ptData.html}
+        `;
+        A.reg(key, fallback);
+      });
     };
     document.head.appendChild(s);
   }
 
-  /* ---------- bibliotecas locais (KaTeX, Mermaid) --------------------------
-     Sao servidas de assets/vendor/ e nao da rede: a aplicacao funciona
-     integralmente offline depois de descarregada a pasta.                    */
+  /* ---------- bibliotecas locais (KaTeX, Mermaid) -------------------------- */
   var VEND = 'assets/vendor/';
   var libs = {};
   function need(name, urls, test, cb) {
@@ -188,7 +222,7 @@
             throwOnError: false, output: 'html'
           });
           n.classList.add('done');
-        } catch (e) { /* deixa o texto original visivel */ }
+        } catch (e) {}
       });
     });
   }
@@ -273,7 +307,6 @@
         setTimeout(function () { b.textContent = o; }, 1400);
       });
     });
-    // tabelas largas ganham rolagem horizontal automatica (ja envolvidas no build)
   }
 
   /* =======================================================================
@@ -286,7 +319,13 @@
     award: '<circle cx="12" cy="9" r="5.5"/><path d="M8.5 13.5L7 21l5-2.4L17 21l-1.5-7.5"/>',
     book: '<path d="M4 4.5h6a2.5 2.5 0 0 1 2.5 2.5v13A2 2 0 0 0 10.5 18H4z"/><path d="M20 4.5h-6A2.5 2.5 0 0 0 11.5 7v13a2 2 0 0 1 2-2H20z"/>',
     gear: '<circle cx="12" cy="12" r="3"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.2 5.2l2.1 2.1M16.7 16.7l2.1 2.1M18.8 5.2l-2.1 2.1M7.3 16.7l-2.1 2.1"/>',
-    chev: '<path d="M9 6l6 6-6 6"/>'
+    chev: '<path d="M9 6l6 6-6 6"/>',
+    shield: '<path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z"/><path d="M9 12l2 2 4-4.5"/>',
+    flow: '<circle cx="6" cy="6" r="2.4"/><circle cx="6" cy="18" r="2.4"/><circle cx="18" cy="12" r="2.4"/><path d="M8.2 7l7.8 4M8.2 17l7.8-4"/>',
+    chart: '<path d="M4 20V9M10 20V4M16 20v-7M22 20H2"/>',
+    data: '<ellipse cx="12" cy="5.5" rx="7.5" ry="2.7"/><path d="M4.5 5.5V12c0 1.5 3.4 2.7 7.5 2.7s7.5-1.2 7.5-2.7V5.5M4.5 12v6.5c0 1.5 3.4 2.7 7.5 2.7s7.5-1.2 7.5-2.7V12"/>',
+    sector: '<path d="M12 3v9l7.8 4.5"/><circle cx="12" cy="12" r="9"/>',
+    target: '<circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r=".7" fill="currentColor"/>'
   };
   function ico(n, cls) { return '<svg viewBox="0 0 24 24" aria-hidden="true"' + (cls ? ' class="' + cls + '"' : '') + '>' + ICONS[n] + '</svg>'; }
 
@@ -302,11 +341,11 @@
     MAN.tracks.forEach(function (t) {
       h += '<details class="trk" data-track="' + t.id + '">';
       h += '<summary class="trk-head" style="--c:' + trackColor(t) + '">' +
-           '<i class="trk-dot"></i><span>' + esc(t.title) + '</span>' + ico('chev', 'chev') + '</summary>';
+           '<i class="trk-dot"></i><span>' + esc(trTitle(t)) + '</span>' + ico('chev', 'chev') + '</summary>';
       h += '<div class="trk-mods">';
       t.modules.forEach(function (m, i) {
         h += '<a class="mod-link" href="#/modulo/' + m.id + '" data-mod="' + m.id + '">' +
-             '<span class="mnum">' + String(i + 1).padStart(2, '0') + '</span>' + esc(m.title) + '</a>';
+             '<span class="mnum">' + String(i + 1).padStart(2, '0') + '</span>' + esc(modTitle(m)) + '</a>';
       });
       h += '</div></details>';
     });
@@ -327,7 +366,6 @@
       a.classList.toggle('on', hash === '/modulo/' + id);
       if (m) a.classList.toggle('done', modProgress(m).pct === 100);
     });
-    // abre a trilha da rota atual
     var cur = null;
     var mm = hash.match(/^\/modulo\/(.+)$/);
     var ma = hash.match(/^\/aula\/(.+)$/);
@@ -363,6 +401,14 @@
   }
 
   /* ---------- painel ---------- */
+  var GOALS = [
+    { track: 'qualidade', icon: 'shield', t: 'home.goal.cqe.t', s: 'home.goal.cqe.s' },
+    { track: 'lean', icon: 'flow', t: 'home.goal.belt.t', s: 'home.goal.belt.s' },
+    { track: 'analytics', icon: 'data', t: 'home.goal.analytics.t', s: 'home.goal.analytics.s' },
+    { track: 'avancado', icon: 'beaker', t: 'home.goal.risk.t', s: 'home.goal.risk.s' },
+    { track: 'lean', icon: 'target', t: 'home.goal.dmaic.t', s: 'home.goal.dmaic.s' }
+  ];
+
   function viewHome() {
     var g = globalProgress();
     var nextId = CHLIST.find(function (id) { return !isRead(id); });
@@ -371,27 +417,53 @@
 
     var h = '<div class="page">';
     h += '<div class="hero">';
+    h += '<div class="hero-pills">' + T('home.tagline').split(' · ').map(function (x) {
+      return '<span>' + esc(x) + '</span>';
+    }).join('') + '</div>';
     h += '<h1>' + (started ? T('home.title.continue') : T('home.title.start')) + '</h1>';
     h += '<p>' + T('home.subtitle', { done: g.done, total: g.total, n: MAN.tracks.length }) +
          (started ? '' : T('home.subtitle.cta')) + '</p>';
     h += '<div class="meter lg" style="max-width:420px;margin-bottom:18px"><i style="width:' + g.pct + '%"></i></div>';
     h += '<div class="hero-cta">';
-    if (next) h += '<a class="btn ghost" href="#/aula/' + next.ch.id + '">' + (started ? T('home.continue') : T('home.start')) + ': ' +
-                   esc(next.ch.title.length > 42 ? next.ch.title.slice(0, 42) + '…' : next.ch.title) + ' →</a>';
+    if (next) { var nextTitle = chTitle(next.ch.id, next.ch.title);
+      h += '<a class="btn ghost" href="#/aula/' + next.ch.id + '">' + (started ? T('home.continue') : T('home.start')) + ': ' +
+           esc(nextTitle.length > 42 ? nextTitle.slice(0, 42) + '…' : nextTitle) + ' →</a>'; }
     h += '<a class="btn ghost" href="#/competencias">' + T('nav.competencies') + '</a>';
     h += '</div></div>';
 
-    h += '<h2 style="font-size:20px;margin:6px 0 14px">' + T('home.mytracks') + '</h2>';
+    h += '<h2 style="font-size:16px;margin:6px 0 4px">' + T('home.goals.title') + '</h2>';
+    h += '<p style="font-size:13.4px;color:var(--ink-3);margin:0 0 14px">' + T('home.goals.sub') + '</p>';
+    h += '<div class="goal-cards">';
+    GOALS.forEach(function (goal) {
+      var t = TRACKS[goal.track];
+      if (!t) return;
+      h += '<a class="goal-card" href="#/trilha/' + t.id + '">' +
+           '<span class="goal-ico">' + ico(goal.icon) + '</span>' +
+           '<span><span class="goal-t">' + T(goal.t) + '</span>' +
+           '<span class="goal-s">' + T(goal.s) + '</span></span></a>';
+    });
+    h += '</div>';
+
+    h += '<h2 style="font-size:20px;margin:22px 0 14px">' + T('home.mytracks') + '</h2>';
     h += '<div class="trk-cards">';
     MAN.tracks.forEach(function (t) {
       var p = trackProgress(t), c = trackColor(t);
       var hasNext = next && next.track.id === t.id;
+      var trackNext = t.modules.find(function (m) { return modProgress(m).pct !== 100; });
+      var comp = [];
+      t.modules.some(function (m) {
+        modComp(m).forEach(function (x) { if (comp.indexOf(x) === -1) comp.push(x); });
+        return comp.length >= 3;
+      });
       h += '<details class="trk-card"' + (hasNext ? ' open' : '') + ' style="--c:' + c + '">';
       h += '<summary>';
-      h += '<i class="trk-dot" style="background:' + c + '"></i>';
-      h += '<span class="trk-info"><h3>' + esc(t.title) +
+      h += '<span class="trk-ico">' + ico(trackIconFor(t)) + '</span>';
+      h += '<span class="trk-info"><h3>' + esc(trTitle(t)) +
            (t.library ? ' <span class="badge">' + T('home.library') + '</span>' : '') + '</h3>' +
-           '<span class="trk-sub">' + esc(t.subtitle) + ' · ' + t.modules.length + ' ' + T('home.modules') + '</span></span>';
+           '<span class="trk-sub">' + esc(trSub(t)) + ' · ' + t.modules.length + ' ' + T('home.modules') + '</span>' +
+           '<span class="trk-comp">' + comp.slice(0, 3).map(function (x) {
+             return '<span class="chip">' + esc(x) + '</span>';
+           }).join('') + '</span></span>';
       h += '<span class="trk-meter-wrap">' + meter(p.pct, c) + '</span>';
       h += '<span class="trk-pct">' + p.pct + '%</span>';
       h += ico('chev', 'chev');
@@ -399,9 +471,11 @@
       h += '<div class="mod-list">';
       t.modules.forEach(function (m, i) {
         var mp = modProgress(m);
-        h += '<a class="mod-row' + (mp.pct === 100 ? ' done' : '') + '" href="#/modulo/' + m.id + '" style="--c:' + c + '">' +
+        var isNext = trackNext && m.id === trackNext.id;
+        h += '<a class="mod-row' + (mp.pct === 100 ? ' done' : '') + (isNext ? ' next' : '') +
+             '" href="#/modulo/' + m.id + '" style="--c:' + c + '">' +
              '<span class="mod-n">' + (mp.pct === 100 ? '✓' : String(i + 1).padStart(2, '0')) + '</span>' +
-             '<span><span class="mod-t">' + esc(m.title) +
+             '<span><span class="mod-t">' + esc(modTitle(m)) +
              (m.chapters.some(function (x) { return x.new; }) ? ' <span class="badge new">' + T('home.new') + '</span>' : '') +
              '</span><span class="mod-s">' + m.chapters.length + ' ' + T('home.lessons') + '</span></span>' +
              '<span class="mod-right">' + mp.done + '/' + mp.total + '</span></a>';
@@ -417,6 +491,10 @@
     show(h);
   }
 
+  function trackIconFor(t) {
+    return ICONS[t.icon] ? t.icon : 'shield';
+  }
+
   function tile(k, v, s) {
     return '<div class="tile"><div class="k">' + esc(k) + '</div><div class="v">' + esc(v) +
            '</div><div class="s">' + esc(s) + '</div></div>';
@@ -429,7 +507,7 @@
     var c = trackColor(t), p = trackProgress(t);
     var h = '<div class="page"><div class="page-head">';
     h += '<div class="eyebrow" style="--c:' + c + '"><i class="dot"></i>' + T('track.eyebrow', { code: esc(t.code) }) + '</div>';
-    h += '<h1>' + esc(t.title) + '</h1><p class="lede">' + esc(t.subtitle) + '</p>';
+    h += '<h1>' + esc(trTitle(t)) + '</h1><p class="lede">' + esc(trSub(t)) + '</p>';
     h += '<div style="max-width:420px;margin-top:16px">' + meter(p.pct, c) +
          '<div style="font-size:13px;color:var(--ink-3)">' +
          T('track.progress', { done: p.done, total: p.total, pct: p.pct }) + '</div></div>';
@@ -439,10 +517,10 @@
       h += '<a class="mod-row' + (mp.pct === 100 ? ' done' : '') + '" href="#/modulo/' + m.id +
            '" style="--c:' + c + '">' +
            '<span class="mod-n">' + (mp.pct === 100 ? '✓' : String(i + 1).padStart(2, '0')) + '</span>' +
-           '<span><span class="mod-t">' + esc(m.title) +
+           '<span><span class="mod-t">' + esc(modTitle(m)) +
            (m.chapters.some(function (x) { return x.new; }) ? ' <span class="badge new">' + T('home.new') + '</span>' : '') +
            '</span><span class="mod-s">' + m.chapters.length + ' ' + T('home.lessons') + ' · ' +
-           esc(m.competencies.slice(0, 3).join(' · ')) + '</span></span>' +
+           esc(modComp(m).slice(0, 3).join(' · ')) + '</span></span>' +
            '<span class="mod-right">' + mp.done + '/' + mp.total + '<br><span class="badge lvl' + m.level +
            '">' + T('module.level', { n: m.level }) + '</span></span></a>';
     });
@@ -459,14 +537,14 @@
 
     var h = '<div class="page"><div class="page-head">';
     h += '<div class="crumb"><a href="#/">' + T('nav.home') + '</a> › <a href="#/trilha/' + t.id + '">' +
-         esc(t.title) + '</a></div>';
+         esc(trTitle(t)) + '</a></div>';
     h += '<div class="eyebrow" style="--c:' + c + '"><i class="dot"></i>' + T('module.eyebrow', { level: m.level }) + '</div>';
-    h += '<h1>' + esc(m.title) + '</h1>';
-    h += '<div class="chips">' + m.competencies.map(function (x) {
+    h += '<h1>' + esc(modTitle(m)) + '</h1>';
+    h += '<div class="chips">' + modComp(m).map(function (x) {
       return '<span class="chip' + (p.pct === 100 ? ' on' : '') + '">' + esc(x) + '</span>';
     }).join('') + '</div>';
     h += '<div style="max-width:420px;margin-top:16px">' + meter(p.pct, c) +
-         '<div style="font-size:13px;color:var(--ink-3)">' + p.done + ' de ' + p.total + ' aulas</div></div>';
+         '<div style="font-size:13px;color:var(--ink-3)">' + T('track.progress', { done: p.done, total: p.total, pct: p.pct }) + '</div></div>';
     h += '</div>';
 
     h += '<h2 style="font-size:19px;margin:22px 0 12px">' + T('module.lessons.h2') + '</h2><div class="mod-list">';
@@ -474,14 +552,13 @@
       var done = isRead(ch.id);
       h += '<a class="mod-row' + (done ? ' done' : '') + '" href="#/aula/' + ch.id +
            '" style="--c:' + c + '"><span class="mod-n">' + (done ? '✓' : (i + 1)) + '</span>' +
-           '<span><span class="mod-t">' + esc(ch.title) +
+           '<span><span class="mod-t">' + esc(chTitle(ch.id, ch.title)) +
            (ch.new ? ' <span class="badge new">' + T('home.new') + '</span>' : '') + '</span>' +
            '<span class="mod-s">' + T('module.chapterof', { n: capLabel(ch.num) }) + '</span></span>' +
            '<span class="mod-right">' + (done ? T('module.completed') : T('module.unread')) + '</span></a>';
     });
     h += '</div>';
 
-    // avaliacao do modulo a partir do banco
     var qs = quizForModule(m);
     if (qs.length) {
       h += '<h2 style="font-size:19px;margin:30px 0 12px">' + T('module.assessment.h2') + '</h2>';
@@ -500,6 +577,7 @@
     var info = CH[id];
     var t = info ? info.track : null;
     var c = t ? trackColor(t) : 'var(--accent)';
+    var lang = window.ACADEMY_I18N.lang();
 
     show('<div class="empty"><div class="spinner"></div>' + T('lesson.loading') + '</div>');
 
@@ -511,14 +589,25 @@
 
       var h = '<div class="page"><div class="reader"><div>';
       h += '<div class="crumb">';
-      if (info) h += '<a href="#/trilha/' + t.id + '">' + esc(t.title) + '</a> › <a href="#/modulo/' +
-                     info.mod.id + '">' + esc(info.mod.title) + '</a>';
+      if (info) h += '<a href="#/trilha/' + t.id + '">' + esc(trTitle(t)) + '</a> › <a href="#/modulo/' +
+                     info.mod.id + '">' + esc(modTitle(info.mod)) + '</a>';
       else h += esc(d.part || '');
       h += '</div>';
       h += '<div class="eyebrow" style="--c:' + c + '"><i class="dot"></i>' +
            (d.num ? T('lesson.chapter', { label: capLabel(d.num) }) : T('lesson.opening')) +
            (d.new ? T('lesson.newedition') : '') + '</div>';
       h += '<h1>' + esc(d.title) + '</h1>';
+
+      if (lang === 'en' && !d._isEnglish) {
+        h += `
+          <div class="note info" style="margin-bottom: 20px; border-left: 4px solid var(--series-4);">
+            <strong>📘 ${T('lang.content.available')}</strong><br>
+            <a href="#" onclick="window.ACADEMY_I18N.setLang('pt'); location.reload();" style="font-weight:600;">
+              ${T('lang.switch.to.pt')}
+            </a>
+          </div>
+        `;
+      }
 
       h += '<div class="lesson-bar">';
       h += '<button class="btn ' + (done ? 'sec' : '') + '" id="markBtn" style="' +
@@ -533,13 +622,12 @@
 
       h += '<div class="pager">';
       if (prev) h += '<a href="#/aula/' + prev.ch.id + '"><span class="dir">' + T('lesson.prev') + '</span>' +
-                     '<span class="ttl">' + esc(prev.ch.title) + '</span></a>'; else h += '<span></span>';
+                     '<span class="ttl">' + esc(chTitle(prev.ch.id, prev.ch.title)) + '</span></a>'; else h += '<span></span>';
       if (next) h += '<a class="next" href="#/aula/' + next.ch.id + '"><span class="dir">' + T('lesson.next') + '</span>' +
-                     '<span class="ttl">' + esc(next.ch.title) + '</span></a>';
+                     '<span class="ttl">' + esc(chTitle(next.ch.id, next.ch.title)) + '</span></a>';
       h += '</div>';
 
-      h += '</div>'; // fim coluna
-      // indice
+      h += '</div>';
       h += '<aside class="toc"><h4>' + T('lesson.toc') + '</h4>';
       (d.toc || []).forEach(function (x) {
         h += '<a class="l' + x.l + '" href="#' + location.hash.slice(1) + '" data-jump="' + x.id + '">' +
@@ -612,9 +700,9 @@
     var t = TRACKS[m.track], c = trackColor(t);
     var qs = quizForModule(m);
     renderQuiz({
-      title: T('quiz.title', { title: m.title }),
-      crumb: '<a href="#/trilha/' + t.id + '">' + esc(t.title) + '</a> › <a href="#/modulo/' +
-             m.id + '">' + esc(m.title) + '</a>',
+      title: T('quiz.title', { title: modTitle(m) }),
+      crumb: '<a href="#/trilha/' + t.id + '">' + esc(trTitle(t)) + '</a> › <a href="#/modulo/' +
+             m.id + '">' + esc(modTitle(m)) + '</a>',
       color: c, questions: qs,
       onDone: function (score) {
         P.quiz[m.id] = { score: score, at: Date.now(), n: qs.length };
@@ -633,6 +721,19 @@
         '<div class="eyebrow"><i class="dot"></i>' + T('bank.eyebrow') + '</div>' +
         '<h1>' + T('bank.title') + '</h1>' +
         '<p class="lede">' + T('bank.lede') + '</p></div>';
+
+      h += '<h2 style="font-size:16px;margin:0 0 3px">' + T('bank.perf.title') + '</h2>';
+      h += '<p style="font-size:13.4px;color:var(--ink-3);margin:0 0 12px">' + T('bank.perf.lede') + '</p>';
+      h += '<div class="hbars" style="margin-bottom:26px">';
+      MAN.tracks.forEach(function (t) {
+        var s = trackPerf(t);
+        h += '<div class="hbar' + (s == null ? ' no-data' : '') + '" style="--c:' + trackColor(t) + '">' +
+             '<span class="lab">' + esc(trTitle(t)) + '</span>' +
+             '<span class="track">' + (s == null ? '' : '<i style="width:' + s + '%"></i>') + '</span>' +
+             '<span class="val">' + (s == null ? T('bank.perf.empty') : s + '%') + '</span></div>';
+      });
+      h += '</div>';
+
       h += '<div class="note warn">' + T('bank.howto') + '</div>';
       h += '<div class="cards">';
       h += '<a class="card" href="#/certificacao?cqe" style="--c:var(--series-1)"><h3>ASQ CQE</h3>' +
@@ -731,7 +832,7 @@
     MAN.tracks.forEach(function (t) {
       var p = trackProgress(t);
       h += '<div class="hbar" style="--c:' + trackColor(t) + '">' +
-           '<span class="lab">' + esc(t.title) + '</span>' +
+           '<span class="lab">' + esc(trTitle(t)) + '</span>' +
            '<span class="track"><i style="width:' + p.pct + '%"></i></span>' +
            '<span class="val">' + p.pct + '%</span></div>';
     });
@@ -741,12 +842,12 @@
       var c = trackColor(t);
       h += '<h2 style="font-size:18px;margin:26px 0 12px;display:flex;align-items:center;gap:9px">' +
            '<i style="width:10px;height:10px;border-radius:3px;background:' + c + ';display:inline-block"></i>' +
-           esc(t.title) + '</h2><div class="comp-grid">';
+           esc(trTitle(t)) + '</h2><div class="comp-grid">';
       t.modules.forEach(function (m) {
         var p = modProgress(m);
         h += '<div class="comp-cell"><h4><a href="#/modulo/' + m.id + '" style="text-decoration:none;color:inherit">' +
-             esc(m.title) + '</a></h4>' + meter(p.pct, c) +
-             '<div class="chips">' + m.competencies.map(function (x) {
+             esc(modTitle(m)) + '</a></h4>' + meter(p.pct, c) +
+             '<div class="chips">' + modComp(m).map(function (x) {
                return '<span class="chip' + (p.pct === 100 ? ' on' : '') + '">' +
                       (p.pct === 100 ? '✓ ' : '') + esc(x) + '</span>';
              }).join('') + '</div></div>';
@@ -784,8 +885,8 @@
       hits.slice(0, 60).forEach(function (x) {
         var m = MODS[x.c.m], t = TRACKS[x.c.tr];
         h += '<a class="hit" href="#/aula/' + x.c.id + '"><div class="h-t">' +
-             hl(x.c.t, words) + '</div><div class="h-m">' +
-             esc(t ? t.title : '') + ' › ' + esc(m ? m.title : '') +
+             hl(chTitle(x.c.id, x.c.t), words) + '</div><div class="h-m">' +
+             esc(t ? trTitle(t) : '') + ' › ' + esc(m ? modTitle(m) : '') +
              ' · ' + T('lesson.chapter', { label: capLabel(x.c.n) }) +
              (isRead(x.c.id) ? ' · <span style="color:var(--good)">' + T('module.completed') + '</span>' : '') +
              '</div></a>';
@@ -800,7 +901,6 @@
     words.forEach(function (w) {
       try {
         var re = new RegExp('(' + w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
-        // aplica no texto sem acentos mas marca no original por posicao
         var plain = deaccent(out), m2, last = 0, res = '';
         re.lastIndex = 0;
         while ((m2 = re.exec(plain)) !== null) {
@@ -840,7 +940,7 @@
       h += '<h2 style="font-size:19px;margin:26px 0 12px">' + T('progress.assessments.h2') + '</h2><div class="hbars">';
       qk.forEach(function (k) {
         var r = P.quiz[k];
-        var name = MODS[k] ? MODS[k].title : T('progress.bankname', { bank: k.replace('bank-', '') });
+        var name = MODS[k] ? modTitle(MODS[k]) : T('progress.bankname', { bank: k.replace('bank-', '') });
         var col = r.score >= 70 ? 'var(--good)' : 'var(--bad)';
         h += '<div class="hbar" style="--c:' + col + '"><span class="lab">' + esc(name) +
              '</span><span class="track"><i style="width:' + r.score + '%"></i></span>' +

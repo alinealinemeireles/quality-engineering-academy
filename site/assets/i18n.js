@@ -1,17 +1,15 @@
 /* =========================================================================
    Academy — i18n (interface PT/EN)
-   Fase 1: traduz so a "moldura" da aplicacao (menus, botoes, rotulos,
-   paineis). O conteudo dos capitulos (manual.ipynb + extra/*.md)
-   continua so em portugues nesta fase.
    ========================================================================= */
 (function () {
   'use strict';
 
   var STRINGS = {
     pt: {
+      // Navegação
       'nav.home': 'Painel',
       'nav.competencies': 'Mapa de competências',
-      'nav.certification': 'Banco de certificação',
+      'nav.certification': 'Practice Lab',
       'nav.opening': 'Abertura do manual',
       'nav.tracks': 'Percursos',
       'nav.data': 'Dados',
@@ -22,6 +20,7 @@
       'theme.toggle': 'Alternar tema claro/escuro',
       'search.aria': 'Buscar no manual',
 
+      // Capítulos
       'chapter.unavailable.title': 'Capítulo indisponível',
       'chapter.unavailable.body': '<b>Não foi possível carregar este capítulo.</b> Verifique se a pasta <code>content/ch/</code> acompanha o ficheiro <code>index.html</code>.',
       'fig.zoom': 'Ampliar figura',
@@ -29,12 +28,14 @@
       'fig.close': 'Fechar',
       'copy.done': 'Copiado ✓',
 
+      // Home
       'home.title.continue': 'Continue o seu percurso',
-      'home.title.start': 'Formação em Engenharia da Qualidade, Lean Six Sigma e Quality Analytics',
+      'home.title.start': 'Dados para entender problemas. Métodos para resolvê-los.',
+      'home.tagline': 'Engenharia da Qualidade · Lean Six Sigma · Melhoria Contínua · Data Analytics',
       'home.subtitle': '{done} de {total} aulas concluídas, em {n} percursos.',
       'home.subtitle.cta': ' Escolha um percurso abaixo para começar.',
       'home.continue': 'Continuar',
-      'home.start': 'Começar',
+      'home.start': 'Começar a aprender',
       'home.mytracks': 'Meus percursos',
       'home.library': 'biblioteca',
       'home.modules': 'módulos',
@@ -43,9 +44,24 @@
       'home.source': '<b>Fonte.</b> Todo o conteúdo vem do {src}',
       'home.storage.warn': ' <br><b>Atenção:</b> este navegador não está a guardar o progresso (modo privado ou restrição de armazenamento). Use a exportação em JSON na página {link}.',
 
+      'home.goals.title': 'Escolha pelo seu objetivo',
+      'home.goals.sub': 'Cada objetivo aponta para o percurso certo para começar.',
+      'home.goal.cqe.t': 'Preparar para o CQE',
+      'home.goal.cqe.s': 'Trilha alinhada ao Body of Knowledge do ASQ',
+      'home.goal.belt.t': 'Six Sigma Green/Black Belt',
+      'home.goal.belt.s': 'Lean, DMAIC e liderança de projetos de melhoria',
+      'home.goal.analytics.t': 'Quality Analytics & Quality 4.0',
+      'home.goal.analytics.s': 'Power BI, SQL, Python e governança de dados',
+      'home.goal.risk.t': 'Risk Engineering avançado',
+      'home.goal.risk.s': 'Inferência moderna, causalidade e risco quantitativo',
+      'home.goal.dmaic.t': 'Melhorar um processo real',
+      'home.goal.dmaic.s': 'Aplique o ciclo DMAIC passo a passo',
+
+      // Track
       'track.eyebrow': 'Percurso {code}',
       'track.progress': '{done} de {total} aulas concluídas · {pct}%',
 
+      // Module
       'module.eyebrow': 'Módulo · nível {level}',
       'module.lessons.h2': 'Aulas',
       'module.chapterof': 'Capítulo {n} do manual',
@@ -59,6 +75,7 @@
       'module.assessment.start': 'Iniciar avaliação',
       'module.level': 'nível {n}',
 
+      // Lesson
       'lesson.loading': 'A carregar o capítulo…',
       'lesson.opening': 'Abertura',
       'lesson.chapter': 'Capítulo {label}',
@@ -71,7 +88,9 @@
       'lesson.prev': '← Anterior',
       'lesson.next': 'Seguinte →',
       'lesson.toc': 'Nesta aula',
+      'lesson.language.warning': '⚠️ Este capítulo está disponível apenas em português. A interface e navegação estão em inglês.',
 
+      // Quiz
       'quiz.title': 'Avaliação · {title}',
       'quiz.empty': 'Sem questões associadas a este módulo.',
       'quiz.gotobank': 'Ir para o banco completo',
@@ -83,22 +102,28 @@
       'quiz.below': 'Abaixo dos 70% recomendados.',
       'quiz.bank.title': 'Banco {bank}',
 
-      'bank.eyebrow': 'Preparação para certificação',
-      'bank.title': 'Banco de questões',
-      'bank.lede': 'Questões autorais escritas para esta edição, com justificação da resposta correta e análise dos distratores. Não reproduzem itens publicados pela ASQ.',
+      // Bank
+      'bank.eyebrow': 'Laboratório de prática',
+      'bank.title': 'Practice Lab',
+      'bank.lede': 'Teste os seus conhecimentos com questões autorais, com justificação da resposta correta e análise dos distratores. Não reproduzem itens publicados pela ASQ.',
       'bank.howto': '<b>Como estudar com este banco.</b> Responda sem consultar e, antes de conferir, justifique por que cada uma das outras três alternativas está errada. Se não conseguir, o conceito ainda não está consolidado.',
       'bank.cqe.desc': 'Certified Quality Engineer — distribuição proporcional ao peso do Body of Knowledge.',
       'bank.cssbb.desc': 'Certified Six Sigma Black Belt — DMAIC, estatística, DOE e liderança de projeto.',
       'bank.questions': '{n} questões',
       'bank.startbtn': 'iniciar',
       'bank.note': '<b>Nota.</b> Esta plataforma é <b>preparatória</b>. Não emite certificação ASQ nem Lean Six Sigma reconhecida — os certificados oficiais são emitidos exclusivamente pelos organismos certificadores.',
+      'bank.perf.title': 'Seu desempenho',
+      'bank.perf.lede': 'Média de aproveitamento nas avaliações já feitas, por trilha.',
+      'bank.perf.empty': 'sem dados',
 
+      // Competencies
       'comp.eyebrow': 'Progresso',
       'comp.title': 'Mapa de competências',
       'comp.lede': 'Cada competência fica marcada quando todas as aulas do módulo que a desenvolve estão concluídas. É o inverso de um certificado de presença: mostra o que ainda falta.',
       'comp.legend.done': 'Competência adquirida',
       'comp.legend.pending': 'Em desenvolvimento',
 
+      // Search
       'search.eyebrow': 'Busca',
       'search.title.results': 'Resultados para “{q}”',
       'search.title.empty': 'Buscar no manual',
@@ -106,6 +131,7 @@
       'search.nohits': 'Nada encontrado. Tente um termo mais curto (por exemplo <code>cpk</code>, <code>kanban</code>, <code>anova</code>).',
       'search.count': '{n} capítulos.',
 
+      // Progress
       'progress.title': 'Progresso e backup',
       'progress.lede': 'O progresso fica guardado apenas neste navegador. Exporte um ficheiro JSON para o transportar para outro computador ou para não o perder ao limpar os dados do navegador.',
       'progress.done.k': 'Aulas concluídas',
@@ -123,37 +149,50 @@
       'progress.assessments.h2': 'Avaliações',
       'progress.invalidfile': 'Ficheiro inválido.',
       'progress.confirmclear': 'Apagar todo o progresso guardado neste navegador?',
-      'progress.bankname': 'Banco {bank}'
+      'progress.bankname': 'Banco {bank}',
+
+      // Idioma
+      'lang.switch': 'Mudar para {lang}',
+      'lang.english': 'inglês',
+      'lang.portuguese': 'português',
+      'lang.warning': '⚠️ Este conteúdo está disponível apenas em português. A interface está em inglês.',
+      'lang.content.available': 'O conteúdo está disponível em português.',
+      'lang.switch.to.en': 'Mudar para inglês →',
+      'lang.switch.to.pt': 'Mudar para português →'
     },
 
     en: {
+      // Navigation
       'nav.home': 'Dashboard',
-      'nav.competencies': 'Competency map',
-      'nav.certification': 'Certification bank',
-      'nav.opening': 'Manual introduction',
+      'nav.competencies': 'Competency Map',
+      'nav.certification': 'Practice Lab',
+      'nav.opening': 'Manual Introduction',
       'nav.tracks': 'Tracks',
       'nav.data': 'Data',
-      'nav.progress': 'Progress & backup',
+      'nav.progress': 'Progress & Backup',
       'search.placeholder': 'Search the manual… (/)',
       'skip': 'Skip to content',
       'nav.open': 'Open menu',
       'theme.toggle': 'Toggle light/dark theme',
       'search.aria': 'Search the manual',
 
-      'chapter.unavailable.title': 'Chapter unavailable',
+      // Chapters
+      'chapter.unavailable.title': 'Chapter Unavailable',
       'chapter.unavailable.body': '<b>This chapter could not be loaded.</b> Check that the <code>content/ch/</code> folder is next to <code>index.html</code>.',
       'fig.zoom': 'Zoom figure',
       'fig.zoomed': 'Zoomed figure',
       'fig.close': 'Close',
       'copy.done': 'Copied ✓',
 
-      'home.title.continue': 'Continue your journey',
-      'home.title.start': 'Quality Engineering, Lean Six Sigma and Quality Analytics Training',
+      // Home
+      'home.title.continue': 'Continue Your Journey',
+      'home.title.start': 'Data to understand problems. Methods to solve them.',
+      'home.tagline': 'Quality Engineering · Lean Six Sigma · Continuous Improvement · Data Analytics',
       'home.subtitle': '{done} of {total} lessons completed, across {n} tracks.',
       'home.subtitle.cta': ' Choose a track below to get started.',
       'home.continue': 'Continue',
-      'home.start': 'Start',
-      'home.mytracks': 'My tracks',
+      'home.start': 'Start learning',
+      'home.mytracks': 'My Tracks',
       'home.library': 'library',
       'home.modules': 'modules',
       'home.lessons': 'lessons',
@@ -161,22 +200,38 @@
       'home.source': '<b>Source.</b> All content comes from {src}',
       'home.storage.warn': ' <br><b>Note:</b> this browser is not saving your progress (private mode or restricted storage). Use the JSON export on the {link} page.',
 
+      'home.goals.title': 'Choose by your goal',
+      'home.goals.sub': 'Each goal points to the right track to start with.',
+      'home.goal.cqe.t': 'Prepare for the CQE exam',
+      'home.goal.cqe.s': 'Track aligned to the ASQ Body of Knowledge',
+      'home.goal.belt.t': 'Six Sigma Green/Black Belt',
+      'home.goal.belt.s': 'Lean, DMAIC and improvement project leadership',
+      'home.goal.analytics.t': 'Quality Analytics & Quality 4.0',
+      'home.goal.analytics.s': 'Power BI, SQL, Python and data governance',
+      'home.goal.risk.t': 'Advanced Risk Engineering',
+      'home.goal.risk.s': 'Modern inference, causality and quantitative risk',
+      'home.goal.dmaic.t': 'Improve a real process',
+      'home.goal.dmaic.s': 'Apply the DMAIC cycle step by step',
+
+      // Track
       'track.eyebrow': 'Track {code}',
       'track.progress': '{done} of {total} lessons completed · {pct}%',
 
-      'module.eyebrow': 'Module · level {level}',
+      // Module
+      'module.eyebrow': 'Module · Level {level}',
       'module.lessons.h2': 'Lessons',
       'module.chapterof': 'Chapter {n} of the manual',
       'module.completed': 'completed',
       'module.unread': 'not read yet',
-      'module.assessment.h2': 'Module assessment',
+      'module.assessment.h2': 'Module Assessment',
       'module.assessment.note': '{n} questions related to this module\'s competencies. {attempt} Recommended minimum: <b>70%</b>.',
       'module.assessment.last': '<b>Last attempt: {score}%</b> on {date}.',
       'module.assessment.none': 'Not yet assessed.',
-      'module.assessment.retry': 'Retake assessment',
-      'module.assessment.start': 'Start assessment',
-      'module.level': 'level {n}',
+      'module.assessment.retry': 'Retake Assessment',
+      'module.assessment.start': 'Start Assessment',
+      'module.level': 'Level {n}',
 
+      // Lesson
       'lesson.loading': 'Loading chapter…',
       'lesson.opening': 'Introduction',
       'lesson.chapter': 'Chapter {label}',
@@ -189,7 +244,9 @@
       'lesson.prev': '← Previous',
       'lesson.next': 'Next →',
       'lesson.toc': 'In this lesson',
+      'lesson.language.warning': '⚠️ This chapter is only available in Portuguese. The interface and navigation are in English.',
 
+      // Quiz
       'quiz.title': 'Assessment · {title}',
       'quiz.empty': 'No questions associated with this module.',
       'quiz.gotobank': 'Go to the full bank',
@@ -201,22 +258,28 @@
       'quiz.below': 'Below the recommended 70%.',
       'quiz.bank.title': '{bank} Bank',
 
-      'bank.eyebrow': 'Certification preparation',
-      'bank.title': 'Question bank',
-      'bank.lede': 'Original questions written for this edition, with justification of the correct answer and distractor analysis. They do not reproduce items published by ASQ.',
+      // Bank
+      'bank.eyebrow': 'Practice Lab',
+      'bank.title': 'Practice Lab',
+      'bank.lede': 'Test your knowledge with original questions, with justification of the correct answer and distractor analysis. They do not reproduce items published by ASQ.',
       'bank.howto': '<b>How to study with this bank.</b> Answer without looking anything up and, before checking, justify why each of the other three options is wrong. If you can\'t, the concept is not yet consolidated.',
       'bank.cqe.desc': 'Certified Quality Engineer — distribution proportional to the Body of Knowledge weighting.',
       'bank.cssbb.desc': 'Certified Six Sigma Black Belt — DMAIC, statistics, DOE and project leadership.',
       'bank.questions': '{n} questions',
       'bank.startbtn': 'start',
       'bank.note': '<b>Note.</b> This platform is <b>preparatory only</b>. It does not issue ASQ or recognized Lean Six Sigma certification — official certificates are issued exclusively by the certifying bodies.',
+      'bank.perf.title': 'Your performance',
+      'bank.perf.lede': 'Average score across assessments taken so far, by track.',
+      'bank.perf.empty': 'no data yet',
 
+      // Competencies
       'comp.eyebrow': 'Progress',
-      'comp.title': 'Competency map',
+      'comp.title': 'Competency Map',
       'comp.lede': 'Each competency is marked once every lesson in the module that develops it is completed. It is the inverse of an attendance certificate: it shows what is still missing.',
       'comp.legend.done': 'Competency acquired',
       'comp.legend.pending': 'In development',
 
+      // Search
       'search.eyebrow': 'Search',
       'search.title.results': 'Results for "{q}"',
       'search.title.empty': 'Search the manual',
@@ -224,7 +287,8 @@
       'search.nohits': 'Nothing found. Try a shorter term (e.g. <code>cpk</code>, <code>kanban</code>, <code>anova</code>).',
       'search.count': '{n} chapters.',
 
-      'progress.title': 'Progress & backup',
+      // Progress
+      'progress.title': 'Progress & Backup',
       'progress.lede': 'Progress is saved only in this browser. Export a JSON file to move it to another computer or to avoid losing it when clearing browser data.',
       'progress.done.k': 'Lessons completed',
       'progress.done.s': '{pct}% of total',
@@ -241,7 +305,16 @@
       'progress.assessments.h2': 'Assessments',
       'progress.invalidfile': 'Invalid file.',
       'progress.confirmclear': 'Clear all progress saved in this browser?',
-      'progress.bankname': '{bank} Bank'
+      'progress.bankname': '{bank} Bank',
+
+      // Language
+      'lang.switch': 'Switch to {lang}',
+      'lang.english': 'English',
+      'lang.portuguese': 'Portuguese',
+      'lang.warning': '⚠️ This content is only available in Portuguese. The interface is in English.',
+      'lang.content.available': 'The content is currently available in Portuguese.',
+      'lang.switch.to.en': 'Switch to English →',
+      'lang.switch.to.pt': 'Switch to Portuguese →'
     }
   };
 

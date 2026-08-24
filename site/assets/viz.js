@@ -49,7 +49,6 @@
       }
       return dst;
     }
-    // aplica o skin a todos os eixos existentes (xaxis, xaxis2, ...)
     Object.keys(out).forEach(function (k) {
       if (/^[xy]axis\d*$/.test(k)) merge(out[k], k[0] === 'x' ? sk.xaxis : sk.yaxis);
     });
@@ -61,7 +60,6 @@
     out.legend = merge(out.legend || {}, sk.legend);
     out.margin = merge(out.margin || {}, sk.margin);
     if (out.title) out.title = merge(out.title, sk.title);
-    // cores declaradas como token CSS -> valor real
     var s = JSON.stringify(out).replace(/"@([a-z0-9-]+)"/g, function (m, n) {
       return JSON.stringify(cssv('--' + n) || '#888');
     });

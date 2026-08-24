@@ -1,10 +1,11 @@
-# Academy · Qualidade, Lean Six Sigma e Quality Analytics
+# Quality Engineering Academy
 
-Plataforma de formação em HTML/CSS/JS gerada a partir do *Manual de Engenharia da Qualidade,
-Lean Six Sigma e Quality Analytics — 4ª edição (2026)*.
+Plataforma de formação em Engenharia da Qualidade, Lean Six Sigma, Melhoria Contínua e Data
+Analytics, em HTML/CSS/JS, gerada a partir do *Manual de Engenharia da Qualidade, Lean Six Sigma
+e Quality Analytics — 4ª edição (2026)*.
 
 Não é um e-book com menus: o manual é a **fonte de conhecimento**, e a aplicação é a **estrutura
-de aprendizagem** — trilhas, módulos, aulas, avaliação e mapa de competências.
+de aprendizagem** — trilhas, módulos, aulas, avaliação, Practice Lab e mapa de competências.
 
 **Abrir:** `site/index.html` em qualquer navegador. Não precisa de servidor, não precisa de
 instalação, funciona offline.

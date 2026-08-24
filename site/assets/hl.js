@@ -31,7 +31,6 @@
 
   var cache = {};
 
-  // tokeniza primeiro comentarios e strings, depois aplica keywords ao resto
   function highlight(code, lang) {
     var cfg = cache[lang] || (cache[lang] = build(lang));
     var out = '', i = 0, n = code.length;
@@ -48,14 +47,12 @@
     var plain = '';
     while (i < n) {
       var c = code[i];
-      // comentario
       if (code.startsWith(cmt, i) || (lang === 'r' && c === '#')) {
         var e = code.indexOf('\n', i); if (e < 0) e = n;
         flushPlain(plain); plain = '';
         out += '<span class="t-c">' + h(code.slice(i, e)) + '</span>';
         i = e; continue;
       }
-      // string tripla python
       if (lang === 'python' && (code.startsWith('"""', i) || code.startsWith("'''", i))) {
         var q3 = code.slice(i, i + 3);
         var e3 = code.indexOf(q3, i + 3); e3 = e3 < 0 ? n : e3 + 3;
@@ -63,7 +60,6 @@
         out += '<span class="t-s">' + h(code.slice(i, e3)) + '</span>';
         i = e3; continue;
       }
-      // string simples
       if (c === '"' || c === "'") {
         var j = i + 1;
         while (j < n && code[j] !== c) { if (code[j] === '\\') j++; j++; }
