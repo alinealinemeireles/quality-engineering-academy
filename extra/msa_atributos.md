@@ -1,8 +1,6 @@
 <a id="capitulo-909"></a>
 ## Capítulo 61-A: MSA por Atributos — Kappa e Percentual de Concordância
 
-> **Nota editorial.** Capítulo escrito de raiz para a edição web, como laboratório do Capítulo 61. O Capítulo 61 trata do Gage R&R para características **variáveis** (dimensões medidas numa escala contínua); este capítulo cobre a análise de sistemas de medição para características de **atributo** (conforme/não conforme, passa/não passa), tópico explícito do BOK do ASQ CQE (IV.F) e do CSSBB (V.C.1).
-
 ### A pergunta de engenharia
 
 *O inspetor A aprovou a peça. O inspetor B reprovou a mesma peça. Qual dos dois está certo — e como medir isso sem simplesmente assumir que um deles é o padrão?*

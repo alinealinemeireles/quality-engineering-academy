@@ -1,12 +1,6 @@
 <a id="capitulo-903"></a>
 ## Capítulo 14-A: Voz do Cliente, Satisfação e o Elo com Lean Six Sigma
 
-> **Nota editorial.** Capítulo escrito de raiz para a edição web, como complemento ao Capítulo 14
-> (Relações com Clientes) e ao Capítulo 6 (CTQ/CTC). Onde o manual trata QFD e pesquisa de
-> satisfação, este capítulo cobre o que fica entre os dois: a arquitetura que liga a Voz do Cliente
-> aos requisitos, à ISO 9001, ao Lean, ao Six Sigma e à melhoria contínua — como um sistema fechado,
-> não como um relatório anual arquivado.
-
 ### A pergunta de engenharia
 
 *A pesquisa de satisfação anual deu 87%. A diretoria está contente. Isso significa que a empresa

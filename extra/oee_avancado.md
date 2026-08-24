@@ -1,12 +1,6 @@
 <a id="capitulo-904"></a>
 ## Capítulo 25-A: OEE Avançado — Decomposição de Perdas, Maturidade Digital e Dados em Tempo Real
 
-> **Nota editorial.** Capítulo interativo escrito de raiz para a edição web, como laboratório
-> avançado do Capítulo 25. Recapitula a definição e as três fórmulas clássicas de OEE (seção 1),
-> para valer sozinho como referência, e depois vai além delas: mostra para onde os minutos
-> desaparecem, por que a média semanal mente, e o que separa uma fábrica que só reporta OEE de
-> uma que age sobre ele.
-
 ### A pergunta de engenharia
 
 *O relatório da semana diz OEE 73%. A diretoria aprova, o quadro fica verde, todos seguem em

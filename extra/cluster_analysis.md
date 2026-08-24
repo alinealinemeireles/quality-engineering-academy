@@ -1,13 +1,6 @@
 <a id="capitulo-907"></a>
 ## Capítulo 56-A: Análise de Clusters — Hierárquica e K-Means na Qualidade
 
-> **Nota editorial.** Capítulo escrito de raiz para a edição web, como extensão natural do
-> Capítulo 56 (PCA e T² de Hotelling). O PCA responde "quantas dimensões independentes existem
-> nos meus dados?"; a análise de clusters responde uma pergunta diferente e complementar:
-> "que grupos naturais de observações parecidas existem, sem eu ter dito ao algoritmo quais são?"
-> É a principal técnica **não supervisionada** ainda ausente do manual, e uma das mais usadas na
-> prática para segmentar fornecedores, produtos, modos de falha e assinaturas de processo.
-
 ### A pergunta de engenharia
 
 *Tenho 40 fornecedores, cada um com uma dúzia de indicadores de qualidade. Há grupos naturais aí

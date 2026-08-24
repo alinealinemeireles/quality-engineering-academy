@@ -1,11 +1,6 @@
 <a id="capitulo-906"></a>
 ## Capítulo 9-A: Resolução Estruturada de Problemas — 5 Porquês, 8D e CAPA
 
-> **Nota editorial.** Capítulo interativo escrito de raiz para a edição web, como laboratório do
-> Capítulo 9. O manual introduz os 5 Porquês e o Pareto como ferramentas de abordagem ao problema;
-> este capítulo monta o fluxo completo — do problema detectado ao fechamento verificado — e mostra
-> por que a maioria dos "problemas resolvidos" volta em algumas semanas.
-
 ### A pergunta de engenharia
 
 *O 8D foi preenchido, assinado e arquivado. Três semanas depois, o mesmo defeito aparece numa peça

@@ -1,8 +1,6 @@
 <a id="capitulo-910"></a>
 ## Capítulo 56-A: Análise Multivariada II — Fatorial, Discriminante e MANOVA
 
-> **Nota editorial.** Capítulo escrito de raiz para a edição web, como companheiro do Capítulo 56. O Capítulo 56 cobre PCA e o T² de Hotelling; este capítulo cobre as três outras ferramentas multivariadas explicitamente listadas no BOK do CSSBB (VI.A.3): análise fatorial, análise discriminante e MANOVA.
-
 ### A pergunta de engenharia
 
 *Você tem vinte variáveis de processo correlacionadas entre si. Quer saber quais delas realmente formam grupos com significado físico — não apenas números que se movem juntos por coincidência estatística — e, uma vez identificados os grupos, quer usar essa estrutura para classificar novas peças ou para comparar o efeito de um tratamento sobre várias características de qualidade ao mesmo tempo.*

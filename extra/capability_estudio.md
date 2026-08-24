@@ -1,10 +1,6 @@
 <a id="capitulo-902"></a>
 ## Capítulo 71-A: Estúdio de Capabilidade — Cp, Cpk, Pp, Ppk na prática
 
-> **Nota editorial.** Capítulo interativo escrito de raiz para a edição web, como laboratório do
-> Capítulo 71. Todos os gráficos respondem ao rato; os cálculos aparecem em Python e em R lado a
-> lado.
-
 ### A pergunta de engenharia
 
 *O cliente exige Cpk ≥ 1,33. O relatório diz Cpk 1,41 e Ppk 0,92. Qual dos dois números é que ele

@@ -1,8 +1,6 @@
 <a id="capitulo-908"></a>
 ## Capítulo 10-A: Barreiras à Melhoria da Qualidade
 
-> **Nota editorial.** Capítulo escrito de raiz para a edição web, cobrindo o tópico I.I do Body of Knowledge do ASQ CQE ("Barriers to Quality Improvement"), que não tinha um capítulo dedicado nesta edição.
-
 ### A pergunta de engenharia
 
 *A equipe resolveu o problema técnico, o projeto foi encerrado com sucesso e o KPI melhorou. Três meses depois, o processo voltou discretamente ao antigo jeito de trabalhar. O que faltou?*

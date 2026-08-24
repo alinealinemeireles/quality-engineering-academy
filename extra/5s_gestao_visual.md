@@ -1,11 +1,6 @@
 <a id="capitulo-905"></a>
 ## Capítulo 18-A: 5S e Gestão Visual de Chão de Fábrica
 
-> **Nota editorial.** Capítulo interativo escrito de raiz para a edição web, como laboratório do
-> Capítulo 18. O manual trata 5S como um dos conceitos Lean; este capítulo trata-o como o que ele
-> é na prática — a ferramenta mais fácil de começar e a mais fácil de deixar morrer nos últimos
-> dois passos.
-
 ### A pergunta de engenharia
 
 *A área foi organizada mês passado. Hoje tem caixa no chão outra vez, ferramenta duplicada na

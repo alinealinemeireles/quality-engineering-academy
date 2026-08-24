@@ -88,6 +88,64 @@ def restore_math(html, store):
     return html
 
 
+# ---- caixas semanticas: reconhece titulos recorrentes (h2/h3/h4) e envolve a
+# secção seguinte (ate ao proximo heading de nivel igual ou maior) numa div
+# estilada. O heading original fica intacto e continua dentro da caixa, para
+# nao quebrar os anchors do TOC (add_anchors corre depois de md2html).
+_HEADING_RE = re.compile(r'<h([234])(?:\s[^>]*)?>(.*?)</h\1>', re.S)
+_TAG_RE = re.compile(r'<[^>]+>')
+_BOX_RULES = [
+    (re.compile(r'^(revis[ãa]o\s+t[ée]cnica\s+2026|2026\s+technical\s+review)\b', re.I), 'strip'),
+    (re.compile(r'^(erros?\s+com(um|uns)|common\s+mistakes?)\b', re.I), 'box-mistake'),
+    (re.compile(r'\b(exemplos?|examples?)\b', re.I), 'box-example'),
+    (re.compile(r'\b(exerc[íi]cios?|exercises?)\b', re.I), 'box-exercise'),
+    (re.compile(r'^(a\s+pergunta\s+de\s+engenharia|the\s+engineering\s+question)\b', re.I), 'box-prompt'),
+]
+
+
+def _classify_heading(heading_html):
+    plain = _TAG_RE.sub('', heading_html).strip()
+    for rx, action in _BOX_RULES:
+        if rx.search(plain):
+            return action
+    return None
+
+
+def apply_boxes(html):
+    matches = list(_HEADING_RE.finditer(html))
+    actions = []
+    for i, m in enumerate(matches):
+        action = _classify_heading(m.group(2))
+        if not action:
+            continue
+        level = int(m.group(1))
+        sec_end = len(html)
+        for j in range(i + 1, len(matches)):
+            if int(matches[j].group(1)) <= level:
+                sec_end = matches[j].start()
+                break
+        actions.append((m.start(), sec_end, action))
+    if not actions:
+        return html
+    # descarta secções aninhadas dentro de uma secção já marcada
+    kept, last_end = [], -1
+    for start, end, action in actions:
+        if start < last_end:
+            continue
+        kept.append((start, end, action))
+        last_end = end
+    out, pos = [], 0
+    for start, end, action in kept:
+        out.append(html[pos:start])
+        if action != 'strip':
+            out.append('<div class="box ' + action + '">')
+            out.append(html[start:end])
+            out.append('</div>')
+        pos = end
+    out.append(html[pos:])
+    return ''.join(out)
+
+
 def md2html(src):
     src = externalise_images(src)
     store = []
@@ -95,6 +153,7 @@ def md2html(src):
     MD.reset()
     html = MD.convert(src)
     html = restore_math(html, store)
+    html = apply_boxes(html)
     # tabelas responsivas
     html = html.replace('<table>', '<div class="table-wrap"><table>').replace('</table>', '</table></div>')
     # blocos plotly -> div renderizavel

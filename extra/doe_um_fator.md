@@ -1,8 +1,6 @@
 <a id="capitulo-911"></a>
 ## Capítulo 74-A: Delineamentos de Um Fator — Blocos Aleatorizados e Quadrado Latino
 
-> **Nota editorial.** Capítulo escrito de raiz para a edição web, como companheiro dos Capítulos 73-74. Aqueles capítulos tratam do fatorial completo com múltiplos fatores; este cobre os delineamentos clássicos de **um único fator de interesse**, na presença de uma ou duas fontes de variação incômoda (nuisance factors) que precisam de ser bloqueadas — tópico explícito do BOK do CSSBB (VII.A.4).
-
 ### A pergunta de engenharia
 
 *Você quer comparar quatro fornecedores de matéria-prima. Sabe, por experiência, que o turno de produção também afeta o resultado — mas não é o turno que está a ser testado. Como isolar o efeito do fornecedor sem que a variação do turno confunda a conclusão?*

@@ -1,12 +1,6 @@
 <a id="capitulo-901"></a>
 ## Capítulo 40-B: Esparguete, Makigami e Tartaruga — as três que faltavam
 
-> **Nota editorial.** Capítulo escrito de raiz para a edição web. O manual cobre bem o fluxograma,
-> o diagrama em raia e o VSM, mas não trata três ferramentas de mapeamento que aparecem
-> constantemente em projetos reais: o **diagrama de esparguete** (movimento físico), o **Makigami**
-> (processos administrativos) e o **diagrama de tartaruga** (exigido em auditorias IATF 16949).
-> Cada uma responde a uma pergunta que as outras não respondem.
-
 ### Primeiro: qual delas, e quando
 
 Não são alternativas — são camadas. Passe o rato sobre cada bolha para ver a que serve.

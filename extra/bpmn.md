@@ -1,12 +1,6 @@
 <a id="capitulo-900"></a>
 ## Capítulo 40-A: BPMN 2.0 e Bizagi Modeler na prática
 
-> **Nota editorial.** Este capítulo foi escrito de raiz para a edição web. O Capítulo 40 do manual
-> apresenta o fluxograma e o diagrama em raia, e menciona a notação BPMN em duas figuras — mas sem o
-> texto que explica os elementos, as regras de sintaxe e a diferença entre BPMN e fluxograma. Como o
-> mapeamento de processos é a competência que atravessa Definir, Medir e Analisar, essa lacuna foi
-> preenchida aqui.
-
 ### A pergunta de engenharia
 
 *Tenho um fluxograma do processo e toda a gente concorda que está certo. Porque é que, na primeira
