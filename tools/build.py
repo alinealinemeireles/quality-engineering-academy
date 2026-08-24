@@ -146,6 +146,47 @@ def apply_boxes(html):
     return ''.join(out)
 
 
+# ---- citacoes de capitulo -> links reais -----------------------------------
+# "Capitulo 71" / "Chapter 71" / "Capitulo 40-A" (alias de capitulo extra) no
+# corpo do texto passam a link para a aula real, tal como um leitor faria no
+# Microsoft Learn. So aplicado a citacoes singulares (nao "Capitulos 34-38"),
+# e nunca dentro de <code>/<pre> (comentarios em blocos de codigo) ou de um
+# link ja existente.
+_CAP_ALIAS_TO_NUM = {'40-A': 900, '40-B': 901, '71-A': 902, '14-A': 903,
+                      '25-A': 904, '18-A': 905, '9-A': 906, '56-A': 907}
+_CHAP_CITE_RE = re.compile(r'\b(?:Cap[íi]tulo|Chapter)\s+(\d+)(?:-([A-Z])\b)?')
+_TAG_TOKEN_RE = re.compile(r'(<[^>]+>)')
+_TAG_NAME_RE = re.compile(r'</?([a-zA-Z0-9]+)')
+
+
+def link_chapter_citations(html, num_to_cid, current_cid):
+    def rep(m):
+        num = int(m.group(1))
+        if m.group(2):
+            num = _CAP_ALIAS_TO_NUM.get(m.group(1) + '-' + m.group(2))
+            if num is None:
+                return m.group(0)
+        cid = num_to_cid.get(num)
+        if not cid or cid == current_cid:
+            return m.group(0)
+        return '<a href="#/aula/' + cid + '">' + m.group(0) + '</a>'
+
+    skip_depth = 0
+    out = []
+    for tok in _TAG_TOKEN_RE.split(html):
+        if tok.startswith('<'):
+            tn = _TAG_NAME_RE.match(tok)
+            if tn and tn.group(1).lower() in ('code', 'pre', 'a'):
+                skip_depth += -1 if tok.startswith('</') else 1
+                skip_depth = max(skip_depth, 0)
+            out.append(tok)
+        elif skip_depth > 0 or not tok:
+            out.append(tok)
+        else:
+            out.append(_CHAP_CITE_RE.sub(rep, tok))
+    return ''.join(out)
+
+
 def md2html(src):
     src = externalise_images(src)
     store = []
@@ -416,6 +457,8 @@ def main():
                                          'part': 'Conteúdo novo (4ª edição web)',
                                          'raw_md': f.read(), 'new': True}
 
+    num_to_cid = {n: f'cap-{n:03d}' for n in chapters}
+
     manifest_tracks = []
     search_index = []
     built = set()
@@ -438,6 +481,7 @@ def main():
                         body = md2html(ch['raw_md'])
                     else:
                         body = '\n'.join(x for x in (cell_html(cells[k]) for k in ch['cells']) if x)
+                    body = link_chapter_citations(body, num_to_cid, cid)
                     body = strip_title(body, ch['title'])
                     body, toc = add_anchors(body)
                     ncode = len(re.findall(r'class="codeblock"', body))
@@ -493,6 +537,7 @@ def main():
             tm = EN_TITLE_RE.search(raw)
             title = tm.group(1) if tm else f'Chapter {num}'
             body = md2html(raw)
+            body = link_chapter_citations(body, num_to_cid, f'cap-{num:03d}')
             body = strip_title(body, title)
             body, toc = add_anchors(body)
             ncode = len(re.findall(r'class="codeblock"', body))
