@@ -281,10 +281,12 @@ h1 { font-size: clamp(24px, 3.3vw, 33px); line-height: 1.2; margin: 0 0 8px; let
 .tile .v { font-size: 27px; font-weight: 700; line-height: 1.15; margin-top: 5px; font-variant-numeric: tabular-nums; }
 .tile .s { font-size: 12.8px; color: var(--ink-3); margin-top: 2px; }
 
-/* cartoes de objetivo (home) */
-.goal-cards { display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); margin-bottom: 30px; }
+/* cartoes de objetivo (home) — flex em vez de grid: uma linha parcial
+   fica centrada, nunca com um cartao orfao a esquerda e vazio a direita */
+.goal-cards { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-bottom: 30px; }
 .goal-card {
   display: flex; align-items: center; gap: 12px;
+  flex: 1 1 190px; max-width: 232px;
   background: var(--surface-1); border: 1px solid var(--line); border-radius: var(--radius-s);
   padding: 13px 15px; text-decoration: none; color: inherit; transition: border-color .14s, transform .14s;
 }
