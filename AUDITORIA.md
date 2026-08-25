@@ -339,5 +339,8 @@ especial é escrita, tanto em `build_toc_html` como em `build_toc_html_en`. Aind
 documentado no `check_i18n.js` (que não verifica duplicação no índice) — ficou descoberto só ao
 carregar a página a sério, o que reforça o valor de testar no browser antes de publicar.
 
-Ainda por correr: `tools/check.js`/`check2.js` (testes Playwright) continuam a precisar de
-`npx playwright install` no ambiente onde forem executados — não foi instalado nesta sessão.
+**Atualização**: `tools/check.js` e `tools/check2.js` foram corridos nesta sessão (Chromium do
+Playwright já estava instalado no ambiente) — ambos passam sem erros de consola ou de página,
+confirmando programaticamente os números vistos manualmente no browser (165 aulas, lupa de figuras,
+progresso a persistir). Continuam a precisar de `npx playwright install` em qualquer ambiente novo
+(ex.: CI) onde o Chromium gerido pelo Playwright ainda não exista.
