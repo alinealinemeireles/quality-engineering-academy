@@ -1,9 +1,13 @@
 const { chromium } = require('playwright');
+const path = require('path');
+const fs = require('fs');
 
 const BASE = 'http://localhost:8899/';
+const SHOTS = path.join(__dirname, '..', 'shots');
+fs.mkdirSync(SHOTS, { recursive: true });
 
 (async () => {
-  const browser = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium' });
+  const browser = await chromium.launch();
   const page = await browser.newPage({ viewport: { width: 1440, height: 980 } });
   const errors = [];
   page.on('console', m => { if (m.type() === 'error') errors.push('CONSOLE: ' + m.text().slice(0, 200)); });
@@ -12,7 +16,7 @@ const BASE = 'http://localhost:8899/';
   async function shot(hash, name, wait = 1200) {
     await page.goto(BASE + hash, { waitUntil: 'domcontentloaded' });
     await page.waitForTimeout(wait);
-    await page.screenshot({ path: `/root/academy/shots/${name}.png`, fullPage: false });
+    await page.screenshot({ path: `${SHOTS}/${name}.png`, fullPage: false });
     return page.title();
   }
 
@@ -31,7 +35,7 @@ const BASE = 'http://localhost:8899/';
   console.log('mermaid svg:', await page.locator('.mermaid svg').count());
   console.log('tabelas:', await page.locator('.prose table').count());
   console.log('toc    :', await page.locator('.toc a').count());
-  await page.screenshot({ path: '/root/academy/shots/04b-aula-bpmn-full.png', fullPage: true });
+  await page.screenshot({ path: path.join(SHOTS, '04b-aula-bpmn-full.png'), fullPage: true });
 
   await shot('#/aula/cap-071', '05-aula-capability', 2500);
   console.log('capability h1:', await page.locator('h1').first().innerText());
@@ -49,7 +53,7 @@ const BASE = 'http://localhost:8899/';
     await page.locator('.qcard').first().locator('.opt').first().click();
     await page.waitForTimeout(400);
     console.log('score after 1:', await page.locator('#scoreV').innerText());
-    await page.screenshot({ path: '/root/academy/shots/08b-quiz-answered.png' });
+    await page.screenshot({ path: path.join(SHOTS, '08b-quiz-answered.png') });
   }
 
   await shot('#/busca?q=cpk', '09-busca');
@@ -60,16 +64,16 @@ const BASE = 'http://localhost:8899/';
   await page.waitForTimeout(600);
   await page.click('#themeBtn');
   await page.waitForTimeout(700);
-  await page.screenshot({ path: '/root/academy/shots/11-dark.png' });
+  await page.screenshot({ path: path.join(SHOTS, '11-dark.png') });
   await page.goto(BASE + '#/aula/cap-900', { waitUntil: 'domcontentloaded' });
   await page.waitForTimeout(3500);
-  await page.screenshot({ path: '/root/academy/shots/12-dark-aula.png' });
+  await page.screenshot({ path: path.join(SHOTS, '12-dark-aula.png') });
 
   // mobile
   const m = await browser.newPage({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 2 });
   await m.goto(BASE, { waitUntil: 'domcontentloaded' });
   await m.waitForTimeout(900);
-  await m.screenshot({ path: '/root/academy/shots/13-mobile.png' });
+  await m.screenshot({ path: path.join(SHOTS, '13-mobile.png') });
 
   console.log('\n--- erros ---');
   console.log(errors.length ? errors.join('\n') : 'nenhum');

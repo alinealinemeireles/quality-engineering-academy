@@ -33,7 +33,7 @@ Medir o impacto de uma barreira, e não apenas descrevê-la, é o que distingue 
 
 ### Métodos de superação
 
-Não existe uma solução única — o método depende de qual categoria de barreira domina no caso concreto —, mas alguns princípios são transversais: comprometimento visível e sustentado da liderança (não apenas um discurso de abertura, mas revisões periódicas de progresso); alinhamento dos sistemas de recompensa e medição com os objetivos de qualidade, e não apenas com custo ou volume; investimento em treinamento e, quando aplicável, em certificação formal (o próprio Body of Knowledge do CQE é, em si, um catálogo do que um profissional de qualidade precisa saber para preencher a barreira técnica); e técnicas estruturadas de gestão da mudança — análise de stakeholders, avaliação de prontidão organizacional, planos de comunicação — em vez de assumir que uma solução tecnicamente correta se sustenta sozinha.
+Não existe uma solução única — o método depende de qual categoria de barreira domina no caso concreto —, mas alguns princípios são transversais: comprometimento visível e sustentado da liderança (não apenas um discurso de abertura, mas revisões periódicas de progresso); alinhamento dos sistemas de recompensa e medição com os objetivos de qualidade, e não apenas com custo ou volume; investimento em formação e, quando aplicável, em certificação formal (o próprio Body of Knowledge do CQE é, em si, um catálogo do que um profissional de qualidade precisa saber para preencher a barreira técnica); e técnicas estruturadas de gestão da mudança — análise de stakeholders, avaliação de prontidão organizacional, planos de comunicação — em vez de assumir que uma solução tecnicamente correta se sustenta sozinha.
 
 ### Exercício proposto: matriz de priorização de barreiras em Excel
 
@@ -43,7 +43,7 @@ Construa, numa folha de cálculo, uma matriz com uma linha por barreira identifi
 
 1. **Tratar a barreira como um detalhe de implementação, não como parte do escopo do projeto.** Se a barreira não é endereçada no plano do projeto, ela não vai desaparecer sozinha quando o projeto terminar.
 2. **Confundir ausência de reclamação com ausência de barreira.** Uma cultura de medo de culpa produz silêncio, não ausência de problemas.
-3. **Aplicar a mesma solução a barreiras de categorias diferentes.** Treinamento técnico não resolve um sistema de recompensa desalinhado, e uma reestruturação de processo não resolve falta de comprometimento da liderança.
+3. **Aplicar a mesma solução a barreiras de categorias diferentes.** Formação técnico não resolve um sistema de recompensa desalinhado, e uma reestruturação de processo não resolve falta de comprometimento da liderança.
 4. **Encerrar o projeto sem transferir a responsabilidade de sustentação para um dono de processo claro.** É a barreira estrutural mais comum por trás de melhorias que revertem.
 
 *Fonte principal: ASQ Certified Quality Engineer Body of Knowledge (2022), seção I.I "Barriers to Quality Improvement". Cross-check: Quality Gurus, "Top 4 Barriers to Quality Improvement" (qualitygurus.com); revisões sistemáticas sobre barreiras culturais, técnicas, estruturais e estratégicas em programas de melhoria contínua. Verificado via pesquisa na web em 22/08/2026.*

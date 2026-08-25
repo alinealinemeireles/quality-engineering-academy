@@ -259,7 +259,7 @@ def codetabs(block):
         langs.append((parts[i].strip().lower(), parts[i + 1].strip('\n')))
     if not langs:
         return '<pre><code class="language-python">%s</code></pre>' % esc(block)
-    uid = 'ct%d' % (abs(hash(block)) % 10 ** 8)
+    uid = 'ct%s' % hashlib.md5(block.encode('utf-8')).hexdigest()[:8]
     tabs, panes = [], []
     for i, (lang, code) in enumerate(langs):
         label = TAB_LANG.get(lang, lang.upper())
@@ -360,11 +360,109 @@ def build_toc_html(parts):
             seen_num.add(ch['num'])
             items.append(ch)
         if not items:
+            # partes sem capitulos numerados no notebook (o banco de questoes e a
+            # bibliografia nao usam o padrao "## Capitulo N:"), mas tem conteudo
+            # real -- listadas a mao para nao desaparecer do indice. Os capitulos
+            # 132/133 pertencem ao notebook a PARTE XVI mas fisicamente caem sob o
+            # cabecalho APENDICE (ver parse.py) -- marcar em seen_num para nao
+            # aparecerem duplicados quando o loop chegar ao APENDICE.
+            special = TOC_SPECIAL_PARTS.get(p['title'])
+            if special:
+                out.append(f'<h3>{esc(p["title"])}</h3><ul>')
+                out.append(special)
+                out.append('</ul>')
+                seen_num.update(TOC_SPECIAL_NUMS.get(p['title'], ()))
             continue
         out.append(f'<h3>{esc(p["title"])}</h3><ul>')
         for ch in items:
             out.append(f'<li><a href="#/aula/cap-{ch["num"]:03d}">{ch["num"]}. '
                        f'{esc(ch["title"])}</a></li>')
+        out.append('</ul>')
+    return '\n'.join(out)
+
+
+TOC_SPECIAL_PARTS = {
+    'PARTE XV — Preparação para Certificação':
+        '<li><a href="#/certificacao">Banco de questões (119 perguntas, CQE e CSSBB)</a></li>',
+    'PARTE XVI — Metodologia, Fontes e Bibliografia':
+        '<li><a href="#/aula/cap-132">132. Sobre Este Manual: Metodologia e Fontes</a></li>'
+        '<li><a href="#/aula/cap-133">133. Bibliografia Completa</a></li>',
+}
+
+TOC_SPECIAL_NUMS = {
+    'PARTE XVI — Metodologia, Fontes e Bibliografia': (132, 133),
+}
+
+
+# ---- indice navegavel em ingles ---------------------------------------------
+# O TOC em si e gerado a partir de `parts` (estrutura do manual.ipynb, que e
+# sempre em portugues) -- por isso precisa de tradução propria de titulos de
+# parte e, por capitulo, usa o titulo EN quando existe traducao (en_titles),
+# caindo para o titulo PT quando ainda nao existe (mesma politica de fallback
+# usada no resto do site).
+PART_TITLE_EN = {
+    'PARTE I — Fundamentos da Qualidade e do Six Sigma': 'PART I — Fundamentals of Quality and Six Sigma',
+    'PARTE II — Gestão, Liderança e Cultura da Qualidade': 'PART II — Management, Leadership, and Quality Culture',
+    'PARTE III — Lean': 'PART III — Lean',
+    'PARTE IV — DMAIC e Melhoria de Processos': 'PART IV — DMAIC and Process Improvement',
+    'PARTE V — Estatística para Engenharia da Qualidade': 'PART V — Statistics for Quality Engineering',
+    'PARTE VI — Engenharia de Medição: Metrologia, MSA e Amostragem':
+        'PART VI — Measurement Engineering: Metrology, MSA, and Sampling',
+    'PARTE VII — Controlo Estatístico de Processo e Capability':
+        'PART VII — Statistical Process Control and Capability',
+    'PARTE VIII — Delineamento de Experimentos e Robust Design':
+        'PART VIII — Design of Experiments and Robust Design',
+    'PARTE IX — Risco, FMEA e Resolução de Problemas': 'PART IX — Risk, FMEA, and Problem Solving',
+    'PARTE X — Sistemas da Qualidade, Normas e Auditoria': 'PART X — Quality Systems, Standards, and Auditing',
+    'PARTE XI — Design de Produto e Processo, Confiabilidade e DFSS':
+        'PART XI — Product and Process Design, Reliability, and DFSS',
+    'PARTE XII — Cadeia de Fornecimento e Qualidade Automotiva':
+        'PART XII — Supply Chain and Automotive Quality',
+    'PARTE XIII — Quality 4.0: Software, Dados, Analytics e IA':
+        'PART XIII — Quality 4.0: Software, Data, Analytics, and AI',
+    'PARTE XIV — Aplicações Setoriais': 'PART XIV — Sector Applications',
+    'PARTE XV — Preparação para Certificação': 'PART XV — Certification Preparation',
+    'PARTE XVI — Metodologia, Fontes e Bibliografia': 'PART XVI — Methodology, Sources, and Bibliography',
+    'APÊNDICE — VALIDAÇÃO MATEMÁTICA E ESTATÍSTICA 2026':
+        'APPENDIX — Mathematical and Statistical Validation 2026',
+    'PARTE XVII — LABORATÓRIO AVANÇADO 2026': 'PART XVII — Advanced Laboratory 2026',
+    'ENCERRAMENTO — PERCURSO DE CERTIFICAÇÃO E PROJETO FINAL 2026':
+        'CLOSING — Certification Path and Final Project 2026',
+}
+
+TOC_SPECIAL_PARTS_EN = {
+    'PARTE XV — Preparação para Certificação':
+        '<li><a href="#/certificacao">Question bank (119 questions, CQE and CSSBB)</a></li>',
+    'PARTE XVI — Metodologia, Fontes e Bibliografia':
+        '<li><a href="#/aula/cap-132">132. About This Handbook: Methodology and Sources</a></li>'
+        '<li><a href="#/aula/cap-133">133. Complete Bibliography</a></li>',
+}
+
+
+def build_toc_html_en(parts, en_titles):
+    out = ['<p>Click any chapter to open the lesson.</p>']
+    seen_num = set()
+    for p in parts:
+        items = []
+        for ch in p['chapters']:
+            if ch['num'] in seen_num:
+                continue
+            seen_num.add(ch['num'])
+            items.append(ch)
+        title_en = PART_TITLE_EN.get(p['title'], p['title'])
+        if not items:
+            special = TOC_SPECIAL_PARTS_EN.get(p['title'])
+            if special:
+                out.append(f'<h3>{esc(title_en)}</h3><ul>')
+                out.append(special)
+                out.append('</ul>')
+                seen_num.update(TOC_SPECIAL_NUMS.get(p['title'], ()))
+            continue
+        out.append(f'<h3>{esc(title_en)}</h3><ul>')
+        for ch in items:
+            title = en_titles.get(ch['num'], ch['title'])
+            out.append(f'<li><a href="#/aula/cap-{ch["num"]:03d}">{ch["num"]}. '
+                       f'{esc(title)}</a></li>')
         out.append('</ul>')
     return '\n'.join(out)
 
@@ -525,8 +623,11 @@ def main():
     # (cap-NNN) quando a traducao ainda nao existe para aquele capitulo.
     EN_DIR = os.path.join(ROOT, 'i18n', 'en')
     EN_TITLE_RE = re.compile(r'^##\s*Chapter\s+\d+:\s*(.+?)\s*$', re.M)
+    id_to_mod_tr = {c['id']: (c['m'], c['tr']) for c in search_index}
+    search_index_en = []
     if os.path.isdir(EN_DIR):
         n_en = 0
+        en_titles = {}
         for fn in sorted(os.listdir(EN_DIR)):
             m = re.match(r'^cap-(\d+)\.md$', fn)
             if not m:
@@ -549,23 +650,31 @@ def main():
                 'id': cid, 'num': num, 'title': title,
                 'part': src_ch.get('part', ''), 'html': body, 'toc': toc,
                 'stats': {'code': ncode, 'fig': nfig, 'words': len(plain.split())},
-                'new': src_ch.get('new', False),
+                'new': src_ch.get('new', False), 'lang': 'en',
             }
             with open(os.path.join(CHDIR, cid + '.en.js'), 'w', encoding='utf-8') as f:
                 f.write(js_module(cid + '.en', payload))
+            en_titles[num] = title
+            mod_id, track_id = id_to_mod_tr.get(cid, ('', ''))
+            if mod_id:
+                search_index_en.append({'id': cid, 'n': num, 't': title,
+                                        'k': keywords(plain), 'm': mod_id, 'tr': track_id})
             n_en += 1
-        # abertura em ingles (capitulo 0), com o mesmo indice navegavel do PT
+        # abertura em ingles (capitulo 0), com indice navegavel proprio (titulos
+        # de parte e de capitulo em ingles, com fallback PT por capitulo ainda
+        # nao traduzido -- ver build_toc_html_en)
         en_abertura = os.path.join(EN_DIR, 'abertura.md')
         if os.path.exists(en_abertura):
             with open(en_abertura, encoding='utf-8') as f:
                 fbody_en = md2html(f.read())
-            fbody_en += build_toc_html(parts)
+            fbody_en += build_toc_html_en(parts, en_titles)
             fbody_en, ftoc_en = add_anchors(fbody_en)
             with open(os.path.join(CHDIR, 'cap-000.en.js'), 'w', encoding='utf-8') as f:
                 f.write(js_module('cap-000.en', {
                     'id': 'cap-000', 'num': 0, 'title': 'Opening',
                     'part': 'Opening', 'html': fbody_en, 'toc': ftoc_en,
-                    'stats': {'code': 0, 'fig': 0, 'words': len(TAG_RE.sub(' ', fbody_en).split())}}))
+                    'stats': {'code': 0, 'fig': 0, 'words': len(TAG_RE.sub(' ', fbody_en).split())},
+                    'lang': 'en'}))
             n_en += 1
         if n_en:
             print(f'traducoes EN      : {n_en}')
@@ -585,6 +694,7 @@ def main():
         'source': 'Manual de Engenharia da Qualidade, Lean Six Sigma e Quality Analytics — 4ª edição (2026)',
         'tracks': manifest_tracks,
         'search': search_index,
+        'searchEn': search_index_en,
         'bankSize': len(bank),
         'figCount': len(figs),
         'chapterCount': len(built),

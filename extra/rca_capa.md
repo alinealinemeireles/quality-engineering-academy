@@ -140,11 +140,11 @@ mais de uma resposta válida, e cada ramo precisa ser checado no gemba antes de 
 | Porquê 1 | Por que saiu fora da dimensão? | Ferramenta desregulada | ✔ medido na máquina |
 | Porquê 2 | Por que a ferramenta estava desregulada? | Não houve verificação no início do turno | ✔ registro de checklist ausente |
 | Porquê 3 | Por que não houve verificação? | Operador não sabia que era obrigatória | ✔ confirmado em entrevista |
-| Porquê 4 | Por que não sabia? | Não foi treinado no procedimento atual | ✔ ficha de treinamento sem registro |
-| Porquê 5 (causa raiz) | Por que não foi treinado? | Não existe matriz de treinamento para esse posto | ✔ matriz não contempla o posto |
+| Porquê 4 | Por que não sabia? | Não foi treinado no procedimento atual | ✔ ficha de formação sem registro |
+| Porquê 5 (causa raiz) | Por que não foi treinado? | Não existe matriz de formação para esse posto | ✔ matriz não contempla o posto |
 
-A causa raiz aqui não é "operador errou" — é "não existe controle que garanta que qualquer
-operador daquele posto seja treinado". A ação corretiva certa mira a matriz de treinamento, não o
+A causa raiz aqui não é "operador errou" — é "não existe controlo que garanta que qualquer
+operador daquele posto seja treinado". A ação corretiva certa mira a matriz de formação, não o
 indivíduo.
 
 ---

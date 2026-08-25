@@ -14,11 +14,11 @@
       'nav.tracks': 'Percursos',
       'nav.data': 'Dados',
       'nav.progress': 'Progresso e backup',
-      'search.placeholder': 'Buscar no manual… (/)',
+      'search.placeholder': 'Pesquisar no manual… (/)',
       'skip': 'Saltar para o conteúdo',
       'nav.open': 'Abrir menu',
       'theme.toggle': 'Alternar tema claro/escuro',
-      'search.aria': 'Buscar no manual',
+      'search.aria': 'Pesquisar no manual',
 
       // Capítulos
       'chapter.unavailable.title': 'Capítulo indisponível',
@@ -26,6 +26,7 @@
       'fig.zoom': 'Ampliar figura',
       'fig.zoomed': 'Figura ampliada',
       'fig.close': 'Fechar',
+      'copy.btn': 'Copiar',
       'copy.done': 'Copiado ✓',
 
       // Home
@@ -34,6 +35,7 @@
       'home.tagline': 'Engenharia da Qualidade · Lean Six Sigma · Melhoria Contínua · Data Analytics',
       'home.subtitle': '{done} de {total} aulas concluídas, em {n} percursos.',
       'home.subtitle.cta': ' Escolha um percurso abaixo para começar.',
+      'home.disclaimer': 'Recurso educativo independente — não é material oficial, aprovado ou endossado pela ASQ, ISO, IATF ou AIAG, e não constitui garantia de aprovação em qualquer exame de certificação.',
       'home.continue': 'Continuar',
       'home.start': 'Começar a aprender',
       'home.mytracks': 'Meus percursos',
@@ -107,11 +109,12 @@
       'bank.title': 'Practice Lab',
       'bank.lede': 'Teste os seus conhecimentos com questões autorais, com justificação da resposta correta e análise dos distratores. Não reproduzem itens publicados pela ASQ.',
       'bank.howto': '<b>Como estudar com este banco.</b> Responda sem consultar e, antes de conferir, justifique por que cada uma das outras três alternativas está errada. Se não conseguir, o conceito ainda não está consolidado.',
-      'bank.cqe.desc': 'Certified Quality Engineer — distribuição proporcional ao peso do Body of Knowledge.',
+      'bank.cqe.desc': 'Certified Quality Engineer — organizado pelos 7 domínios do Body of Knowledge; distribuição autoral, não proporcional ao peso oficial do exame.',
       'bank.cssbb.desc': 'Certified Six Sigma Black Belt — DMAIC, estatística, DOE e liderança de projeto.',
       'bank.questions': '{n} questões',
       'bank.startbtn': 'iniciar',
       'bank.note': '<b>Nota.</b> Esta plataforma é <b>preparatória</b>. Não emite certificação ASQ nem Lean Six Sigma reconhecida — os certificados oficiais são emitidos exclusivamente pelos organismos certificadores.',
+      'bank.lang.notice': 'O enunciado, as alternativas e as explicações deste banco de questões estão disponíveis apenas em português.',
       'bank.perf.title': 'Seu desempenho',
       'bank.perf.lede': 'Média de aproveitamento nas avaliações já feitas, por trilha.',
       'bank.perf.empty': 'sem dados',
@@ -124,10 +127,10 @@
       'comp.legend.pending': 'Em desenvolvimento',
 
       // Search
-      'search.eyebrow': 'Busca',
+      'search.eyebrow': 'Pesquisa',
       'search.title.results': 'Resultados para “{q}”',
-      'search.title.empty': 'Buscar no manual',
-      'search.hint': 'Escreva um termo na caixa de busca.',
+      'search.title.empty': 'Pesquisar no manual',
+      'search.hint': 'Escreva um termo na caixa de pesquisa.',
       'search.nohits': 'Nada encontrado. Tente um termo mais curto (por exemplo <code>cpk</code>, <code>kanban</code>, <code>anova</code>).',
       'search.count': '{n} capítulos.',
 
@@ -182,6 +185,7 @@
       'fig.zoom': 'Zoom figure',
       'fig.zoomed': 'Zoomed figure',
       'fig.close': 'Close',
+      'copy.btn': 'Copy',
       'copy.done': 'Copied ✓',
 
       // Home
@@ -190,6 +194,7 @@
       'home.tagline': 'Quality Engineering · Lean Six Sigma · Continuous Improvement · Data Analytics',
       'home.subtitle': '{done} of {total} lessons completed, across {n} tracks.',
       'home.subtitle.cta': ' Choose a track below to get started.',
+      'home.disclaimer': 'Independent educational resource — not official material, approved by, or endorsed by ASQ, ISO, IATF, or AIAG, and it does not guarantee passing any certification exam.',
       'home.continue': 'Continue',
       'home.start': 'Start learning',
       'home.mytracks': 'My Tracks',
@@ -263,11 +268,12 @@
       'bank.title': 'Practice Lab',
       'bank.lede': 'Test your knowledge with original questions, with justification of the correct answer and distractor analysis. They do not reproduce items published by ASQ.',
       'bank.howto': '<b>How to study with this bank.</b> Answer without looking anything up and, before checking, justify why each of the other three options is wrong. If you can\'t, the concept is not yet consolidated.',
-      'bank.cqe.desc': 'Certified Quality Engineer — distribution proportional to the Body of Knowledge weighting.',
+      'bank.cqe.desc': 'Certified Quality Engineer — organized by the 7 Body of Knowledge domains; original distribution, not proportional to the official exam weighting.',
       'bank.cssbb.desc': 'Certified Six Sigma Black Belt — DMAIC, statistics, DOE and project leadership.',
       'bank.questions': '{n} questions',
       'bank.startbtn': 'start',
       'bank.note': '<b>Note.</b> This platform is <b>preparatory only</b>. It does not issue ASQ or recognized Lean Six Sigma certification — official certificates are issued exclusively by the certifying bodies.',
+      'bank.lang.notice': 'The question text, answer options, and explanations in this question bank are currently available in Portuguese only.',
       'bank.perf.title': 'Your performance',
       'bank.perf.lede': 'Average score across assessments taken so far, by track.',
       'bank.perf.empty': 'no data yet',

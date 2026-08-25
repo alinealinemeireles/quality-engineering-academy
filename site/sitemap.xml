@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  A aplicação é uma SPA com routing por hash (#/aula/cap-001, etc.) — os motores
+  de busca não indexam fragmentos de URL como páginas distintas, por isso este
+  sitemap lista apenas a página raiz. Atualize <loc> com o domínio real de
+  publicação (ver README, secção "Publicar no GitHub Pages") antes de tornar o
+  site público.
+-->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://example.github.io/quality-engineering-academy/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>1.0</priority>
+  </url>
+</urlset>

@@ -75,7 +75,7 @@ def classificar(k):
         return "boa a excelente"
     if k >= 0.40:
         return "moderada (condicional)"
-    return "fraca -- rever criterio ou treinamento"
+    return "fraca -- rever criterio ou formação"
 
 print("PASSO 1 -- Repetibilidade dentro do avaliador A (A1 vs A2):")
 Po, Pe, k = kappa_cohen(A1, A2)

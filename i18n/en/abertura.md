@@ -10,7 +10,7 @@ competencies.
 
 > **Not official material**, approved or endorsed by ASQ, ISO, IATF, or AIAG, and it does
 > not guarantee passing any certification exam. The question bank
-> (112 questions, Part XV) is **entirely original** — it does not reproduce items published by ASQ.
+> (119 questions, Part XV) is **entirely original** — it does not reproduce items published by ASQ.
 
 ---
 
@@ -20,7 +20,7 @@ The handbook is organized into 17 parts, each assuming knowledge of the previous
 thread that runs through everything — hover over each step:
 
 <figure class="figure2026">
-<svg role="img" aria-label="Eixo vertical do manual: cliente, produto e processo, sistema de medicao, analise estatistica, melhoria continua e sistema da qualidade" viewBox="0 0 700 560" style="width:100%;height:auto;display:block;background:var(--surface-1);border:1px solid var(--line);border-radius:10px" xmlns="http://www.w3.org/2000/svg">
+<svg role="img" aria-label="Vertical axis of the handbook: customer, product and process, measurement system, statistical analysis, continuous improvement, and quality system" viewBox="0 0 700 560" style="width:100%;height:auto;display:block;background:var(--surface-1);border:1px solid var(--line);border-radius:10px" xmlns="http://www.w3.org/2000/svg">
 <defs><marker id="ax-ar" markerWidth="9" markerHeight="9" refX="4" refY="5" orient="auto"><path d="M0,0 L8,5 L0,10 Z" fill="#7c8f99"/></marker></defs>
 <style>
 .ax-t { font-family: "Segoe UI", Inter, system-ui, sans-serif; }
@@ -89,7 +89,7 @@ are the advanced core of this edition.
 |---|---|---|
 | **Body of Knowledge** | 2022, 7 domains | 2022, 9 domains |
 | **Exam** | 175 questions (160 scored), 5h18, open book | 165 questions (150 scored), 4h18, open book |
-| **This handbook's original bank** | 56 questions, 7 domains | 56 questions, 9 domains |
+| **This handbook's original bank** | 60 questions, 7 domains | 59 questions, 9 domains |
 
 Each question in the bank (Part XV) indicates the BoK domain and the chapter where the topic is
 developed. Always check the exam's current conditions at the official ASQ source before

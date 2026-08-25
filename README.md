@@ -16,13 +16,17 @@ instalação, funciona offline.
 
 | | |
 |---|---|
-| Capítulos | 155 (151 do manual + 4 escritos de raiz) |
+| Capítulos | 165 (153 do manual + 12 escritos de raiz) |
 | Percursos (trilhas) | 6 |
-| Módulos | 62 |
-| Blocos de código (Python/R/SQL/DAX) | 140 |
-| Figuras e diagramas | 192 |
-| Gráficos interativos (Plotly) | 12, com hover e deslizadores |
-| Questões de certificação | 112 (CQE + CSSBB, autorais) |
+| Módulos | 61 |
+| Blocos de código (Python/R/SQL/DAX) | 196 |
+| Figuras e diagramas | 256 |
+| Gráficos interativos (Plotly) | 21, com hover e deslizadores |
+| Questões de certificação | 119 (60 CQE + 59 CSSBB, autorais) |
+| Tradução para inglês | 100% dos capítulos (165/165) e do banco de questões (119/119) |
+
+Estes números são recalculados a cada `python3 tools/build.py`, a partir do `manifest.js` gerado —
+não são mantidos manualmente. Se divergirem do que vê no site, o manifest é que está certo.
 
 ### Percursos
 
@@ -54,6 +58,16 @@ instalação, funciona offline.
 | **40-B** | Esparguete, Makigami e Tartaruga | `lss-05` | Três ferramentas de mapeamento ausentes |
 | **71-A** | Estúdio de Capabilidade | `eq-10` | Laboratório interativo de Cp/Cpk/Pp/Ppk |
 | **14-A** | Voz do Cliente, Satisfação e o Elo com Lean Six Sigma | `eq-05` | Liga VoC → ISO 9001 → Lean → Six Sigma → DMAIC/PDCA num ciclo fechado |
+| **25-A** | OEE Avançado — Decomposição de Perdas, Maturidade Digital | `lss-04` | Aprofunda o OEE do Capítulo 25 com cascata de perdas e maturidade digital |
+| **18-A** | 5S e Gestão Visual de Chão de Fábrica | `lss-01` | Disciplina de Sustain e ferramentas de gestão visual, além do 5S introdutório |
+| **9-A** | Resolução Estruturada de Problemas — 5 Porquês, 8D e CAPA | `eq-03` | Aprofunda o 5 Porquês do Capítulo 9 com o fluxo completo até o 8D e o CAPA |
+| **56-A** | Análise de Clusters — Hierárquica e K-Means | `est-07` | Técnica de agrupamento não supervisionado ausente do manual original |
+| **10-A** | Barreiras à Melhoria da Qualidade | `eq-04` | Cobre o tópico I.I do BoK CQE, sem capítulo dedicado na edição original |
+| — | MSA por Atributos — Kappa e Percentual de Concordância | `eq-06` | MSA do manual cobria só variáveis; faltava atributos |
+| — | Análise Multivariada II — Fatorial, Discriminante e MANOVA | `est-07` | Aprofunda a análise multivariada além do PCA/T² do Capítulo 56 |
+| — | Delineamentos de Um Fator — Blocos Aleatorizados e Quadrado Latino | `est-08` | DOE de um fator ausente entre os delineamentos fatoriais do manual |
+
+Todos os 12 têm tradução completa para inglês em `i18n/en/`.
 
 ---
 
@@ -73,19 +87,19 @@ instalação, funciona offline.
 │       ├── bank.js           ← banco de questões
 │       ├── figs.js           ← gráficos interativos pré-calculados
 │       └── ch/cap-NNN.js     ← um ficheiro por capítulo
-├── extra/                    ← capítulos escritos de raiz
-│   ├── bpmn.md               ← 40-A
-│   ├── mapeamento_extra.md   ← 40-B
-│   ├── capability_estudio.md ← 71-A
-│   └── voz_cliente.md        ← 14-A
+├── extra/                    ← 12 capítulos escritos de raiz (900-911), ver tabela acima
+├── i18n/en/                  ← tradução EN capítulo a capítulo (cap-NNN.md) + bank.json (119 questões), 100% de cobertura
 ├── tools/
 │   ├── parse.py              ← lê o notebook e deteta partes/capítulos
 │   ├── curriculum.py         ← matriz trilha → módulo → capítulo → competência
-│   ├── build.py              ← pipeline notebook → site
+│   ├── build.py              ← pipeline notebook → site (também compila i18n/en/*.md)
+│   ├── enrich_bank.js        ← adiciona bokTopic/cognitiveLevel/chapterRef ao banco de questões
+│   ├── build_bank_en.js      ← gera content/bank_en.js a partir de bank.js + i18n/en/bank.json
+│   ├── check_i18n.js         ← verifica paridade PT/EN de capítulos, banco e traceability
 │   ├── figures.py            ← gera os gráficos Plotly (JSON, sem imagens)
 │   ├── mk_bpmn_svg.py        ← gera o diagrama BPMN autoral
 │   └── check.js check2.js    ← testes de navegador (Playwright)
-├── manual.ipynb              ← fonte (não é publicado)
+├── manual.ipynb              ← fonte (não é publicado, não versionado — ver .gitignore)
 └── AUDITORIA.md              ← o que foi encontrado no manual
 ```
 
@@ -94,11 +108,14 @@ instalação, funciona offline.
 ```bash
 pip install markdown pymdown-extensions
 python3 tools/build.py
+node tools/enrich_bank.js    # bank.js é regenerado a cada build.py: isto reaplica bokTopic/cognitiveLevel/chapterRef
+node tools/build_bank_en.js  # gera content/bank_en.js (tradução EN) a partir de bank.js + i18n/en/bank.json
 ```
 
 O `build.py` extrai as 192 imagens embutidas para ficheiros (o notebook tinha ~5 MB de base64
 inline), converte o markdown em HTML, protege as fórmulas para o KaTeX, transforma os blocos
-` ```mermaid ` em diagramas renderizáveis e gera um ficheiro `.js` por capítulo.
+` ```mermaid ` em diagramas renderizáveis, gera um ficheiro `.js` por capítulo e compila as
+traduções EN de `i18n/en/*.md` para `content/ch/cap-NNN.en.js`.
 
 Para alterar a organização curricular, edite **`tools/curriculum.py`** — é a única coisa que
 define trilhas, módulos e competências.
@@ -106,9 +123,17 @@ define trilhas, módulos e competências.
 ### Testar
 
 ```bash
-cd site && python3 -m http.server 8899   # noutro terminal:
+node tools/check_i18n.js                 # paridade PT/EN + rastreabilidade do banco (sem browser, corre em CI)
+
+cd site && python3 -m http.server 8899   # para os testes de browser, noutro terminal:
 node tools/check.js && node tools/check2.js
 ```
+
+`check_i18n.js` corre automaticamente em CI a cada push/PR (`.github/workflows/check.yml`) e falha
+se algum capítulo ficar sem tradução EN ou alguma questão do banco perder a rastreabilidade
+(`bokTopic`/`cognitiveLevel`/`chapterRef`, gerados por `tools/enrich_bank.js` após cada
+`build.py`). `check.js`/`check2.js` precisam do Chromium do Playwright instalado localmente
+(`npx playwright install chromium`) e não correm em CI.
 
 ---
 
@@ -119,9 +144,13 @@ para `main`. Depois do primeiro push:
 
 1. **Settings → Pages → Source: GitHub Actions**
 2. O site fica em `https://<utilizador>.github.io/<repositorio>/`
+3. **Antes de tornar público**: substitua `https://example.github.io/quality-engineering-academy/`
+   pelo domínio real em `site/robots.txt`, `site/sitemap.xml` e nas tags `canonical` / `og:url` /
+   `twitter:url` de `site/index.html` — foram deixadas com um domínio de exemplo porque o
+   repositório ainda não tem remote/publicação configurados.
 
-A pasta `site/` tem cerca de 14 MB (3,6 MB de conteúdo, 3,8 MB de imagens, 4,8 MB de bibliotecas
-locais), bem dentro do confortável para o Pages.
+A pasta `site/` tem cerca de 17 MB (7,7 MB de conteúdo — PT + EN —, 3,8 MB de imagens, 5,3 MB de
+bibliotecas locais), bem dentro do confortável para o Pages.
 
 ---
 

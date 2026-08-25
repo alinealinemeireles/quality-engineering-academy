@@ -10,6 +10,32 @@
   var BANK = A.data.bank || [];
   var T = window.ACADEMY_I18N.t;
 
+  /* ---------- banco de questoes: localizacao EN sem alterar a selecao ------
+     A seleccao/contagem de questoes usa sempre BANK (PT) -- para nao alterar
+     o que quizForModule escolhe consoante o idioma. So o TEXTO exibido troca
+     para a versao EN, por id, quando existe traducao. */
+  var BANK_EN_MAP = (function () {
+    var map = {};
+    (A.data.bank_en || []).forEach(function (q) { map[q.id] = q; });
+    return map;
+  })();
+  function localizeQuestion(q) {
+    var lang = (window.ACADEMY_I18N && window.ACADEMY_I18N.lang()) || 'pt';
+    if (lang !== 'en') return q;
+    return BANK_EN_MAP[q.id] || q;
+  }
+
+  /* ---------- indice de busca: PT por omissao, EN quando o idioma e ingles -
+     MAN.search tem titulo+palavras-chave em PT; MAN.searchEn e o espelho em
+     ingles (gerado por build.py a partir das traducoes). Sem isto, procurar
+     "capability" em modo ingles so encontrava capitulos cujo texto PT tivesse
+     essa palavra emprestada -- o motor de busca nao era mesmo bilingue. */
+  function searchIndex() {
+    var lang = (window.ACADEMY_I18N && window.ACADEMY_I18N.lang()) || 'pt';
+    if (lang === 'en' && MAN.searchEn && MAN.searchEn.length) return MAN.searchEn;
+    return MAN.search;
+  }
+
   /* ---------- utilidades ---------- */
   var $ = function (s, r) { return (r || document).querySelector(s); };
   var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
@@ -299,6 +325,7 @@
     renderMath(root); renderMermaid(root); highlight(root); zoomable(root);
     if (window.ACADEMY_VIZ) window.ACADEMY_VIZ.all(root);
     $$('.btn-copy', root).forEach(function (b) {
+      b.textContent = T('copy.btn');
       b.addEventListener('click', function () {
         var code = $('code', b.closest('.codeblock'));
         var txt = code ? code.textContent : '';
@@ -430,6 +457,9 @@
            esc(nextTitle.length > 42 ? nextTitle.slice(0, 42) + '…' : nextTitle) + ' →</a>'; }
     h += '<a class="btn ghost" href="#/competencias">' + T('nav.competencies') + '</a>';
     h += '</div></div>';
+
+    h += '<p style="font-size:12px;color:var(--ink-3);margin:0 0 20px;max-width:760px">' +
+         T('home.disclaimer') + '</p>';
 
     h += '<h2 style="font-size:16px;margin:6px 0 4px">' + T('home.goals.title') + '</h2>';
     h += '<p style="font-size:13.4px;color:var(--ink-3);margin:0 0 14px">' + T('home.goals.sub') + '</p>';
@@ -596,9 +626,9 @@
       h += '<div class="eyebrow" style="--c:' + c + '"><i class="dot"></i>' +
            (d.num ? T('lesson.chapter', { label: capLabel(d.num) }) : T('lesson.opening')) +
            (d.new ? T('lesson.newedition') : '') + '</div>';
-      h += '<h1>' + esc(d._isEnglish ? d.title : chTitle(d.id, d.title)) + '</h1>';
+      h += '<h1>' + esc(d.lang === 'en' ? d.title : chTitle(d.id, d.title)) + '</h1>';
 
-      if (lang === 'en' && !d._isEnglish) {
+      if (lang === 'en' && d.lang !== 'en') {
         h += `
           <div class="note info" style="margin-bottom: 20px; border-left: 4px solid var(--series-4);">
             <strong>📘 ${T('lang.content.available')}</strong><br>
@@ -691,7 +721,7 @@
       return { q: q, s: s };
     }).filter(function (x) { return x.s > 0; })
       .sort(function (a, b) { return b.s - a.s; });
-    return scored.slice(0, 10).map(function (x) { return x.q; });
+    return scored.slice(0, 10).map(function (x) { return localizeQuestion(x.q); });
   }
 
   function viewQuiz(modId) {
@@ -711,6 +741,13 @@
     });
   }
 
+  function bankLangNote() {
+    var lang = (window.ACADEMY_I18N && window.ACADEMY_I18N.lang()) || 'pt';
+    if (lang === 'pt' || A.data.bank_en) return '';
+    return '<div class="note info" style="border-left: 4px solid var(--series-4);">' +
+      '<strong>📘 ' + T('bank.lang.notice') + '</strong></div>';
+  }
+
   function viewBank() {
     var pick = (location.hash.split('?')[1] || '');
     var bank = /cssbb/i.test(pick) ? 'CSSBB' : (/cqe/i.test(pick) ? 'CQE' : null);
@@ -721,6 +758,7 @@
         '<div class="eyebrow"><i class="dot"></i>' + T('bank.eyebrow') + '</div>' +
         '<h1>' + T('bank.title') + '</h1>' +
         '<p class="lede">' + T('bank.lede') + '</p></div>';
+      h += bankLangNote();
 
       h += '<h2 style="font-size:16px;margin:0 0 3px">' + T('bank.perf.title') + '</h2>';
       h += '<p style="font-size:13.4px;color:var(--ink-3);margin:0 0 12px">' + T('bank.perf.lede') + '</p>';
@@ -749,10 +787,11 @@
       h += '</div>';
       return show(h);
     }
-    var qs = BANK.filter(function (q) { return q.bank === bank; });
+    var qs = BANK.filter(function (q) { return q.bank === bank; }).map(localizeQuestion);
     renderQuiz({
       title: T('quiz.bank.title', { bank: bank }), crumb: '<a href="#/certificacao">' + T('nav.certification') + '</a>',
       color: bank === 'CQE' ? 'var(--series-1)' : 'var(--series-2)',
+      note: bankLangNote(),
       questions: qs, showDomain: true,
       onDone: function (score) { P.quiz['bank-' + bank] = { score: score, at: Date.now(), n: qs.length }; save(); }
     });
@@ -769,6 +808,7 @@
     h += '<div class="crumb">' + cfg.crumb + '</div>';
     h += '<h1>' + esc(cfg.title) + '</h1>';
     h += '<p class="lede">' + T('quiz.lede', { n: qs.length }) + '</p></div>';
+    if (cfg.note) h += cfg.note;
     h += '<div class="score" id="score"><span class="big" id="scoreV">' + T('quiz.scoredefault') + '</span>' +
          '<span style="color:var(--ink-3);font-size:13.5px">' + T('quiz.scorehint') + '</span></div>';
     h += '<div class="quiz">';
@@ -868,7 +908,7 @@
     if (!q) { h += '<div class="empty">' + T('search.hint') + '</div></div>'; return show(h); }
 
     var words = norm(q).split(/\s+/).filter(function (w) { return w.length > 1; });
-    var hits = MAN.search.map(function (c) {
+    var hits = searchIndex().map(function (c) {
       var hay = norm(c.t + ' ' + c.k);
       var s = 0;
       words.forEach(function (w) {

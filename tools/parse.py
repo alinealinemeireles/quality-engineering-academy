@@ -28,7 +28,10 @@ def structure():
         if mp and not mc:
             cur_part = {'title': mp.group(1).strip(), 'chapters': [], 'first_cell': i}
             parts.append(cur_part)
-            # the part heading cell may contain other content -> keep it
+            # a new part boundary ends the previous chapter's body -- cells between
+            # here and the next real "## Capitulo N:" heading (part intros, section
+            # notes) must not keep bleeding into the last chapter of the prior part
+            cur_chap = None
         if mc:
             cur_chap = {
                 'num': int(mc.group(1)),

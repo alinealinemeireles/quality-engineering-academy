@@ -10,7 +10,7 @@ complementares.
 
 > **Não é material oficial**, aprovado ou endossado pelo ASQ, pela ISO, pela IATF ou pela AIAG, e
 > não constitui garantia de aprovação em qualquer exame de certificação. O banco de questões
-> (112, Parte XV) é **integralmente autoral** — não reproduz itens publicados pela ASQ.
+> (119, Parte XV) é **integralmente autoral** — não reproduz itens publicados pela ASQ.
 
 ---
 
@@ -89,7 +89,7 @@ núcleo avançado desta edição.
 |---|---|---|
 | **Body of Knowledge** | 2022, 7 domínios | 2022, 9 domínios |
 | **Exame** | 175 questões (160 pontuadas), 5h18, *open book* | 165 questões (150 pontuadas), 4h18, *open book* |
-| **Banco autoral deste manual** | 56 questões, 7 domínios | 56 questões, 9 domínios |
+| **Banco autoral deste manual** | 60 questões, 7 domínios | 59 questões, 9 domínios |
 
 Cada questão do banco (Parte XV) indica o domínio do BoK e o capítulo onde o tema é desenvolvido.
 Verifique sempre as condições atuais do exame na fonte oficial da ASQ antes de se inscrever —

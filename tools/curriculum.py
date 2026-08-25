@@ -27,7 +27,7 @@ TRACKS = [
              "extra": ["barreiras_melhoria"], "featured": True,
              "competencies": ["Liderança da qualidade", "Facilitação", "Ética ASQ",
                               "Barreiras à melhoria"], "level": 1},
-            {"id": "eq-05", "title": "Cliente, treinamento e equipes", "chapters": [14, 15, 16],
+            {"id": "eq-05", "title": "Cliente, formação e equipes", "chapters": [14, 15, 16],
              "extra": ["voz_cliente"], "featured": True,
              "competencies": ["QFD", "ADDIE", "Gestão de equipes Six Sigma", "VoC vs. satisfação",
                               "VOC → CTQ", "Matriz de ligação", "Pareto de reclamações"], "level": 2},
@@ -208,6 +208,8 @@ TRACKS = [
              "competencies": ["Six Sigma setorial"], "level": 2},
             {"id": "set-05", "title": "Manufatura, alimentação, construção, defesa e governo", "chapters": [127, 128, 129, 130, 131],
              "competencies": ["Six Sigma setorial"], "level": 2},
+            {"id": "set-06", "title": "Sobre este manual: metodologia e bibliografia", "chapters": [132, 133],
+             "competencies": ["Metodologia e fontes", "Bibliografia completa"], "level": 1},
         ],
     },
 ]
