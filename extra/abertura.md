@@ -16,7 +16,7 @@ complementares.
 
 ## Como usar este manual
 
-O manual está organizado em 17 partes, cada uma assumindo o conhecimento das anteriores. O eixo
+O manual está organizado em 18 partes, cada uma assumindo o conhecimento das anteriores. O eixo
 que atravessa tudo — passe o rato em cada etapa:
 
 <figure class="figure2026">

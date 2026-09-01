@@ -16,7 +16,7 @@ competencies.
 
 ## How to use this handbook
 
-The handbook is organized into 17 parts, each assuming knowledge of the previous ones. The
+The handbook is organized into 18 parts, each assuming knowledge of the previous ones. The
 thread that runs through everything — hover over each step:
 
 <figure class="figure2026">

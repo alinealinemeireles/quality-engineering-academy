@@ -152,8 +152,8 @@ def apply_boxes(html):
 # Microsoft Learn. So aplicado a citacoes singulares (nao "Capitulos 34-38"),
 # e nunca dentro de <code>/<pre> (comentarios em blocos de codigo) ou de um
 # link ja existente.
-_CAP_ALIAS_TO_NUM = {'40-A': 900, '40-B': 901, '71-A': 902, '14-A': 903,
-                      '25-A': 904, '18-A': 905, '9-A': 906, '56-A': 907}
+_CAP_ALIAS_TO_NUM = {'40-A': 154, '40-B': 155, '71-A': 156, '14-A': 157,
+                      '25-A': 158, '18-A': 159, '9-A': 160, '56-A': 161}
 _CHAP_CITE_RE = re.compile(r'\b(?:Cap[íi]tulo|Chapter)\s+(\d+)(?:-([A-Z])\b)?')
 _TAG_TOKEN_RE = re.compile(r'(<[^>]+>)')
 _TAG_NAME_RE = re.compile(r'</?([a-zA-Z0-9]+)')
@@ -310,7 +310,7 @@ def strip_title(html, title):
     m = TITLE_H.match(html)
     if not m:
         return html
-    heading = TAG_RE.sub('', m.group(1))
+    heading = unesc(TAG_RE.sub('', m.group(1)))
     norm_h = re.sub(r'\s+', ' ', heading).strip().lower()
     norm_t = re.sub(r'\s+', ' ', title).strip().lower()
     if norm_t in norm_h or norm_h.endswith(norm_t):
@@ -428,6 +428,7 @@ PART_TITLE_EN = {
     'PARTE XVII — LABORATÓRIO AVANÇADO 2026': 'PART XVII — Advanced Laboratory 2026',
     'ENCERRAMENTO — PERCURSO DE CERTIFICAÇÃO E PROJETO FINAL 2026':
         'CLOSING — Certification Path and Final Project 2026',
+    'PARTE XVIII — Conteúdo Novo (4ª Edição Web)': 'PART XVIII — New Content (Web 4th Edition)',
 }
 
 TOC_SPECIAL_PARTS_EN = {
@@ -564,7 +565,12 @@ def main():
     for tr in TRACKS:
         mods = []
         for mod in tr['modules']:
-            chlist = list(mod['chapters'])
+            # 'chapters' normalmente so tem numeros do notebook, mas pode
+            # intercalar chaves de EXTRA_CHAPTERS (string) quando um capitulo
+            # extra precisa de entrar no meio da lista em vez de so no fim
+            # (que e o que 'extra' abaixo sempre faz).
+            chlist = [c if isinstance(c, int) else EXTRA_CHAPTERS[c]['num']
+                      for c in mod['chapters']]
             for extra in mod.get('extra', []):
                 chlist.append(EXTRA_CHAPTERS[extra]['num'])
             chrefs = []
@@ -606,11 +612,22 @@ def main():
         t['modules'] = mods
         manifest_tracks.append(t)
 
+    # capitulos extra (EXTRA_CHAPTERS) nao vem da estrutura do notebook (`parts`),
+    # entao o indice navegavel do front matter precisa de uma parte sintetica
+    # para eles nao desaparecerem do "Manual Introduction" -- construida a
+    # partir do proprio EXTRA_CHAPTERS, nunca precisa de manutencao manual.
+    extra_nums = sorted(meta['num'] for meta in EXTRA_CHAPTERS.values() if meta['num'] in chapters)
+    toc_parts = parts
+    if extra_nums:
+        extra_part = {'title': 'PARTE XVIII — Conteúdo Novo (4ª Edição Web)',
+                      'chapters': [{'num': n, 'title': chapters[n]['title']} for n in extra_nums]}
+        toc_parts = parts + [extra_part]
+
     # front matter como capitulo 0 -- texto de abertura escrito a mao (extra/abertura.md)
     # seguido do indice navegavel, gerado a partir da estrutura real dos capitulos
     with open(os.path.join(ROOT, 'extra', 'abertura.md'), encoding='utf-8') as f:
         fbody = md2html(f.read())
-    fbody += build_toc_html(parts)
+    fbody += build_toc_html(toc_parts)
     fbody, ftoc = add_anchors(fbody)
     with open(os.path.join(CHDIR, 'cap-000.js'), 'w', encoding='utf-8') as f:
         f.write(js_module('cap-000', {'id': 'cap-000', 'num': 0, 'title': 'Abertura do manual',
@@ -667,7 +684,7 @@ def main():
         if os.path.exists(en_abertura):
             with open(en_abertura, encoding='utf-8') as f:
                 fbody_en = md2html(f.read())
-            fbody_en += build_toc_html_en(parts, en_titles)
+            fbody_en += build_toc_html_en(toc_parts, en_titles)
             fbody_en, ftoc_en = add_anchors(fbody_en)
             with open(os.path.join(CHDIR, 'cap-000.en.js'), 'w', encoding='utf-8') as f:
                 f.write(js_module('cap-000.en', {

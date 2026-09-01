@@ -16,17 +16,18 @@ instalação, funciona offline.
 
 | | |
 |---|---|
-| Capítulos | 165 (153 do manual + 12 escritos de raiz) |
+| Capítulos | 182 (153 do manual + 29 escritos de raiz) |
 | Percursos (trilhas) | 6 |
-| Módulos | 61 |
+| Módulos | 62 |
 | Blocos de código (Python/R/SQL/DAX) | 196 |
 | Figuras e diagramas | 256 |
 | Gráficos interativos (Plotly) | 21, com hover e deslizadores |
 | Questões de certificação | 119 (60 CQE + 59 CSSBB, autorais) |
-| Tradução para inglês | 100% dos capítulos (165/165) e do banco de questões (119/119) |
+| Tradução para inglês | 100% dos capítulos (182/182) e do banco de questões (119/119) |
 
-Estes números são recalculados a cada `python3 tools/build.py`, a partir do `manifest.js` gerado —
-não são mantidos manualmente. Se divergirem do que vê no site, o manifest é que está certo.
+Estes números costumavam ser recalculados a cada `python3 tools/build.py`, a partir do
+`manifest.js` gerado. **Isso já não é totalmente verdade a partir dos 17 capítulos mais recentes
+(166–182, ver tabela abaixo)** — ver aviso na secção seguinte antes de correr o build.
 
 ### Percursos
 
@@ -52,22 +53,49 @@ não são mantidos manualmente. Se divergirem do que vê no site, o manifest é 
 
 ### Capítulos escritos de raiz para a edição web
 
+**Lote 1 (cap-154 a cap-165, 12 capítulos)** — passaram pelo pipeline completo: fonte em
+`extra/*.md`, compilados por `tools/build.py`, tradução em `i18n/en/cap-15X.md`.
+
 | Nº | Título | Módulo | Porquê |
 |---|---|---|---|
-| **40-A** | BPMN 2.0 e Bizagi Modeler na prática | `lss-05` | O manual só tinha BPMN em imagens, sem texto |
-| **40-B** | Esparguete, Makigami e Tartaruga | `lss-05` | Três ferramentas de mapeamento ausentes |
-| **71-A** | Estúdio de Capabilidade | `eq-10` | Laboratório interativo de Cp/Cpk/Pp/Ppk |
-| **14-A** | Voz do Cliente, Satisfação e o Elo com Lean Six Sigma | `eq-05` | Liga VoC → ISO 9001 → Lean → Six Sigma → DMAIC/PDCA num ciclo fechado |
-| **25-A** | OEE Avançado — Decomposição de Perdas, Maturidade Digital | `lss-04` | Aprofunda o OEE do Capítulo 25 com cascata de perdas e maturidade digital |
-| **18-A** | 5S e Gestão Visual de Chão de Fábrica | `lss-01` | Disciplina de Sustain e ferramentas de gestão visual, além do 5S introdutório |
-| **9-A** | Resolução Estruturada de Problemas — 5 Porquês, 8D e CAPA | `eq-03` | Aprofunda o 5 Porquês do Capítulo 9 com o fluxo completo até o 8D e o CAPA |
-| **56-A** | Análise de Clusters — Hierárquica e K-Means | `est-07` | Técnica de agrupamento não supervisionado ausente do manual original |
-| **10-A** | Barreiras à Melhoria da Qualidade | `eq-04` | Cobre o tópico I.I do BoK CQE, sem capítulo dedicado na edição original |
-| — | MSA por Atributos — Kappa e Percentual de Concordância | `eq-06` | MSA do manual cobria só variáveis; faltava atributos |
-| — | Análise Multivariada II — Fatorial, Discriminante e MANOVA | `est-07` | Aprofunda a análise multivariada além do PCA/T² do Capítulo 56 |
-| — | Delineamentos de Um Fator — Blocos Aleatorizados e Quadrado Latino | `est-08` | DOE de um fator ausente entre os delineamentos fatoriais do manual |
+| 154 | BPMN 2.0 e Bizagi Modeler na prática | `lss-05` | O manual só tinha BPMN em imagens, sem texto |
+| 155 | Esparguete, Makigami e Tartaruga | `lss-05` | Três ferramentas de mapeamento ausentes |
+| 156 | Estúdio de Capabilidade | `eq-10` | Laboratório interativo de Cp/Cpk/Pp/Ppk |
+| 157 | Voz do Cliente, Satisfação e o Elo com Lean Six Sigma | `eq-05` | Liga VoC → ISO 9001 → Lean → Six Sigma → DMAIC/PDCA num ciclo fechado |
+| 158 | OEE Avançado — Decomposição de Perdas, Maturidade Digital | `lss-04` | Aprofunda o OEE do Capítulo 25 com cascata de perdas e maturidade digital |
+| 159 | 5S e Gestão Visual de Chão de Fábrica | `lss-01` | Disciplina de Sustain e ferramentas de gestão visual, além do 5S introdutório |
+| 160 | Resolução Estruturada de Problemas — 5 Porquês, 8D e CAPA | `eq-03` | Aprofunda o 5 Porquês do Capítulo 9 com o fluxo completo até o 8D e o CAPA |
+| 161 | Análise de Clusters — Hierárquica e K-Means | `est-07` | Técnica de agrupamento não supervisionado ausente do manual original |
+| 162 | Barreiras à Melhoria da Qualidade | `eq-04` | Cobre o tópico I.I do BoK CQE, sem capítulo dedicado na edição original |
+| 163 | MSA por Atributos — Kappa e Percentual de Concordância | `eq-06` | MSA do manual cobria só variáveis; faltava atributos |
+| 164 | Análise Multivariada II — Fatorial, Discriminante e MANOVA | `est-07` | Aprofunda a análise multivariada além do PCA/T² do Capítulo 56 |
+| 165 | Delineamentos de Um Fator — Blocos Aleatorizados e Quadrado Latino | `est-08` | DOE de um fator ausente entre os delineamentos fatoriais do manual |
 
-Todos os 12 têm tradução completa para inglês em `i18n/en/`.
+**Lote 2 (cap-166 a cap-182, 17 capítulos)** — resultado do diagnóstico de alinhamento com o
+projeto prático `manufacturing-performance-analytics` (ver `alinhamento-academy-vs-pratica.md`).
+⚠️ **Só existem como ficheiros compilados** (`site/content/ch/cap-1XX.js` + `.en.js` e
+`site/content/manifest.js`) — **não têm fonte em `extra/*.md` nem tradução em `i18n/en/`, e não
+estão no `manual.ipynb`.** Ver aviso na próxima secção antes de rodar `tools/build.py`.
+
+| Nº | Título | Módulo | Porquê |
+|---|---|---|---|
+| 166 | MTBF, MTTR e Indicadores Básicos de Confiabilidade | `eq-13` | Degrau intermediário de confiabilidade ausente entre o TPM/OEE (nível 2) e Weibull/Kaplan-Meier (nível 3) |
+| 167 | Confundimento: Por Que a ANOVA Sozinha Pode Enganar | `est-05` | Ponte conceptual antes do confundimento causal, hoje só tratado no capstone (lab-04) |
+| 168 | Teste de Bartlett: Verificando a Pressuposição de Variâncias Iguais | `est-05` | Pressuposto de variâncias iguais da ANOVA nunca era testado explicitamente |
+| 169 | Métricas de Classificação sob Desbalanceamento e Threshold de Decisão Econômico | `qa-05` | Precision/Recall/F1/PR-AUC e custo assimétrico FP/FN ausentes do capítulo de ML |
+| 170 | Validação Cruzada Temporal e Busca de Hiperparâmetros | `qa-05` | `TimeSeriesSplit`/`GridSearchCV` ausentes; splits aleatórios vazam informação temporal |
+| 171 | Modelos de Árvore: Random Forest e Gradient Boosting (XGBoost) | `qa-05` | Nenhum modelo de árvore era ensinado; maior gap de uso no projeto prático |
+| 172 | Interpretabilidade com SHAP | `qa-05` | Interpretabilidade de modelos de árvore ausente |
+| 173 | Decomposição Sazonal e Modelos ARIMA/SARIMA | `est-07` | ARIMA/SARIMA nunca eram nomeados no capítulo de séries temporais |
+| 174 | Correlação Cruzada e Indicadores Antecedentes | `est-07` | Cross-correlation entre séries e leading indicators ausentes |
+| 175 | Gage R&R por ANOVA: o Método Recomendado pela AIAG MSA | `eq-06` | O método gráfico/manual hoje ensinado é tratado como legado pela norma AIAG MSA 4ª ed. |
+| 176 | Conectando Python a Bancos de Dados: SQLAlchemy, pyodbc e Carga em Massa | `qa-03` | SQL puro (SELECT/joins) já coberto; faltava acesso via Python/ORM em produção |
+| 177 | Modelagem Dimensional: Fato, Dimensão e Star Schema | `qa-04` | Modelagem dimensional (Kimball) era só conceitual, sem exercício hands-on |
+| 178 | Arquitetura Medalhão: Bronze, Silver, Gold | `qa-04` | Padrão Databricks de estágios de refinamento, complementar ao star schema |
+| 179 | Engenharia de Pipeline em Pandas: groupby/transform, Matching de Intervalos e Sequenciamento Stateful | `qa-04` | ETL era conceitual, com pouquíssimo código pandas |
+| 180 | Métricas de Rendimento Six Sigma: DPU, DPMO, Nível Sigma, FPY/FTY e RTY | `eq-10` | Cluster de métricas de rendimento (ASQ BoK) nunca era ensinado junto |
+| 181 | Testes Automatizados de Pipeline: da Lógica pytest ao dbt tests/Great Expectations | `qa-04` | Nenhum conteúdo de testes automatizados de dados/análises existia |
+| 182 | Teoria das Restrições (TOC): os 5 Focusing Steps | `lss-15` (módulo novo) | TOC não existia em nenhum track; só citada de forma genérica |
 
 ---
 
@@ -87,8 +115,10 @@ Todos os 12 têm tradução completa para inglês em `i18n/en/`.
 │       ├── bank.js           ← banco de questões
 │       ├── figs.js           ← gráficos interativos pré-calculados
 │       └── ch/cap-NNN.js     ← um ficheiro por capítulo
-├── extra/                    ← 12 capítulos escritos de raiz (900-911), ver tabela acima
-├── i18n/en/                  ← tradução EN capítulo a capítulo (cap-NNN.md) + bank.json (119 questões), 100% de cobertura
+├── extra/                    ← 12 capítulos escritos de raiz (cap-154 a 165, lote 1), ver tabela acima
+│                                ⚠️ NÃO inclui o lote 2 (cap-166 a 182) — ver aviso abaixo
+├── i18n/en/                  ← tradução EN capítulo a capítulo (cap-NNN.md) + bank.json (119 questões)
+│                                cobre cap-001 a 165; NÃO cobre cap-166 a 182 (ver aviso abaixo)
 ├── tools/
 │   ├── parse.py              ← lê o notebook e deteta partes/capítulos
 │   ├── curriculum.py         ← matriz trilha → módulo → capítulo → competência
@@ -102,6 +132,23 @@ Todos os 12 têm tradução completa para inglês em `i18n/en/`.
 ├── manual.ipynb              ← fonte (não é publicado, não versionado — ver .gitignore)
 └── AUDITORIA.md              ← o que foi encontrado no manual
 ```
+
+### ⚠️ Antes de reconstruir: os capítulos 166–182 não estão no pipeline
+
+`tools/build.py` regenera `manifest.js`, `content/ch/cap-NNN.js` e `cap-NNN.en.js` **a partir do
+`manual.ipynb` + `extra/*.md` + `i18n/en/*.md`**, guiado por `tools/curriculum.py`. Os capítulos
+166 a 182 (lote 2, tabela acima) foram adicionados diretamente como ficheiros já compilados —
+**não existem no notebook, não têm fonte em `extra/*.md` e não têm tradução em `i18n/en/`.**
+
+**Rodar `python3 tools/build.py` agora reescreveria `manifest.js` e apagaria esses 17 capítulos**,
+porque o build não sabe que eles existem. Antes de rodar o build:
+1. Escreva a fonte de cada capítulo 166–182 em `extra/*.md` (ou no notebook) e a tradução em `i18n/en/cap-1XX.md`;
+2. Registe cada um em `tools/curriculum.py` (mapa trilha → módulo → capítulo), incluindo o módulo novo `lss-15`;
+3. Só depois rode `build.py` — e confira com `node tools/check_i18n.js` e uma comparação de
+   `manifest.js` antes/depois que nenhum capítulo desapareceu.
+
+Até isso ser feito, trate `site/content/` como a fonte de verdade para os capítulos 166–182 e
+edite-os diretamente ali.
 
 ### Reconstruir o site a partir do notebook
 
