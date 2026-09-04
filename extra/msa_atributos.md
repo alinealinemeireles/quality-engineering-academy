@@ -1,4 +1,4 @@
-<a id="capitulo-909"></a>
+<a id="capitulo-163"></a>
 ## Capítulo 61-A: MSA por Atributos — Kappa e Percentual de Concordância
 
 ### A pergunta de engenharia
@@ -121,6 +121,6 @@ Usando o conjunto de dados do exemplo resolvido acima, substitua 10 das decisõe
 
 *Fonte principal: AIAG, Measurement Systems Analysis (MSA), 4ª edição — critérios de aceitação de kappa. Cross-check: Minitab Support, "Kappa Statistics for Attribute Agreement Analysis"; SixSigma.us, "Everything about Attribute Agreement Analysis in Lean Six Sigma". Verificado via pesquisa na web em 22/08/2026.*
 
-### Revisão técnica 2026 — Capítulo 909
+### Revisão técnica 2026 — Capítulo 163
 
 **Status:** Capítulo novo, escrito para cobrir a lacuna do tópico IV.F (MSA por atributos) do BOK do CQE e V.C.1 do BOK do CSSBB, identificada em auditoria de conteúdo de agosto de 2026.

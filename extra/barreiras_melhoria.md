@@ -1,4 +1,4 @@
-<a id="capitulo-908"></a>
+<a id="capitulo-162"></a>
 ## Capítulo 10-A: Barreiras à Melhoria da Qualidade
 
 ### A pergunta de engenharia
@@ -48,6 +48,6 @@ Construa, numa folha de cálculo, uma matriz com uma linha por barreira identifi
 
 *Fonte principal: ASQ Certified Quality Engineer Body of Knowledge (2022), seção I.I "Barriers to Quality Improvement". Cross-check: Quality Gurus, "Top 4 Barriers to Quality Improvement" (qualitygurus.com); revisões sistemáticas sobre barreiras culturais, técnicas, estruturais e estratégicas em programas de melhoria contínua. Verificado via pesquisa na web em 22/08/2026.*
 
-### Revisão técnica 2026 — Capítulo 908
+### Revisão técnica 2026 — Capítulo 162
 
 **Status:** Capítulo novo, escrito para cobrir a lacuna do tópico I.I do BOK do CQE identificada em auditoria de conteúdo de agosto de 2026.

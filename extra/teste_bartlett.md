@@ -14,7 +14,7 @@
 <p>O <strong>teste de Levene</strong> (e a sua variante mais robusta, com mediana em vez de média, às vezes chamada de teste de Brown-Forsythe) testa a mesma hipótese — igualdade de variâncias — mas transforma os dados antes de aplicar uma ANOVA convencional sobre os desvios absolutos em relação ao centro de cada grupo. Essa transformação torna o teste muito menos sensível a desvios de normalidade do que Bartlett.</p>
 <p><strong>Regra prática:</strong> se há boa razão para acreditar que os dados são aproximadamente normais dentro de cada grupo, Bartlett é ligeiramente mais potente (deteta diferenças de variância menores, com a mesma amostra). Em caso de dúvida sobre normalidade — que é a maioria dos casos reais de chão de fábrica —, prefira Levene. Isto não é o mesmo teste que o de aderência à distribuição do <a href="#/aula/cap-047">Capítulo 47</a>: aquele testa se um único conjunto de dados segue uma distribuição específica; Bartlett/Levene testam se <strong>vários</strong> conjuntos de dados têm a <strong>mesma</strong> variância entre si, independentemente de qual seja a forma da distribuição.</p><h3 id="variancia-desigual-e-leitura-de-capability">Variância desigual e leitura de capability</h3>
 <p>Heterogeneidade de variância entre grupos não é apenas um detalhe técnico da ANOVA — tem uma consequência prática direta na forma como o <a href="#/aula/cap-071">Capítulo 71</a> calcula Cp/Cpk. Se um estudo de capability agrupar dados de vários operadores, turnos ou máquinas sem verificar antes se a variabilidade é homogénea, o desvio-padrão combinado usado no denominador de Cp/Cpk pode ficar dominado pelo grupo mais disperso — inflando artificialmente a variação "do processo" e subestimando a capacidade real de cada grupo individualmente. Pior ainda: se o subgrupo racional (<a href="#/aula/cap-065">Capítulo 65</a>) misturar deliberada ou acidentalmente fontes de variação com dispersões diferentes, o Cpk calculado deixa de corresponder a nenhum cenário real de produção — não é o Cpk do operador bom, nem o do operador com problema, é uma média sem significado físico direto.</p>
-<p>Por isso, antes de reportar um Cp/Cpk agregado sobre múltiplos operadores, turnos ou máquinas, vale a pena rodar Bartlett ou Levene sobre os grupos que compõem o agregado. Se a hipótese de variância igual for rejeitada, a decisão correta não é "consertar" o teste — é reportar Cpk separadamente por grupo, e tratar a diferença de variabilidade como um achado de processo por si só, exatamente como no exemplo do operador C acima.</p><h3 id="exemplo-resolvido-variabilidade-de-operador">Exemplo resolvido: médias iguais, variâncias diferentes</h3><div class="codetabs"><div class="ct-bar" role="tablist"><button type="button" class="ct-tab on" role="tab" aria-selected="true" id="ct0bda49fd-t0">Python</button></div><div class="ct-pane" role="tabpanel" aria-labelledby="ct0bda49fd-t0"><div class="codeblock" data-lang="python"><div class="codebar"><span class="lang">Python</span><button class="btn-copy" type="button">Copiar</button></div><pre><code class="language-python">import numpy as np
+<p>Por isso, antes de reportar um Cp/Cpk agregado sobre múltiplos operadores, turnos ou máquinas, vale a pena rodar Bartlett ou Levene sobre os grupos que compõem o agregado. Se a hipótese de variância igual for rejeitada, a decisão correta não é "consertar" o teste — é reportar Cpk separadamente por grupo, e tratar a diferença de variabilidade como um achado de processo por si só, exatamente como no exemplo do operador C acima.</p><h3 id="exemplo-resolvido-variabilidade-de-operador">Exemplo resolvido: médias iguais, variâncias diferentes</h3><div class="codetabs"><div class="ct-bar" role="tablist"><button type="button" class="ct-tab on" role="tab" aria-selected="true" id="ct0bda49fd-t0">Python</button><button type="button" class="ct-tab" role="tab" aria-selected="false" id="ct0bda49fd-t1">R</button></div><div class="ct-pane" role="tabpanel" aria-labelledby="ct0bda49fd-t0"><div class="codeblock" data-lang="python"><div class="codebar"><span class="lang">Python</span><button class="btn-copy" type="button">Copiar</button></div><pre><code class="language-python">import numpy as np
 from scipy import stats
 
 rng = np.random.default_rng(914)
@@ -43,7 +43,47 @@ if p_bartlett &lt; alfa or p_levene &lt; alfa:
     print("\nDIAGNOSTICO: as MEDIAS parecem iguais, mas Bartlett e Levene detetam")
     print("VARIANCIAS significativamente diferentes -- o operador C precisa de")
     print("investigacao (formacao, condicao do instrumento, metodo de trabalho),")
-    print("mesmo sem ter produzido pecas fora do alvo em media.")</code></pre></div></div></div><h3 id="exercicio-proposto">Exercício proposto</h3>
+    print("mesmo sem ter produzido pecas fora do alvo em media.")</code></pre></div></div><div class="ct-pane" hidden role="tabpanel" aria-labelledby="ct0bda49fd-t1"><div class="codeblock" data-lang="r"><div class="codebar"><span class="lang">R</span><button class="btn-copy" type="button">Copiar</button></div><pre><code class="language-r">set.seed(914)
+
+# Tres operadores, MESMA media-alvo de dimensao (25.00 mm), variabilidade DIFERENTE
+op_A &lt;- rnorm(40, 25.00, 0.020)   # consistente
+op_B &lt;- rnorm(40, 25.00, 0.022)   # consistente
+op_C &lt;- rnorm(40, 25.00, 0.065)   # muito mais disperso
+
+cat("Medias por operador (a ANOVA de medias nao veria problema aqui):\n")
+for (op in list(A = op_A, B = op_B, C = op_C)) {
+  nome &lt;- names(which(sapply(list(A = op_A, B = op_B, C = op_C), identical, op)))
+}
+dados_op &lt;- list(A = op_A, B = op_B, C = op_C)
+for (nome in names(dados_op)) {
+  d &lt;- dados_op[[nome]]
+  cat(sprintf("  Operador %s: media = %.4f  desvio-padrao = %.4f\n", nome, mean(d), sd(d)))
+}
+
+valores &lt;- c(op_A, op_B, op_C)
+grupo &lt;- factor(rep(c("A", "B", "C"), each = 40))
+
+anova_media &lt;- oneway.test(valores ~ grupo, var.equal = TRUE)
+veredito_media &lt;- if (anova_media$p.value &lt; 0.05) "medias diferem" else "medias NAO diferem significativamente"
+cat(sprintf("\nANOVA de medias (Capitulo 50): F = %.2f  p = %.4f  -&gt; %s\n",
+            anova_media$statistic, anova_media$p.value, veredito_media))
+
+teste_bartlett &lt;- bartlett.test(valores ~ grupo)
+teste_levene   &lt;- car::leveneTest(valores ~ grupo, center = median)   # requer install.packages("car")
+
+cat(sprintf("\nTeste de Bartlett : estatistica = %.2f  p = %.5f\n",
+            teste_bartlett$statistic, teste_bartlett$p.value))
+cat(sprintf("Teste de Levene   : estatistica = %.2f  p = %.5f\n",
+            teste_levene$`F value`[1], teste_levene$`Pr(&gt;F)`[1]))
+
+alfa &lt;- 0.05
+if (teste_bartlett$p.value &lt; alfa || teste_levene$`Pr(&gt;F)`[1] &lt; alfa) {
+  cat("\nDIAGNOSTICO: as MEDIAS parecem iguais, mas Bartlett e Levene detetam\n")
+  cat("VARIANCIAS significativamente diferentes -- o operador C precisa de\n")
+  cat("investigacao (formacao, condicao do instrumento, metodo de trabalho),\n")
+  cat("mesmo sem ter produzido pecas fora do alvo em media.\n")
+}
+</code></pre></div></div></div><h3 id="exercicio-proposto">Exercício proposto</h3>
 <p>Repita o exemplo acima substituindo as três distribuições normais por distribuições log-normais com a mesma média e os mesmos desvios-padrão-alvo (dica: use <code>rng.lognormal</code> ajustando os parâmetros para obter a média/variância desejada). Compare o p-valor de Bartlett com o de Levene nesse cenário não-normal — qual dos dois se mantém mais confiável? Relacione a resposta com a explicação de sensibilidade a não-normalidade dada no capítulo.</p>
 <h3 id="erros-comuns">Erros comuns</h3>
 <ol>

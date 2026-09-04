@@ -1,4 +1,4 @@
-<a id="capitulo-911"></a>
+<a id="capitulo-165"></a>
 ## Capítulo 74-A: Delineamentos de Um Fator — Blocos Aleatorizados e Quadrado Latino
 
 ### A pergunta de engenharia
@@ -125,6 +125,6 @@ Usando o conjunto de dados do RCBD do exemplo resolvido, remova o termo `C(turno
 
 *Fonte principal: ASQ Certified Six Sigma Black Belt Body of Knowledge (2022), seção VII.A.4 "One-factor experiments". Cross-check: Six Sigma Study Guide, "Other Designed Experiment Types" (sixsigmastudyguide.com); Minitab Support, "What are randomized block designs and Latin square designs?". Verificado via pesquisa na web em 22/08/2026.*
 
-### Revisão técnica 2026 — Capítulo 911
+### Revisão técnica 2026 — Capítulo 165
 
 **Status:** Capítulo novo, escrito para cobrir a lacuna do tópico VII.A.4 do BOK do CSSBB (delineamento completamente aleatorizado, blocos aleatorizados e quadrado latino), identificada em auditoria de conteúdo de agosto de 2026.

@@ -18,7 +18,7 @@
 <li><strong>Verificar antes de testar.</strong> Construir uma tabela de contingência Máquina × Produto. Se a correlação for próxima de 1:1, já se sabe, antes de rodar qualquer ANOVA, que os dois efeitos não são estatisticamente separáveis com estes dados.</li>
 <li><strong>Ampliar a ANOVA para incluir a covariável.</strong> Se existir alguma variação natural (produtos que passam por mais de uma máquina), uma ANOVA de 2 vias, ou uma regressão/GLM controlando pela covariável (ver <a href="#/aula/cap-051">Capítulo 51</a>), consegue separar parcialmente os dois efeitos — desde que exista variação suficiente para estimar os dois.</li>
 <li><strong>Assumir a limitação explicitamente.</strong> Quando a confusão é total (1:1 perfeito) e não há como redesenhar a coleta, a conclusão correta é reportar a associação como "máquina-e-produto", não decompor o que os dados não permitem decompor — e, se possível, propor uma intervenção futura (rodar temporariamente o produto difícil noutra máquina) que quebre a confusão.</li>
-</ul><h3 id="exemplo-resolvido-maquina-confundida-com-produto">Exemplo resolvido: quando "efeito de máquina" é, na verdade, efeito de produto</h3><div class="codetabs"><div class="ct-bar" role="tablist"><button type="button" class="ct-tab on" role="tab" aria-selected="true" id="ctc0de7e36-t0">Python</button></div><div class="ct-pane" role="tabpanel" aria-labelledby="ctc0de7e36-t0"><div class="codeblock" data-lang="python"><div class="codebar"><span class="lang">Python</span><button class="btn-copy" type="button">Copiar</button></div><pre><code class="language-python">import numpy as np
+</ul><h3 id="exemplo-resolvido-maquina-confundida-com-produto">Exemplo resolvido: quando "efeito de máquina" é, na verdade, efeito de produto</h3><div class="codetabs"><div class="ct-bar" role="tablist"><button type="button" class="ct-tab on" role="tab" aria-selected="true" id="ctc0de7e36-t0">Python</button><button type="button" class="ct-tab" role="tab" aria-selected="false" id="ctc0de7e36-t1">R</button></div><div class="ct-pane" role="tabpanel" aria-labelledby="ctc0de7e36-t0"><div class="codeblock" data-lang="python"><div class="codebar"><span class="lang">Python</span><button class="btn-copy" type="button">Copiar</button></div><pre><code class="language-python">import numpy as np
 import pandas as pd
 from scipy import stats
 import statsmodels.formula.api as smf
@@ -68,7 +68,48 @@ print("  mostra que 'Maquina' deixa de ser significativo assim que 'ProdutoDific
 print("  entra no modelo: o efeito real e do produto, nao da maquina.")
 print("  Isto so foi possivel porque M-A e M-B tambem processam ALGUM produto dificil")
 print("  (10%) -- se o confundimento fosse 100% perfeito, nem a ANOVA de 2 vias")
-print("  conseguiria separar os efeitos.")</code></pre></div></div></div><h3 id="quando-aprofundar-em-cada-direcao">Quando aprofundar em cada direção</h3>
+print("  conseguiria separar os efeitos.")</code></pre></div></div><div class="ct-pane" hidden role="tabpanel" aria-labelledby="ctc0de7e36-t1"><div class="codeblock" data-lang="r"><div class="codebar"><span class="lang">R</span><button class="btn-copy" type="button">Copiar</button></div><pre><code class="language-r">set.seed(913)
+
+# Cenario: 3 maquinas. M-C so processa o produto dificil (95% das vezes).
+# O efeito real da maquina C, isolado, e ZERO -- toda a diferenca observada
+# vem do produto, nao da maquina. Vamos ver se a ANOVA ingenua percebe isso.
+n_por_maquina &lt;- 60
+maquinas &lt;- c("M-A", "M-B", "M-C")
+prob_produto_dificil &lt;- c("M-A" = 0.10, "M-B" = 0.10, "M-C" = 0.95)  # confundimento quase 1:1
+
+registos &lt;- do.call(rbind, lapply(maquinas, function(maq) {
+  dificil &lt;- runif(n_por_maquina) &lt; prob_produto_dificil[[maq]]
+  base &lt;- 0.05
+  efeito_produto &lt;- ifelse(dificil, 0.04, 0.0)
+  ruido &lt;- rnorm(n_por_maquina, 0, 0.01)
+  taxa_rejeitados &lt;- pmin(pmax(base + efeito_produto + ruido, 0), 1)
+  data.frame(Maquina = maq, ProdutoDificil = as.integer(dificil), TaxaRejeitados = taxa_rejeitados)
+}))
+
+cat("Tabela de contingencia Maquina x Produto (confundimento visivel antes de testar):\n")
+print(table(registos$Maquina, registos$ProdutoDificil))
+
+cat("\nPASSO 1 -- ANOVA ingenua, so 'Maquina':\n")
+modelo_ingenuo &lt;- aov(TaxaRejeitados ~ Maquina, data = registos)
+resumo_ing &lt;- summary(modelo_ingenuo)[[1]]
+f_ing &lt;- resumo_ing["Maquina", "F value"]
+p_ing &lt;- resumo_ing["Maquina", "Pr(&gt;F)"]
+resultado &lt;- if (p_ing &lt; 0.05) "SIGNIFICATIVO: parece que a maquina importa" else "nao significativo"
+cat(sprintf("  F = %.2f  p = %.4f  -&gt; %s\n", f_ing, p_ing, resultado))
+
+cat("\nPASSO 2 -- ANOVA de 2 vias, controlando por 'ProdutoDificil':\n")
+modelo_2vias &lt;- aov(TaxaRejeitados ~ Maquina + ProdutoDificil, data = registos)
+print(summary(modelo_2vias))
+
+cat("\nDIAGNOSTICO:\n")
+cat("  O Passo 1 sugere um efeito de maquina que NAO EXISTE -- e um artefacto do\n")
+cat("  confundimento com o produto dificil. O Passo 2, controlando pelo produto,\n")
+cat("  mostra que 'Maquina' deixa de ser significativo assim que 'ProdutoDificil'\n")
+cat("  entra no modelo: o efeito real e do produto, nao da maquina.\n")
+cat("  Isto so foi possivel porque M-A e M-B tambem processam ALGUM produto dificil\n")
+cat("  (10%) -- se o confundimento fosse 100% perfeito, nem a ANOVA de 2 vias\n")
+cat("  conseguiria separar os efeitos.\n")
+</code></pre></div></div></div><h3 id="quando-aprofundar-em-cada-direcao">Quando aprofundar em cada direção</h3>
 <p>Use este capítulo como um "hub": se o problema é decidir <strong>como desenhar</strong> um experimento futuro para evitar confundimento — quantos blocos, que fatores confundir de propósito para reduzir corridas —, o conteúdo certo é o <a href="#/aula/cap-076">Capítulo 76</a> e os fatoriais fracionados que se seguem. Se o problema é <strong>interpretar dados já coletados</strong>, observacionais, em que o confundimento não foi escolhido por ninguém — o caso mais comum em análise de processo de manufatura —, o conteúdo certo é o <a href="#/aula/cap-137">Capítulo 137</a>, que trata diagramas causais (DAG), variáveis de confusão e desenhos quase-experimentais (diferenças-em-diferenças) especificamente para essa situação.</p><h3 id="exercicio-proposto">Exercício proposto</h3>
 <p>Usando o exemplo resolvido acima, altere <code>prob_produto_dificil</code> para que M-A e M-B processem 0% de produto difícil (confundimento perfeitamente 1:1 com M-C). Rode novamente a ANOVA de 2 vias — o que acontece ao erro-padrão do coeficiente de "Máquina"? Explique, em termos de graus de liberdade e de colinearidade, por que o modelo deixa de conseguir separar os dois efeitos, e o que isso implica para a recomendação de ação (comparado com o caso em que existe alguma sobreposição de 10%).</p>
 <h3 id="erros-comuns">Erros comuns</h3>

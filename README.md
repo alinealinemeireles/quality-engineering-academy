@@ -19,15 +19,18 @@ instalação, funciona offline.
 | Capítulos | 182 (153 do manual + 29 escritos de raiz) |
 | Percursos (trilhas) | 6 |
 | Módulos | 62 |
-| Blocos de código (Python/R/SQL/DAX) | 196 |
+| Blocos de código (Python/R/SQL/DAX) | 233 |
 | Figuras e diagramas | 256 |
-| Gráficos interativos (Plotly) | 21, com hover e deslizadores |
+| Gráficos interativos (Plotly) | 21 figuras (composições registadas em `figs.js`; cada figura pode ter mais de uma série — 65 séries no total: 34 scatter, 14 bar, 14 line, 2 log, 1 contour), com hover e deslizadores |
 | Questões de certificação | 119 (60 CQE + 59 CSSBB, autorais) |
 | Tradução para inglês | 100% dos capítulos (182/182) e do banco de questões (119/119) |
 
-Estes números costumavam ser recalculados a cada `python3 tools/build.py`, a partir do
-`manifest.js` gerado. **Isso já não é totalmente verdade a partir dos 17 capítulos mais recentes
-(166–182, ver tabela abaixo)** — ver aviso na secção seguinte antes de correr o build.
+Estes números são recalculados a cada `python3 tools/build.py`, a partir do `manifest.js`
+gerado. Os 17 capítulos mais recentes (166–182, ver tabela abaixo) já têm fonte própria em
+`extra/*.md` e tradução em `i18n/en/*.md`, e estão registados em `tools/curriculum.py`
+(`EXTRA_CHAPTERS`) do mesmo jeito que o lote 1 (154–165) — não precisam de tratamento especial
+antes de rodar o build (verificado em 2026-09-03: rebuild completo reproduz os 182 capítulos
+sem perdas, `node tools/check_i18n.js` passa 182/182).
 
 ### Percursos
 
@@ -73,9 +76,10 @@ Estes números costumavam ser recalculados a cada `python3 tools/build.py`, a pa
 
 **Lote 2 (cap-166 a cap-182, 17 capítulos)** — resultado do diagnóstico de alinhamento com o
 projeto prático `manufacturing-performance-analytics` (ver `alinhamento-academy-vs-pratica.md`).
-⚠️ **Só existem como ficheiros compilados** (`site/content/ch/cap-1XX.js` + `.en.js` e
-`site/content/manifest.js`) — **não têm fonte em `extra/*.md` nem tradução em `i18n/en/`, e não
-estão no `manual.ipynb`.** Ver aviso na próxima secção antes de rodar `tools/build.py`.
+Têm fonte em `extra/*.md`, tradução em `i18n/en/cap-1XX.md` e estão registados em
+`tools/curriculum.py` (`EXTRA_CHAPTERS`), no mesmo esquema do lote 1 — não vêm do
+`manual.ipynb` (são "escritos de raiz", por desenho, ver comentário em `curriculum.py`), mas
+isso não é um problema de pipeline: passam por `build.py` normalmente.
 
 | Nº | Título | Módulo | Porquê |
 |---|---|---|---|
@@ -115,10 +119,9 @@ estão no `manual.ipynb`.** Ver aviso na próxima secção antes de rodar `tools
 │       ├── bank.js           ← banco de questões
 │       ├── figs.js           ← gráficos interativos pré-calculados
 │       └── ch/cap-NNN.js     ← um ficheiro por capítulo
-├── extra/                    ← 12 capítulos escritos de raiz (cap-154 a 165, lote 1), ver tabela acima
-│                                ⚠️ NÃO inclui o lote 2 (cap-166 a 182) — ver aviso abaixo
+├── extra/                    ← 29 capítulos escritos de raiz (cap-154 a 182, lotes 1 e 2), ver tabela acima
 ├── i18n/en/                  ← tradução EN capítulo a capítulo (cap-NNN.md) + bank.json (119 questões)
-│                                cobre cap-001 a 165; NÃO cobre cap-166 a 182 (ver aviso abaixo)
+│                                cobre cap-001 a 182 (100%)
 ├── tools/
 │   ├── parse.py              ← lê o notebook e deteta partes/capítulos
 │   ├── curriculum.py         ← matriz trilha → módulo → capítulo → competência
@@ -129,26 +132,28 @@ estão no `manual.ipynb`.** Ver aviso na próxima secção antes de rodar `tools
 │   ├── figures.py            ← gera os gráficos Plotly (JSON, sem imagens)
 │   ├── mk_bpmn_svg.py        ← gera o diagrama BPMN autoral
 │   └── check.js check2.js    ← testes de navegador (Playwright)
-├── manual.ipynb              ← fonte (não é publicado, não versionado — ver .gitignore)
+├── manual.ipynb              ← fonte principal do manual; usado pelo build e incluído no pacote de desenvolvimento
 └── AUDITORIA.md              ← o que foi encontrado no manual
 ```
 
-### ⚠️ Antes de reconstruir: os capítulos 166–182 não estão no pipeline
+### Reconstruir com segurança: os capítulos 166–182 já estão no pipeline
 
 `tools/build.py` regenera `manifest.js`, `content/ch/cap-NNN.js` e `cap-NNN.en.js` **a partir do
 `manual.ipynb` + `extra/*.md` + `i18n/en/*.md`**, guiado por `tools/curriculum.py`. Os capítulos
-166 a 182 (lote 2, tabela acima) foram adicionados diretamente como ficheiros já compilados —
-**não existem no notebook, não têm fonte em `extra/*.md` e não têm tradução em `i18n/en/`.**
+166 a 182 (lote 2) têm fonte em `extra/*.md`, tradução em `i18n/en/cap-1XX.md` e estão
+registados em `EXTRA_CHAPTERS` (`tools/curriculum.py`), incluindo o módulo novo `lss-15` já
+adicionado à trilha Lean Six Sigma. Não vêm do `manual.ipynb` — por desenho, não por lacuna: é o
+mesmo mecanismo usado pelo lote 1 (154–165) e por capítulos mais antigos como `gage_rr_anova`
+(módulo `eq-06`).
 
-**Rodar `python3 tools/build.py` agora reescreveria `manifest.js` e apagaria esses 17 capítulos**,
-porque o build não sabe que eles existem. Antes de rodar o build:
-1. Escreva a fonte de cada capítulo 166–182 em `extra/*.md` (ou no notebook) e a tradução em `i18n/en/cap-1XX.md`;
-2. Registe cada um em `tools/curriculum.py` (mapa trilha → módulo → capítulo), incluindo o módulo novo `lss-15`;
-3. Só depois rode `build.py` — e confira com `node tools/check_i18n.js` e uma comparação de
-   `manifest.js` antes/depois que nenhum capítulo desapareceu.
-
-Até isso ser feito, trate `site/content/` como a fonte de verdade para os capítulos 166–182 e
-edite-os diretamente ali.
+**Verificado em 2026-09-03**: rebuild completo (`python3 tools/build.py && node tools/enrich_bank.js
+&& node tools/build_bank_en.js`) reproduz os 182 capítulos sem perdas, e `node tools/check_i18n.js`
+confirma paridade PT/EN 182/182. Se algum dia isto deixar de ser verdade (por exemplo, se um
+capítulo novo for adicionado direto em `site/content/ch/` sem passar por `extra/*.md` +
+`curriculum.py`, atalho usado historicamente antes desta correção), o sintoma será
+`check_i18n.js` falhando ou o capítulo desaparecendo do `manifest.js` — sempre correr esse
+comando e comparar `manifest.js` antes/depois de qualquer rebuild, como boa prática, não só
+quando há aviso explícito.
 
 ### Reconstruir o site a partir do notebook
 
@@ -191,7 +196,7 @@ para `main`. Depois do primeiro push:
 
 1. **Settings → Pages → Source: GitHub Actions**
 2. O site fica em `https://<utilizador>.github.io/<repositorio>/`
-3. **Antes de tornar público**: substitua `https://example.github.io/quality-engineering-academy/`
+3. **Antes de publicar em domínio próprio**: configure `canonical`, `og:url` e `sitemap.xml` para o domínio final
    pelo domínio real em `site/robots.txt`, `site/sitemap.xml` e nas tags `canonical` / `og:url` /
    `twitter:url` de `site/index.html` — foram deixadas com um domínio de exemplo porque o
    repositório ainda não tem remote/publicação configurados.

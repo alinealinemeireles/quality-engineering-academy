@@ -1,4 +1,4 @@
-<a id="capitulo-904"></a>
+<a id="capitulo-158"></a>
 ## Capítulo 25-A: OEE Avançado — Decomposição de Perdas, Maturidade Digital e Dados em Tempo Real
 
 ### A pergunta de engenharia
@@ -53,7 +53,7 @@ antes de ir mais fundo.
 | **< 40%** | Precisa de melhoria urgente — geralmente sinal de problema estrutural, não só de execução |
 | **40–60%** | Típico de linhas sem gestão ativa de perdas |
 | **60–85%** | Faixa comum da indústria, com espaço real de ganho |
-| **≥ 85%** | Referência de "classe mundial" para a maioria dos processos discretos |
+| **≥ 85%** | Referência histórica de benchmarking frequentemente chamada de "classe mundial"; não é um limite universal |
 
 > **Por que isto importa para capability (Capítulo 71).** Um processo que para, acelera e desacelera
 > de forma imprevisível não é um processo estatisticamente estável — e capability só faz sentido

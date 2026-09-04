@@ -1,4 +1,4 @@
-<a id="capitulo-902"></a>
+<a id="capitulo-156"></a>
 ## Capítulo 71-A: Estúdio de Capabilidade — Cp, Cpk, Pp, Ppk na prática
 
 ### A pergunta de engenharia

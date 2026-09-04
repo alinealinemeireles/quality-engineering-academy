@@ -5,7 +5,7 @@
 //
 // Sai com codigo 1 se encontrar qualquer capitulo sem traducao EN carregavel, ou
 // qualquer questao do banco sem os campos de rastreabilidade (bokTopic, cognitiveLevel,
-// chapterRef). E o teste que teria apanhado os cap-900..907 sem versao EN.
+// chapterRef). E o teste que teria apanhado os cap-154..161 sem versao EN.
 const fs = require('fs');
 const path = require('path');
 

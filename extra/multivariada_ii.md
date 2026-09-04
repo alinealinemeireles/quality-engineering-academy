@@ -1,4 +1,4 @@
-<a id="capitulo-910"></a>
+<a id="capitulo-164"></a>
 ## Capítulo 56-A: Análise Multivariada II — Fatorial, Discriminante e MANOVA
 
 ### A pergunta de engenharia
@@ -113,6 +113,6 @@ Usando o conjunto de dados do exemplo resolvido, adicione um terceiro fator late
 
 *Fonte principal: ASQ Certified Six Sigma Black Belt Body of Knowledge (2022), seção VI.A.3 "Multivariate tools". Cross-check: SixSigma.us e MSI Certified, material introdutório sobre análise fatorial, análise discriminante e MANOVA em contexto Six Sigma; Statistics How To, "Wilks' Lambda". Verificado via pesquisa na web em 22/08/2026.*
 
-### Revisão técnica 2026 — Capítulo 910
+### Revisão técnica 2026 — Capítulo 164
 
 **Status:** Capítulo novo, escrito para cobrir a lacuna do tópico VI.A.3 do BOK do CSSBB (análise fatorial, discriminante e MANOVA), identificada em auditoria de conteúdo de agosto de 2026.

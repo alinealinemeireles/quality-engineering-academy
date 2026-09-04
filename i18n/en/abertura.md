@@ -121,8 +121,16 @@ is still a bad analysis.
 | ISO 31000:2018 / IEC 31010:2019 / ISO 31073:2022 | Risk principles / techniques / vocabulary; none is certifiable |
 | ISO 22301:2019 · ISO 22000:2018 | Business continuity · food safety; in force |
 | FSSC 22000 | V7 introduced in 2026 — confirm the version required by your customer |
-| Regulation (EU) 2024/1689 — AI Act | In force since 08/2024; general rule (Annex III high-risk) from 08/02/2026 (Ch. 152) |
+| Regulation (EU) 2024/1689 — AI Act | In force since 08/2024; general application from 08/02/2026; Annex III high-risk from 02/12/2027 and Annex I from 02/08/2028 (Ch. 152) |
 | AIAG Core Tools | APQP 3rd ed. (2024) · Control Plan 1st ed. (2024) · FMEA Handbook AIAG&amp;VDA · SPC Manual 1st ed. (2026) |
+
+**Maintenance note.** Rows marked "expected" or "in publication" (today: the ISO 9001 6th
+edition) describe a state that can change without notice in this text -- the verification date
+above only holds until the standard is actually published. Re-confirm this table every quarterly
+content review (or whenever chapters 80, 91, or 133 are edited) and update the date in this
+section's heading. Until the next re-confirmation, treat any "expected" entry here as subject to
+change, not as settled fact.
+
 
 > Never cite a normative requirement from this handbook in an official document without confirming
 > the edition currently in force at the primary source.

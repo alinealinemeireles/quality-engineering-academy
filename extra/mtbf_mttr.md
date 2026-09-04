@@ -10,7 +10,7 @@
 <div class="math-block" data-math="\text{MTTR} = \frac{\text{Tempo total de reparo}}{\text{Número de reparos}}"></div>
 <p><strong>MTBF</strong> (<em>Mean Time Between Failures</em>) mede a <strong>frequência</strong> de falha: quanto tempo, em média, o equipamento fica operacional entre uma falha e a seguinte. <strong>MTTR</strong> (<em>Mean Time To Repair</em>) mede a <strong>velocidade de recuperação</strong>: quanto tempo, em média, demora a voltar a operar depois de falhar. São dois problemas de engenharia diferentes, com contramedidas diferentes — aumentar o MTBF é um problema de fiabilidade de projeto e de manutenção autónoma (ver <a href="#/aula/cap-025">Capítulo 25</a>); reduzir o MTTR é um problema de logística de peças, de diagnóstico e de procedimento de reparo.</p>
 <p>Uma nota de nomenclatura que importa: para equipamento <strong>não reparável</strong> (um componente que é substituído, não consertado), a métrica correta chama-se <strong>MTTF</strong> (<em>Mean Time To Failure</em>), não MTBF — a distinção existe porque "entre falhas" não faz sentido para algo que só falha uma vez, na sua vida útil.</p><h3 id="disponibilidade-inerente">Disponibilidade inerente: onde os dois se encontram</h3>
-<p>MTBF e MTTR combinam-se numa única métrica de disponibilidade — a mesma que entra na fórmula do OEE (<a href="#/aula/cap-025">Capítulo 25</a>):</p>
+<p>MTBF e MTTR podem ser combinados numa <strong>disponibilidade inerente</strong> sob hipóteses e fronteiras de tempo bem definidas. Isto não significa que esta seja a mesma definição de disponibilidade usada no OEE (<a href="#/aula/cap-025">Capítulo 25</a>): as duas métricas estão relacionadas, mas têm denominadores e objetivos diferentes.</p>
 <div class="math-block" data-math="\text{Disponibilidade inerente} = \frac{\text{MTBF}}{\text{MTBF} + \text{MTTR}}"></div>
 <p>Esta fórmula tem uma implicação prática direta: <strong>há dois caminhos independentes para aumentar disponibilidade</strong> — falhar com menos frequência (MTBF maior) ou reparar mais depressa (MTTR menor) — e nem sempre custam o mesmo. Duplicar o MTBF de um equipamento pode exigir investimento em manutenção preditiva e revisão de projeto; reduzir o MTTR para metade pode ser tão simples quanto manter uma peça sobressalente pré-posicionada no chão de fábrica. A pergunta "onde investir primeiro?" não tem resposta sem separar as duas métricas — é exatamente o que a disponibilidade agregada esconde.</p><h3 id="matriz-de-criticidade">Matriz de criticidade MTBF × MTTR</h3>
 <p>Cruzar as duas métricas por equipamento, em vez de olhar cada uma isoladamente, é o que transforma um log de paragens num plano de priorização de manutenção. Divide-se a frota em quatro quadrantes, a partir de limiares definidos pela planta (por exemplo, a mediana do parque de equipamentos):</p>
@@ -21,8 +21,8 @@
 <tr><td><strong>MTBF baixo (falha muito)</strong></td><td>Incómodo operacional, mas recuperável — priorizar causa-raiz da falha</td><td><strong>Crítico</strong>: falha muito e demora a recuperar. Prioridade máxima de manutenção e, provavelmente, candidato a redesenho</td></tr>
 </tbody></table>
 <p>O quadrante "MTBF alto, MTTR alto" é o mais frequentemente mal gerido: como o equipamento falha raramente, não aparece no topo de um Pareto de tempo de paragem acumulado — mas quando falha, a paragem é longa e cara, exatamente porque a raridade da falha significa que a equipa não tem prática recente de reparo nem, muitas vezes, a peça em stock. É o quadrante do "cisne negro" de manutenção.</p><h3 id="o-que-mtbf-nao-diz">O que MTBF não diz: a taxa de falha não é sempre constante</h3>
-<p>MTBF é uma <strong>média</strong>, e como toda a média sobre um período, pressupõe implicitamente que a taxa de falha é aproximadamente <strong>constante</strong> ao longo do tempo — o que corresponde, em termos estatísticos, a assumir que o tempo entre falhas segue uma distribuição exponencial. Essa pressuposição é razoável apenas na fase intermédia da vida do equipamento — a fase de "falha aleatória" da curva da banheira. Não é razoável na fase de mortalidade infantil (falhas por defeito de instalação ou de componente, decrescentes ao longo do tempo) nem na fase de desgaste (falhas crescentes perto do fim da vida útil).</p>
-<p>Dois equipamentos podem ter <strong>o mesmo MTBF</strong> e perfis de risco completamente diferentes: um com taxa de falha constante (seguro extrapolar) e outro em desgaste acelerado (perigoso extrapolar — a próxima falha está mais próxima do que a média sugere). MTBF, sozinho, não distingue os dois casos. Para isso é preciso modelar a <strong>forma</strong> da distribuição de falha — o parâmetro β de Weibull, tratado no <a href="#/aula/cap-098">Capítulo 98</a> e aprofundado com censura e estimação de máxima verosimilhança no <a href="#/aula/cap-139">Capítulo 139</a>. MTBF/MTTR são o vocabulário básico de fiabilidade — a matriz de criticidade acima já é suficiente para priorizar manutenção do dia a dia; Weibull é o passo seguinte, necessário quando a decisão é sobre substituição preventiva antes do fim de vida útil, ou sobre garantia.</p><h3 id="exemplo-resolvido-matriz-de-criticidade">Exemplo resolvido: MTBF, MTTR e matriz de criticidade a partir de um log de paradas</h3><div class="codetabs"><div class="ct-bar" role="tablist"><button type="button" class="ct-tab on" role="tab" aria-selected="true" id="cta6878f21-t0">Python</button></div><div class="ct-pane" role="tabpanel" aria-labelledby="cta6878f21-t0"><div class="codeblock" data-lang="python"><div class="codebar"><span class="lang">Python</span><button class="btn-copy" type="button">Copiar</button></div><pre><code class="language-python">import pandas as pd
+<p>MTBF é uma <strong>média descritiva</strong>; por si só, não pressupõe uma taxa de falha constante nem uma distribuição exponencial. A hipótese de <strong>hazard constante</strong> é uma propriedade do modelo exponencial e permite relacionar a taxa de falha com o inverso do MTBF sob esse modelo. Em equipamentos reais, a taxa de falha pode diminuir na mortalidade infantil, ser aproximadamente estável durante a vida útil ou aumentar no desgaste — razão pela qual MTBF, isoladamente, não descreve a forma temporal do risco.</p>
+<p>Dois equipamentos podem ter <strong>o mesmo MTBF</strong> e perfis de risco completamente diferentes: um com taxa de falha constante (seguro extrapolar) e outro em desgaste acelerado (perigoso extrapolar — a próxima falha está mais próxima do que a média sugere). MTBF, sozinho, não distingue os dois casos. Para isso é preciso modelar a <strong>forma</strong> da distribuição de falha — o parâmetro β de Weibull, tratado no <a href="#/aula/cap-098">Capítulo 98</a> e aprofundado com censura e estimação de máxima verosimilhança no <a href="#/aula/cap-139">Capítulo 139</a>. MTBF/MTTR são o vocabulário básico de fiabilidade — a matriz de criticidade acima já é suficiente para priorizar manutenção do dia a dia; Weibull é o passo seguinte, necessário quando a decisão é sobre substituição preventiva antes do fim de vida útil, ou sobre garantia.</p><h3 id="exemplo-resolvido-matriz-de-criticidade">Exemplo resolvido: MTBF, MTTR e matriz de criticidade a partir de um log de paradas</h3><div class="codetabs"><div class="ct-bar" role="tablist"><button type="button" class="ct-tab on" role="tab" aria-selected="true" id="cta6878f21-t0">Python</button><button type="button" class="ct-tab" role="tab" aria-selected="false" id="cta6878f21-t1">R</button></div><div class="ct-pane" role="tabpanel" aria-labelledby="cta6878f21-t0"><div class="codeblock" data-lang="python"><div class="codebar"><span class="lang">Python</span><button class="btn-copy" type="button">Copiar</button></div><pre><code class="language-python">import pandas as pd
 
 # Log de paradas nao planeadas por maquina (mesma logica do etl_lib do projeto
 # pratico manufacturing-performance-analytics: uma linha por evento de parada,
@@ -70,7 +70,53 @@ print(f"Prioridade 1 (critico): {criticos}")
 print(f"Prioridade 2 (risco latente -- raro mas caro quando falha): {latentes}")
 print("\nRepare que maquinas diferentes podem ter disponibilidade parecida mas")
 print("pertencer a quadrantes de prioridade opostos -- a disponibilidade agregada,")
-print("sozinha, nao mostra essa diferenca.")</code></pre></div></div></div><h3 id="exercicio-proposto">Exercício proposto</h3>
+print("sozinha, nao mostra essa diferenca.")</code></pre></div></div><div class="ct-pane" hidden role="tabpanel" aria-labelledby="cta6878f21-t1"><div class="codeblock" data-lang="r"><div class="codebar"><span class="lang">R</span><button class="btn-copy" type="button">Copiar</button></div><pre><code class="language-r">library(dplyr)
+
+# Log de paradas nao planeadas por maquina (mesma logica do etl_lib do projeto
+# pratico manufacturing-performance-analytics: uma linha por evento de parada,
+# com maquina e duracao em minutos)
+paradas &lt;- data.frame(
+  Maquina    = c(rep("M-01", 2), rep("M-02", 1), rep("M-03", 20), rep("M-04", 8)),
+  DuracaoMin = c(20, 20, 500, rep(10, 20), rep(60, 8))
+)
+
+TEMPO_OBSERVACAO_MIN &lt;- 30 * 24 * 60   # janela de 30 dias, 3 turnos, calendario completo
+
+resumo &lt;- paradas %&gt;%
+  group_by(Maquina) %&gt;%
+  summarise(n_falhas = n(), tempo_reparo_total = sum(DuracaoMin), .groups = "drop") %&gt;%
+  mutate(
+    tempo_operacao  = TEMPO_OBSERVACAO_MIN - tempo_reparo_total,
+    MTBF_min        = tempo_operacao / n_falhas,
+    MTTR_min        = tempo_reparo_total / n_falhas,
+    Disponibilidade = MTBF_min / (MTBF_min + MTTR_min)
+  )
+
+mediana_mtbf &lt;- median(resumo$MTBF_min)
+mediana_mttr &lt;- median(resumo$MTTR_min)
+
+quadrante &lt;- function(mtbf, mttr) {
+  alto_mtbf &lt;- mtbf &gt;= mediana_mtbf
+  alto_mttr &lt;- mttr &gt;= mediana_mttr
+  if (alto_mtbf &amp;&amp; !alto_mttr) return("Saudavel")
+  if (!alto_mtbf &amp;&amp; !alto_mttr) return("Incomodo operacional")
+  if (alto_mtbf &amp;&amp; alto_mttr) return("Risco latente")
+  return("Critico")
+}
+
+resumo$Quadrante &lt;- mapply(quadrante, resumo$MTBF_min, resumo$MTTR_min)
+
+print(resumo[, c("Maquina", "n_falhas", "MTBF_min", "MTTR_min", "Disponibilidade", "Quadrante")])
+
+cat(sprintf("\nMediana MTBF = %.0f min | Mediana MTTR = %.1f min\n", mediana_mtbf, mediana_mttr))
+criticos &lt;- resumo$Maquina[resumo$Quadrante == "Critico"]
+latentes &lt;- resumo$Maquina[resumo$Quadrante == "Risco latente"]
+cat("Prioridade 1 (critico):", paste(criticos, collapse = ", "), "\n")
+cat("Prioridade 2 (risco latente -- raro mas caro quando falha):", paste(latentes, collapse = ", "), "\n")
+cat("\nRepare que maquinas diferentes podem ter disponibilidade parecida mas\n")
+cat("pertencer a quadrantes de prioridade opostos -- a disponibilidade agregada,\n")
+cat("sozinha, nao mostra essa diferenca.\n")
+</code></pre></div></div></div><h3 id="exercicio-proposto">Exercício proposto</h3>
 <p>Usando um log de paradas com pelo menos 5 máquinas (pode reutilizar a estrutura de dados do exemplo acima, ou um extrato do log de paradas do projeto <em>manufacturing-performance-analytics</em>, mesma lógica de <code>etl_lib.compute_six_big_losses</code>), calcule MTBF, MTTR e disponibilidade inerente por máquina. Construa a matriz de criticidade usando os quartis (não a mediana) como limiares, em vez de uma divisão em dois grupos — o que muda na classificação quando se usa uma grade mais fina? Em seguida, escolha as duas máquinas classificadas como "Crítico" ou "Risco latente" e redija, para cada uma, uma frase de recomendação de ação que distinga explicitamente se o problema principal é de frequência (MTBF) ou de velocidade de reparo (MTTR) — a ação certa é diferente para cada caso.</p>
 <h3 id="erros-comuns">Erros comuns</h3>
 <ol>

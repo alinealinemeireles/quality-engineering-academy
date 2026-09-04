@@ -31,7 +31,7 @@ fs.mkdirSync(SHOTS, { recursive: true });
   await shot('#/modulo/lss-05', '03-modulo');
   console.log('aulas  :', await page.locator('.mod-row').count());
 
-  await shot('#/aula/cap-900', '04-aula-bpmn', 4000);
+  await shot('#/aula/cap-154', '04-aula-bpmn', 4000);
   console.log('mermaid svg:', await page.locator('.mermaid svg').count());
   console.log('tabelas:', await page.locator('.prose table').count());
   console.log('toc    :', await page.locator('.toc a').count());
@@ -65,7 +65,7 @@ fs.mkdirSync(SHOTS, { recursive: true });
   await page.click('#themeBtn');
   await page.waitForTimeout(700);
   await page.screenshot({ path: path.join(SHOTS, '11-dark.png') });
-  await page.goto(BASE + '#/aula/cap-900', { waitUntil: 'domcontentloaded' });
+  await page.goto(BASE + '#/aula/cap-154', { waitUntil: 'domcontentloaded' });
   await page.waitForTimeout(3500);
   await page.screenshot({ path: path.join(SHOTS, '12-dark-aula.png') });
 
@@ -78,4 +78,5 @@ fs.mkdirSync(SHOTS, { recursive: true });
   console.log('\n--- erros ---');
   console.log(errors.length ? errors.join('\n') : 'nenhum');
   await browser.close();
+  if (errors.length) process.exit(1);
 })();

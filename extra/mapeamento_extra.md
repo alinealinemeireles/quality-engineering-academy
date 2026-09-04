@@ -1,4 +1,4 @@
-<a id="capitulo-901"></a>
+<a id="capitulo-155"></a>
 ## Capítulo 40-B: Esparguete, Makigami e Tartaruga — as três que faltavam
 
 ### Primeiro: qual delas, e quando
@@ -18,7 +18,7 @@ atravessa cinco departamentos é ingenuidade.
 
 ## 1 · Diagrama de esparguete
 
-### A pergunta de engenharia
+### A pergunta de engenharia — Esparguete
 
 *Toda a gente concorda que a célula está "bem organizada". Porque é que o operador anda 4 km por
 turno?*
@@ -157,7 +157,7 @@ cat(sprintf("A 18 EUR/h de custo total do posto: %s EUR/ano\n",
 =(E15_atual-E15_futuro)*420/1,2/3600
 ```
 
-### Erros comuns
+### Erros comuns — Tartaruga — Esparguete
 
 1. **Traçar de memória.** O percurso lembrado é sempre mais curto e mais limpo que o real.
 2. **Misturar sujeitos.** Um mapa para o operador, outro para a peça. Se cruzarem, isso já é um
@@ -171,7 +171,7 @@ cat(sprintf("A 18 EUR/h de custo total do posto: %s EUR/ano\n",
 
 ## 2 · Makigami
 
-### A pergunta de engenharia
+### A pergunta de engenharia — Makigami
 
 *O VSM funciona bem no chão de fábrica. Como se mapeia um processo em que não há peça nenhuma a
 mover-se — só informação, aprovações e espera?*
@@ -242,7 +242,7 @@ Este é o mesmo argumento da regra de ouro pool/lane no capítulo anterior, agor
 
 ## 3 · Diagrama de tartaruga
 
-### A pergunta de engenharia
+### A pergunta de engenharia — Tartaruga
 
 *O auditor vai chegar e perguntar "mostre-me este processo". O que é que se põe em cima da mesa?*
 

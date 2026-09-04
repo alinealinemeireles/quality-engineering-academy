@@ -14,7 +14,7 @@ fs.mkdirSync(SHOTS, { recursive: true });
   p.on('console', m => { if (m.type() === 'error') errs.push('CONSOLE: ' + m.text().slice(0, 160)); });
 
   // lupa
-  await p.goto(BASE + '#/aula/cap-900', { waitUntil: 'domcontentloaded' });
+  await p.goto(BASE + '#/aula/cap-154', { waitUntil: 'domcontentloaded' });
   await p.waitForTimeout(2500);
   const figs = await p.locator('.zoom-btn').count();
   console.log('botoes de lupa:', figs);
@@ -57,4 +57,5 @@ fs.mkdirSync(SHOTS, { recursive: true });
 
   console.log('\nerros:', errs.length ? errs.join('\n') : 'nenhum');
   await b.close();
+  if (errs.length) process.exit(1);
 })();

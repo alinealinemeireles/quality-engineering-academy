@@ -344,3 +344,43 @@ Playwright já estava instalado no ambiente) — ambos passam sem erros de conso
 confirmando programaticamente os números vistos manualmente no browser (165 aulas, lupa de figuras,
 progresso a persistir). Continuam a precisar de `npx playwright install` em qualquer ambiente novo
 (ex.: CI) onde o Chromium gerido pelo Playwright ainda não exista.
+
+---
+
+## 12. Auditoria multidisciplinar externa (setembro de 2026) — verificação do estado do lote 2
+
+Nova auditoria externa (equipa simulada: Engenharia da Qualidade, Lean Six Sigma, Estatística/
+Ciência de Dados, Engenharia de Dados, Analista de Dados/BI), a partir do repositório real, não só
+do `README.md`. Achado principal: **o aviso do README sobre os capítulos 166–182 estava
+desatualizado e descrevia um risco que já não existia.**
+
+Verificação direta, nesta sessão:
+
+- `extra/mtbf_mttr.md` até `extra/toc_theory_of_constraints.md` (os 17 slugs do lote 2) **já
+  existem**, com o cabeçalho `<a id="capitulo-1XX"></a>` / `## Capítulo 1XX: ...` no formato
+  esperado por `tools/parse.py`.
+- `i18n/en/cap-166.md` até `cap-182.md` **já existem**, com tradução completa.
+- `tools/curriculum.py` **já tem** os 17 capítulos registados em `EXTRA_CHAPTERS` (com `source`
+  apontando para `extra/*.md`) e distribuídos pelos módulos corretos, incluindo o módulo novo
+  `lss-15` (Teoria das Restrições) já inserido na trilha Lean Six Sigma.
+- **Rebuild completo executado e verificado**: `python3 tools/build.py && node
+  tools/enrich_bank.js && node tools/build_bank_en.js`, seguido de `node tools/check_i18n.js`.
+  Resultado: 182 capítulos gerados, 183 traduções EN (182 capítulos + abertura), 119 questões,
+  paridade PT/EN confirmada. Comparação byte-a-byte de `manifest.js` e de `site/content/ch/*.js`
+  antes/depois do rebuild: conteúdo idêntico (as poucas diferenças de tamanho de ficheiro
+  encontradas são terminadores de linha, não conteúdo — confirmado por `difflib` sem diffs de
+  texto).
+
+**Conclusão**: o mecanismo `EXTRA_CHAPTERS` (usado desde o lote 1, cap-154–165) já cobre o lote 2
+por desenho — não foi preciso migrar nada. O aviso do `README.md` descrevia um estado transitório
+que existiu em algum momento anterior a esta sessão e que já tinha sido resolvido, mas a
+documentação não foi atualizada quando isso aconteceu. **Corrigido** (`README.md`): removido o
+aviso de risco de perda de dados no rebuild, substituído por confirmação verificada com data;
+tabela de números atualizada (extra/ = 29 capítulos, não 12; i18n/en/ cobre 001–182, não só até
+165); esclarecido que "21 gráficos interativos" conta figuras (chaves em `figs.js`), não séries —
+há 65 séries (traces) distribuídas pelas 21 figuras.
+
+**Lição para o processo de manutenção**: um aviso de "não fazer X sem Y" no README, uma vez escrito,
+não se autocorrige quando Y deixa de ser necessário. Nas próximas vezes que este tipo de aviso for
+resolvido, apagar ou reescrever o aviso no mesmo commit que resolve o problema — não deixá-lo para
+uma auditoria externa descobrir que já não se aplica.

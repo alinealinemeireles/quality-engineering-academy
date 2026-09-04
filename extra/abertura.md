@@ -121,8 +121,16 @@ continua sendo uma análise ruim.
 | ISO 31000:2018 / IEC 31010:2019 / ISO 31073:2022 | Princípios / técnicas / vocabulário de risco; nenhuma é certificável |
 | ISO 22301:2019 · ISO 22000:2018 | Continuidade de negócio · segurança alimentar; vigentes |
 | FSSC 22000 | V7 introduzida em 2026 — confirmar versão exigida pelo cliente |
-| Regulamento (UE) 2024/1689 — AI Act | Em vigor desde 08/2024; regra geral (alto risco Anexo III) a partir de 02/08/2026 (Cap. 152) |
+| Regulamento (UE) 2024/1689 — AI Act | Em vigor desde 08/2024; aplicação geral desde 02/08/2026; alto risco Anexo III desde 02/12/2027 e Anexo I desde 02/08/2028 (Cap. 152) |
 | AIAG Core Tools | APQP 3ª ed. (2024) · Control Plan 1ª ed. (2024) · FMEA Handbook AIAG&amp;VDA · SPC Manual 1ª ed. (2026) |
+
+**Nota de manutenção.** As linhas marcadas "prevista para" ou "em publicação" (hoje: a 6ª edição da
+ISO 9001) descrevem um estado que muda sem aviso no texto — a data de verificação acima só
+continua válida até a norma ser mesmo publicada. Reconfirme esta tabela a cada revisão trimestral
+do conteúdo (ou sempre que os capítulos 80, 91 ou 133 forem editados) e atualize a data no
+cabeçalho desta seção. Até a próxima reconfirmação, trate qualquer "previsão" aqui como sujeita a
+mudança, não como facto assente.
+
 
 > Nunca cite um requisito normativo a partir deste manual num documento oficial sem confirmar a
 > edição em vigor na fonte primária.

@@ -18,7 +18,7 @@
 </ul>
 <p>O indicador final, %GRR, compara o desvio-padrão de medição com a variação total do estudo:</p>
 <div class="math-block" data-math="\%GRR = 100 \times \frac{\sqrt{\text{var\_grr}}}{\sqrt{\text{var\_grr} + \text{var\_part}}}"></div>
-<p><strong>Critério de aceitação (AIAG):</strong> %GRR &lt; 10% — sistema aceitável; 10–30% — aceitável condicionalmente, dependendo da aplicação e do custo de melhorar; &gt; 30% — inaceitável.</p><h3 id="exemplo-resolvido-anova-de-dois-fatores">Exemplo resolvido: ANOVA de dois fatores com interação, no mesmo formato do projeto prático</h3><div class="codetabs"><div class="ct-bar" role="tablist"><button type="button" class="ct-tab on" role="tab" aria-selected="true" id="ct2a4b949e-t0">Python</button></div><div class="ct-pane" role="tabpanel" aria-labelledby="ct2a4b949e-t0"><div class="codeblock" data-lang="python"><div class="codebar"><span class="lang">Python</span><button class="btn-copy" type="button">Copiar</button></div><pre><code class="language-python">import numpy as np
+<p><strong>Critério de aceitação (AIAG):</strong> %GRR &lt; 10% — sistema aceitável; 10–30% — aceitável condicionalmente, dependendo da aplicação e do custo de melhorar; &gt; 30% — inaceitável.</p><h3 id="exemplo-resolvido-anova-de-dois-fatores">Exemplo resolvido: ANOVA de dois fatores com interação, no mesmo formato do projeto prático</h3><div class="codetabs"><div class="ct-bar" role="tablist"><button type="button" class="ct-tab on" role="tab" aria-selected="true" id="ct2a4b949e-t0">Python</button><button type="button" class="ct-tab" role="tab" aria-selected="false" id="ct2a4b949e-t1">R</button></div><div class="ct-pane" role="tabpanel" aria-labelledby="ct2a4b949e-t0"><div class="codeblock" data-lang="python"><div class="codebar"><span class="lang">Python</span><button class="btn-copy" type="button">Copiar</button></div><pre><code class="language-python">import numpy as np
 import pandas as pd
 import statsmodels.api as sm
 import statsmodels.formula.api as smf
@@ -79,7 +79,67 @@ p_interacao = anova_tab.loc["C(PartId):C(Inspector)", "PR(&gt;F)"]
 print(f"\np-valor da interacao PartId x Inspector: {p_interacao:.4f}")
 if p_interacao &lt; 0.05:
     print("SIGNIFICATIVA -- este e exatamente o padrao que o metodo Range nao deteta:")
-    print("um inspetor que so diverge dos outros em pecas de um certo tamanho.")</code></pre></div></div></div><h3 id="de-grr-para-cpk">De %GRR para a leitura de Cpk</h3>
+    print("um inspetor que so diverge dos outros em pecas de um certo tamanho.")</code></pre></div></div><div class="ct-pane" hidden role="tabpanel" aria-labelledby="ct2a4b949e-t1"><div class="codeblock" data-lang="r"><div class="codebar"><span class="lang">R</span><button class="btn-copy" type="button">Copiar</button></div><pre><code class="language-r">set.seed(921)
+
+# Estudo classico AIAG: 10 pecas, 3 inspetores, 2 repeticoes.
+# Mesma estrutura de modelo usada no projeto manufacturing-performance-analytics
+# (Notebook, Parte 9.2): ANOVA cruzada com interacao PartId x Inspector.
+pecas &lt;- sprintf("P%02d", 1:10)
+inspetores &lt;- c("Insp1", "Insp2", "Insp3")
+valor_real_peca &lt;- rnorm(length(pecas), 50.0, 1.2)   # variacao real peca-a-peca
+names(valor_real_peca) &lt;- pecas
+
+registos &lt;- do.call(rbind, lapply(seq_along(pecas), function(i) {
+  peca &lt;- pecas[i]
+  do.call(rbind, lapply(inspetores, function(insp) {
+    # interacao: Insp3 tem vies que CRESCE com o tamanho da peca (nao constante!)
+    vies_interacao &lt;- if (insp == "Insp3") 0.03 * (valor_real_peca[i] - 50.0) else 0.0
+    do.call(rbind, lapply(0:1, function(rep) {
+      medido &lt;- valor_real_peca[i] + vies_interacao + rnorm(1, 0, 0.15)
+      data.frame(PartId = peca, Inspector = insp, Rep = rep, MeasuredValue = medido)
+    }))
+  }))
+}))
+
+modelo &lt;- aov(MeasuredValue ~ PartId * Inspector, data = registos)
+anova_tab &lt;- summary(modelo)[[1]]
+cat("Tabela ANOVA de 2 vias com interacao:\n")
+print(round(anova_tab, 4))
+
+n_inspetores &lt;- length(unique(registos$Inspector))
+n_pecas &lt;- length(unique(registos$PartId))
+n_reps &lt;- 2
+
+ms_erro       &lt;- anova_tab["Residuals", "Mean Sq"]
+ms_interacao  &lt;- anova_tab["PartId:Inspector", "Mean Sq"]
+ms_inspector  &lt;- anova_tab["Inspector", "Mean Sq"]
+ms_part       &lt;- anova_tab["PartId", "Mean Sq"]
+
+var_repeatability   &lt;- ms_erro
+var_interaction     &lt;- max(0, (ms_interacao - ms_erro) / n_reps)
+var_inspector       &lt;- max(0, (ms_inspector - ms_interacao) / (n_pecas * n_reps))
+var_reproducibility &lt;- var_inspector + var_interaction
+var_part            &lt;- max(0, (ms_part - ms_interacao) / (n_inspetores * n_reps))
+
+var_grr   &lt;- var_repeatability + var_reproducibility
+var_total &lt;- var_grr + var_part
+
+cat(sprintf("Repetitividade (var_repeatability)     : %.5f\n", var_repeatability))
+cat(sprintf("Reprodutibilidade (var_reproducibility): %.5f  (inclui interacao PartId x Inspector = %.5f)\n",
+            var_reproducibility, var_interaction))
+cat(sprintf("Peca-a-peca (var_part)                 : %.5f\n", var_part))
+cat(sprintf("GRR total (var_grr)                    : %.5f\n", var_grr))
+
+pct_grr &lt;- 100 * sqrt(var_grr) / sqrt(var_total)
+cat(sprintf("\n%%GRR = 100 x sqrt(var_grr) / sqrt(var_total) = %.1f%%\n", pct_grr))
+
+p_interacao &lt;- anova_tab["PartId:Inspector", "Pr(&gt;F)"]
+cat(sprintf("\np-valor da interacao PartId x Inspector: %.4f\n", p_interacao))
+if (p_interacao &lt; 0.05) {
+  cat("SIGNIFICATIVA -- este e exatamente o padrao que o metodo Range nao deteta:\n")
+  cat("um inspetor que so diverge dos outros em pecas de um certo tamanho.\n")
+}
+</code></pre></div></div></div><h3 id="de-grr-para-cpk">De %GRR para a leitura de Cpk</h3>
 <p>Um sistema de medição com %GRR alto não produz apenas medições ruidosas — ele <strong>contamina diretamente</strong> a leitura de capacidade de processo do <a href="#/aula/cap-071">Capítulo 71</a>. A variância total observada num estudo de capability é, por construção, a soma da variância real do processo com a variância do sistema de medição:</p>
 <div class="math-block" data-math="\sigma_{Observada}^2 = \sigma_{Processo}^2 + \sigma_{Medicao}^2"></div>
 <p>Se <span class="math-inline" data-math="\sigma_{Medicao}"></span> for uma fração relevante de <span class="math-inline" data-math="\sigma_{Observada}"></span>, o Cpk calculado a partir dos dados <strong>subestima</strong> o Cpk real do processo — porque o denominador da fórmula de Cpk usa o desvio-padrão observado, inflado pelo ruído de medição. Na prática, isto significa que um processo genuinamente capaz pode parecer incapaz só porque o sistema de medição é ruim — e a ação corretiva errada (mexer no processo, que já estava bem) não resolve nada, porque o problema estava na régua, não na peça.</p>

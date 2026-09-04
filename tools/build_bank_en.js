@@ -44,6 +44,7 @@ const bankEn = bank.map((q) => {
     bokTopic: enChapterTitles[q.chapterRef] || q.bokTopic,
     chapterRef: q.chapterRef,
     cognitiveLevel: q.cognitiveLevel,
+    difficulty: q.difficulty,
   };
 });
 

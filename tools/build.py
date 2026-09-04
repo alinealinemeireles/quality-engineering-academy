@@ -70,12 +70,35 @@ MATH_INLINE = re.compile(r'(?<![\\$])\$(?!\s)([^\$\n]+?)(?<!\s)\$(?!\$)')
 
 
 def protect_math(src, store):
+    """Protect math delimiters without ever parsing code as mathematics.
+
+    A literal ``$`` is common in R (``df$col``) and in shell/SQL examples.
+    Fenced code and inline-code spans therefore get temporarily replaced before
+    the math regexes run, then restored before Markdown conversion.
+    """
+    protected = []
+
+    def keep_code(m):
+        token = f'@@CODE{len(protected)}@@'
+        protected.append(m.group(0))
+        return token
+
+    # Raw HTML <pre>/<code> widgets (used by the PT/R language-tab blocks)
+    # first, fenced Markdown blocks second, inline code outside fences third.
+    src = re.sub(r'<pre\b.*?</pre>', keep_code, src, flags=re.S | re.I)
+    src = re.sub(r'```.*?```', keep_code, src, flags=re.S)
+    src = re.sub(r'(?<!`)`[^`\n]+`(?!`)', keep_code, src)
+
     def keep(m, disp):
         token = f'@@MATH{len(store)}@@'
         store.append((m.group(1), disp))
         return token
+
     src = MATH_BLOCK.sub(lambda m: keep(m, True), src)
     src = MATH_INLINE.sub(lambda m: keep(m, False), src)
+
+    for i, code in enumerate(protected):
+        src = src.replace(f'@@CODE{i}@@', code)
     return src
 
 
@@ -187,7 +210,7 @@ def link_chapter_citations(html, num_to_cid, current_cid):
     return ''.join(out)
 
 
-def md2html(src):
+def md2html(src, lang='pt'):
     src = externalise_images(src)
     store = []
     src = protect_math(src, store)
@@ -210,15 +233,15 @@ def md2html(src):
         r'<pre><code class="language-(sql|dax|r|bash|json|xml)">(.*?)</code></pre>',
         lambda m: ('<div class="codeblock" data-lang="%s"><div class="codebar">'
                    '<span class="lang">%s</span>'
-                   '<button class="btn-copy" type="button">Copiar</button></div>'
+                   '<button class="btn-copy" type="button">%s</button></div>'
                    '<pre><code class="language-%s">%s</code></pre></div>'
                    % (m.group(1), LANG_LABEL.get(m.group(1), m.group(1).upper()),
-                      m.group(1), m.group(2))),
+                      COPY_LABEL.get(lang, 'Copiar'), m.group(1), m.group(2))),
         html, flags=re.S)
     # blocos py-r -> separadores Python / R
     html = re.sub(
         r'<pre><code class="language-py-r">(.*?)</code></pre>',
-        lambda m: codetabs(unesc(m.group(1))), html, flags=re.S)
+        lambda m: codetabs(unesc(m.group(1)), lang), html, flags=re.S)
     # blocos mermaid -> div renderizavel
     html = re.sub(
         r'<pre><code class="language-mermaid">(.*?)</code></pre>',
@@ -232,6 +255,7 @@ def md2html(src):
 
 
 LANG_LABEL = {'sql': 'SQL', 'dax': 'DAX', 'r': 'R', 'bash': 'Shell', 'json': 'JSON', 'xml': 'XML'}
+COPY_LABEL = {'pt': 'Copiar', 'en': 'Copy'}
 
 
 def unesc(s):
@@ -244,7 +268,7 @@ TAB_LANG = {'python': 'Python', 'r': 'R', 'sql': 'SQL', 'dax': 'DAX / Power BI',
             'excel': 'Excel', 'vba': 'VBA'}
 
 
-def codetabs(block):
+def codetabs(block, ui_lang='pt'):
     """Converte um bloco `py-r` em separadores de linguagem.
 
     Formato:
@@ -261,6 +285,18 @@ def codetabs(block):
         return '<pre><code class="language-python">%s</code></pre>' % esc(block)
     uid = 'ct%s' % hashlib.md5(block.encode('utf-8')).hexdigest()[:8]
     tabs, panes = [], []
+    normalized = []
+    for lang, code in langs:
+        # English translations are authored in Markdown, where an R example may
+        # arrive as ``--- python`` + ``%%R``. Normalize it to a real R tab and
+        # remove the notebook-only magic before publication.
+        if lang == 'python' and code.lstrip().startswith('%%R'):
+            code = re.sub(r'^\s*%%R\s*\n?', '', code, count=1)
+            lang = 'r'
+        elif lang == 'r':
+            code = re.sub(r'^\s*%%R\s*\n?', '', code, count=1)
+        normalized.append((lang, code))
+    langs = normalized
     for i, (lang, code) in enumerate(langs):
         label = TAB_LANG.get(lang, lang.upper())
         on = ' on' if i == 0 else ''
@@ -271,9 +307,10 @@ def codetabs(block):
             '<div class="ct-pane"%s role="tabpanel" aria-labelledby="%s-t%d">'
             '<div class="codeblock" data-lang="%s"><div class="codebar">'
             '<span class="lang">%s</span>'
-            '<button class="btn-copy" type="button">Copiar</button></div>'
+            '<button class="btn-copy" type="button">%s</button></div>'
             '<pre><code class="language-%s">%s</code></pre></div></div>'
-            % ('' if i == 0 else ' hidden', uid, i, lang, label, lang, esc(code)))
+            % ('' if i == 0 else ' hidden', uid, i, lang, label,
+               COPY_LABEL.get(ui_lang, 'Copiar'), lang, esc(code)))
     return ('<div class="codetabs"><div class="ct-bar" role="tablist">%s</div>%s</div>'
             % (''.join(tabs), ''.join(panes)))
 
@@ -295,6 +332,8 @@ def cell_html(cell):
     if cell['cell_type'] == 'code':
         is_r = src.lstrip().startswith('%%R')
         lang, label = ('r', 'R') if is_r else ('python', 'Python')
+        if is_r:
+            src = re.sub(r'^\s*%%R\s*\n?', '', src, count=1)
         return CODE_TPL.format(lang=lang, label=label, code=esc(src.rstrip()))
     return md2html(src)
 
@@ -430,6 +469,14 @@ PART_TITLE_EN = {
         'CLOSING — Certification Path and Final Project 2026',
     'PARTE XVIII — Conteúdo Novo (4ª Edição Web)': 'PART XVIII — New Content (Web 4th Edition)',
 }
+
+def part_title_en(title):
+    """Return the canonical English part label for generated EN artifacts."""
+    return PART_TITLE_EN.get(title, {
+        'Conteúdo novo (4ª edição web)': 'New Content (Web 4th Edition)',
+        'Abertura': 'Introduction',
+    }.get(title, title))
+
 
 TOC_SPECIAL_PARTS_EN = {
     'PARTE XV — Preparação para Certificação':
@@ -654,7 +701,7 @@ def main():
                 raw = f.read()
             tm = EN_TITLE_RE.search(raw)
             title = tm.group(1) if tm else f'Chapter {num}'
-            body = md2html(raw)
+            body = md2html(raw, lang='en')
             body = link_chapter_citations(body, num_to_cid, f'cap-{num:03d}')
             body = strip_title(body, title)
             body, toc = add_anchors(body)
@@ -665,7 +712,7 @@ def main():
             cid = f'cap-{num:03d}'
             payload = {
                 'id': cid, 'num': num, 'title': title,
-                'part': src_ch.get('part', ''), 'html': body, 'toc': toc,
+                'part': part_title_en(src_ch.get('part', '')), 'html': body, 'toc': toc,
                 'stats': {'code': ncode, 'fig': nfig, 'words': len(plain.split())},
                 'new': src_ch.get('new', False), 'lang': 'en',
             }
@@ -683,7 +730,7 @@ def main():
         en_abertura = os.path.join(EN_DIR, 'abertura.md')
         if os.path.exists(en_abertura):
             with open(en_abertura, encoding='utf-8') as f:
-                fbody_en = md2html(f.read())
+                fbody_en = md2html(f.read(), lang='en')
             fbody_en += build_toc_html_en(toc_parts, en_titles)
             fbody_en, ftoc_en = add_anchors(fbody_en)
             with open(os.path.join(CHDIR, 'cap-000.en.js'), 'w', encoding='utf-8') as f:

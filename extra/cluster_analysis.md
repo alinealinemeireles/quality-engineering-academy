@@ -1,4 +1,4 @@
-<a id="capitulo-907"></a>
+<a id="capitulo-161"></a>
 ## Capítulo 56-A: Análise de Clusters — Hierárquica e K-Means na Qualidade
 
 ### A pergunta de engenharia
