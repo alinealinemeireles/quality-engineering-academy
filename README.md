@@ -10,6 +10,12 @@ de aprendizagem** — trilhas, módulos, aulas, avaliação, Practice Lab e mapa
 **Abrir:** `site/index.html` em qualquer navegador. Não precisa de servidor, não precisa de
 instalação, funciona offline.
 
+> **⚠️ Direitos reservados sobre o conteúdo.** O código-fonte da plataforma (HTML/CSS/JS em
+> `site/assets/`, `tools/`) está sob licença MIT — ver [`LICENSE`](LICENSE). O **conteúdo didático**
+> (capítulos, banco de questões, figuras e o manual de origem) é obra autoral de **Aline Meireles**,
+> com **todos os direitos reservados**: não é autorizada a cópia, reprodução, redistribuição ou
+> reutilização deste conteúdo, total ou parcial, sem autorização expressa da autora.
+
 ---
 
 ## O que está lá dentro

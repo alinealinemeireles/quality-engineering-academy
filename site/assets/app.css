@@ -186,7 +186,14 @@ a:hover { text-decoration-color: currentColor; }
 
 /* ---------- shell ---------- */
 .shell { display: grid; grid-template-columns: var(--sidebar-w) minmax(0, 1fr); align-items: start; }
-main { min-width: 0; padding: 28px clamp(16px, 4vw, 44px) 120px; }
+.shell-main { min-width: 0; display: flex; flex-direction: column; min-height: calc(100vh - var(--topbar-h)); }
+main { min-width: 0; flex: 1 0 auto; padding: 28px clamp(16px, 4vw, 44px) 60px; }
+
+.site-footer {
+  flex: 0 0 auto; padding: 16px clamp(16px, 4vw, 44px) 22px;
+  border-top: 1px solid var(--line-soft); color: var(--ink-3); font-size: 12px; line-height: 1.6;
+}
+.site-footer a { color: inherit; }
 
 /* ---------- sidebar ---------- */
 .sidebar {

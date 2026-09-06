@@ -1055,6 +1055,7 @@
     $('#searchInput').setAttribute('aria-label', T('search.aria'));
     $('#themeBtn').setAttribute('aria-label', T('theme.toggle'));
     var instBtn = $('#installBtn'); if (instBtn) instBtn.setAttribute('aria-label', T('install.btn'));
+    var foot = $('#siteFooter'); if (foot) foot.innerHTML = T('footer.rights', { year: new Date().getFullYear() });
     $('#sidebar').setAttribute('aria-label', T('nav.tracks'));
     $('#langBtn').textContent = window.ACADEMY_I18N.lang() === 'pt' ? 'EN' : 'PT';
   }

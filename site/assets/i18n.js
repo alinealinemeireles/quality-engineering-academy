@@ -21,6 +21,7 @@
       'theme.toggle': 'Alternar tema claro/escuro',
       'search.aria': 'Pesquisar no manual',
       'install.btn': 'Instalar aplicação',
+      'footer.rights': '© {year} Aline Meireles. Todos os direitos reservados sobre o conteúdo didático (capítulos, banco de questões, figuras e manual de origem) — cópia, reprodução ou redistribuição não autorizadas. O código-fonte da plataforma está sob <a href="LICENSE" target="_blank" rel="noopener">licença MIT</a>.',
 
       // Capítulos
       'chapter.unavailable.title': 'Capítulo indisponível',
@@ -261,6 +262,7 @@
       'theme.toggle': 'Toggle light/dark theme',
       'search.aria': 'Search the manual',
       'install.btn': 'Install app',
+      'footer.rights': '© {year} Aline Meireles. All rights reserved on the educational content (chapters, question bank, figures and source manual) — unauthorized copying, reproduction or redistribution. The platform\'s source code is under the <a href="LICENSE" target="_blank" rel="noopener">MIT license</a>.',
 
       // Chapters
       'chapter.unavailable.title': 'Chapter Unavailable',
