@@ -377,6 +377,7 @@
       h += '</div></details>';
     });
     h += '<div class="side-h">' + T('nav.data') + '</div>';
+    h += '<a class="side-link" href="#/simuladores" data-r="/simuladores">' + ico('beaker') + T('nav.lab') + '</a>';
     h += '<a class="side-link" href="#/progresso" data-r="/progresso">' + ico('gear') + T('nav.progress') + '</a>';
     nav.innerHTML = h;
     syncSidebar();
@@ -385,7 +386,8 @@
   function syncSidebar() {
     var hash = location.hash.slice(1) || '/';
     $$('#sidebar .side-link').forEach(function (a) {
-      a.classList.toggle('on', a.getAttribute('data-r') === hash);
+      var r = a.getAttribute('data-r');
+      a.classList.toggle('on', r === hash || (r === '/simuladores' && /^\/simuladores(\/|$)/.test(hash)));
     });
     $$('#sidebar .mod-link').forEach(function (a) {
       var id = a.getAttribute('data-mod');
@@ -1034,8 +1036,14 @@
     if (path === '/competencias') return viewComp();
     if (path === '/progresso') return viewProgress();
     if (path === '/busca') return viewSearch(decodeURIComponent(qs.replace(/^q=/, '')));
+    if (path === '/simuladores') return window.ACADEMY_LAB && window.ACADEMY_LAB.index();
+    if ((m = path.match(/^\/simuladores\/(.+)$/)))
+      return window.ACADEMY_LAB && window.ACADEMY_LAB.view(m[1]);
     return viewHome();
   }
+
+  /* ---------- ponte publica para modulos independentes (assets/lab.js) ---- */
+  window.ACADEMY_APP = { show: show, T: T, esc: esc, el: el, $: $, $$: $$ };
 
   /* =======================================================================
      ARRANQUE
@@ -1046,6 +1054,7 @@
     $('#searchInput').setAttribute('placeholder', T('search.placeholder'));
     $('#searchInput').setAttribute('aria-label', T('search.aria'));
     $('#themeBtn').setAttribute('aria-label', T('theme.toggle'));
+    var instBtn = $('#installBtn'); if (instBtn) instBtn.setAttribute('aria-label', T('install.btn'));
     $('#sidebar').setAttribute('aria-label', T('nav.tracks'));
     $('#langBtn').textContent = window.ACADEMY_I18N.lang() === 'pt' ? 'EN' : 'PT';
   }
@@ -1066,6 +1075,8 @@
     var d = document.documentElement.getAttribute('data-theme') === 'dark';
     document.documentElement.setAttribute('data-theme', d ? 'light' : 'dark');
     Store.set('academy.theme', d ? 'light' : 'dark');
+    var tc = $('#themeColorMeta');
+    if (tc) tc.setAttribute('content', d ? '#e6eaed' : '#10161a');
     mermaidReady = false;
     if (window.ACADEMY_VIZ) window.ACADEMY_VIZ.retheme();
     $$('.mermaid[data-done]').forEach(function (n) {

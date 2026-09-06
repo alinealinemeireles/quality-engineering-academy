@@ -211,6 +211,21 @@ bibliotecas locais), bem dentro do confortável para o Pages.
 **Offline.** Tudo é servido de ficheiros locais — KaTeX, Mermaid e Plotly estão em
 `assets/vendor/`, não em CDN. Não há qualquer dependência de rede depois da primeira carga.
 
+**PWA / instalação.** `site/manifest.webmanifest` + `site/sw.js` tornam o site instalável
+("Adicionar ao ecrã inicial" em telemóvel, ou o botão de instalar que aparece na barra superior
+quando o browser sinaliza `beforeinstallprompt`). O service worker pré-carrega o essencial do
+manual (app shell, banco de questões, figuras) e cacheia dinamicamente `assets/` e `content/` à
+medida que o utilizador navega, para leitura offline dos capítulos já visitados. Para testar
+localmente, sirva `site/` por HTTP (não `file://` — service workers exigem `http(s)`) e verifique
+em DevTools → Application → Service Workers.
+
+**Simuladores.** Em `#/simuladores`, três ferramentas interativas construídas em
+`assets/lab.js` (independente de `app.js`, ligado por uma pequena ponte pública
+`window.ACADEMY_APP`): um simulador de cartas de controlo X̄/R (gera subgrupos aleatórios e calcula
+os limites a partir dos próprios dados), uma calculadora de capacidade Cp/Cpk/Ppk com PPM e nível
+sigma, e uma calculadora de OEE com referências classe mundial. Todos usam Plotly com hover e
+controlos ao vivo (sem recarregar a página) e não têm ligação ao banco de questões.
+
 **Python, R, Excel e Power BI.** Aparecem lado a lado em separadores, com botão de copiar, como
 referência para correr no VSCode, no RStudio, no Excel ou no Power BI. Nenhum código é executado no
 navegador — os gráficos são pré-calculados em `tools/figures.py` e os resultados numéricos já estão

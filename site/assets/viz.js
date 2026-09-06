@@ -208,6 +208,7 @@
 
   window.ACADEMY_VIZ = {
     render: render, retheme: retheme, wireTips: wireTips, wireTabs: wireTabs,
-    all: function (root) { render(root); wireTips(root); wireTabs(root); }
+    all: function (root) { render(root); wireTips(root); wireTabs(root); },
+    ensurePlotly: ensurePlotly, layoutSkin: layoutSkin, cssv: cssv, config: CONFIG
   };
 })();

@@ -5,25 +5,30 @@
 
 :root {
   color-scheme: light;
-  /* superficies: cinza chumbo esbatido */
-  --surface-0: #eceff1;
-  --surface-1: #fafbfc;
-  --surface-2: #e2e7ea;
-  --surface-3: #d2dadf;
-  --line:      #c3ced4;
-  --line-soft: #dce3e7;
+  /* superficies: aluminio escovado */
+  --surface-0: #e6eaed;
+  --surface-1: #f6f8f9;
+  --surface-2: #dee4e7;
+  --surface-3: #cdd6db;
+  --line:      #b9c4ca;
+  --line-soft: #d6dee2;
 
   /* tinta: chumbo */
   --ink:       #18242a;
   --ink-2:     #44545c;
   --ink-3:     #6c7e87;
 
-  /* acento: azul petroleo */
-  --accent:      #12657a;
+  /* acento: azul petroleo/aco */
+  --accent:      #0e6178;
   --accent-ink:  #0d4d5e;
   --accent-soft: #dceaee;
-  --gun:         #2c3a41;
-  --gun-2:       #3b4b53;
+  --gun:         #29373e;
+  --gun-2:       #38474f;
+
+  /* superficie metalica: usada em relevos, cabecalhos e botoes industriais */
+  --metal-hi:    rgba(255,255,255,.55);
+  --metal-lo:    rgba(12,20,24,.20);
+  --rivet:       rgba(12,20,24,.28);
 
   --good:  #1c7050;
   --warn:  #94690c;
@@ -63,22 +68,27 @@
 
 :root[data-theme="dark"] {
   color-scheme: dark;
-  --surface-0: #141a1d;
-  --surface-1: #1c2429;
-  --surface-2: #242e34;
-  --surface-3: #2d393f;
-  --line:      #384750;
-  --line-soft: #263036;
+  /* chumbo industrial + aco escovado, tom de chao-de-fabrica */
+  --surface-0: #10161a;
+  --surface-1: #182026;
+  --surface-2: #202a30;
+  --surface-3: #2a353c;
+  --line:      #3b4750;
+  --line-soft: #232d33;
 
-  --ink:       #e6edf0;
-  --ink-2:     #a2b3bb;
-  --ink-3:     #788992;
+  --ink:       #e8eef1;
+  --ink-2:     #a3b4bc;
+  --ink-3:     #798a93;
 
-  --accent:      #3fa5bd;
-  --accent-ink:  #74c8dc;
-  --accent-soft: #10333d;
-  --gun:         #232e34;
-  --gun-2:       #2f3d45;
+  --accent:      #35a0ba;
+  --accent-ink:  #78cbe0;
+  --accent-soft: #0f2e38;
+  --gun:         #1e282e;
+  --gun-2:       #2a363e;
+
+  --metal-hi:    rgba(255,255,255,.08);
+  --metal-lo:    rgba(0,0,0,.45);
+  --rivet:       rgba(0,0,0,.5);
 
   --good:  #43a97c;
   --warn:  #cfa14a;
@@ -139,9 +149,13 @@ a:hover { text-decoration-color: currentColor; }
   height: var(--topbar-h);
   display: flex; align-items: center; gap: 12px;
   padding: 0 14px;
-  background: color-mix(in srgb, var(--surface-1) 88%, transparent);
+  background:
+    repeating-linear-gradient(100deg, var(--metal-hi) 0 1px, transparent 1px 3px),
+    color-mix(in srgb, var(--surface-1) 88%, transparent);
+  background-blend-mode: overlay;
   backdrop-filter: saturate(1.4) blur(10px);
   border-bottom: 1px solid var(--line);
+  box-shadow: inset 0 1px 0 var(--metal-hi), inset 0 -1px 0 var(--metal-lo);
 }
 .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--accent); flex: 0 0 auto; }
 .brand-mark { width: 30px; height: 30px; }
@@ -182,6 +196,7 @@ main { min-width: 0; padding: 28px clamp(16px, 4vw, 44px) 120px; }
   padding: 18px 12px 60px;
   border-right: 1px solid var(--line);
   background: var(--surface-1);
+  box-shadow: inset -3px 0 6px -4px var(--metal-lo);
   scrollbar-width: thin;
 }
 .side-h {
@@ -260,9 +275,13 @@ h1 { font-size: clamp(24px, 3.3vw, 33px); line-height: 1.2; margin: 0 0 8px; let
   display: inline-flex; align-items: center; gap: 8px;
   padding: 10px 18px; border-radius: 10px; border: 1px solid transparent;
   font: inherit; font-size: 14.5px; font-weight: 600; cursor: pointer; text-decoration: none;
-  background: var(--accent); color: #fff;
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--accent) 100%, #fff 14%) 0%, var(--accent) 55%, color-mix(in srgb, var(--accent) 100%, #000 12%) 100%);
+  color: #fff;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.35), inset 0 -1px 1px rgba(0,0,0,.22), 0 1px 2px rgba(0,0,0,.15);
 }
 .btn:hover { filter: brightness(1.08); }
+.btn:active { filter: brightness(.97); box-shadow: inset 0 1px 2px rgba(0,0,0,.3); }
 .btn svg { width: 17px; height: 17px; }
 .btn.ghost { background: rgba(255,255,255,.12); color: #fff; border-color: rgba(255,255,255,.3); }
 .btn.ghost:hover { background: rgba(255,255,255,.2); }
@@ -307,7 +326,7 @@ h1 { font-size: clamp(24px, 3.3vw, 33px); line-height: 1.2; margin: 0 0 8px; let
   border-radius: var(--radius); padding: 17px 18px; text-decoration: none; color: inherit;
   box-shadow: var(--shadow-1); transition: transform .14s, box-shadow .14s;
 }
-.card:hover { transform: translateY(-2px); box-shadow: var(--shadow-2); }
+.card:hover { transform: translateY(-2px); box-shadow: var(--shadow-2), inset 0 1px 0 var(--metal-hi); }
 .card h3 { margin: 0 0 4px; font-size: 17px; letter-spacing: -.01em; }
 .card p { margin: 0 0 14px; font-size: 13.8px; color: var(--ink-2); line-height: 1.5; }
 .card-meta { display: flex; align-items: center; justify-content: space-between; gap: 10px; font-size: 12.6px; color: var(--ink-3); }
@@ -320,6 +339,40 @@ h1 { font-size: clamp(24px, 3.3vw, 33px); line-height: 1.2; margin: 0 0 8px; let
 .badge.lvl1 { background: var(--good-soft); color: var(--good); }
 .badge.lvl2 { background: var(--warn-soft); color: var(--warn); }
 .badge.lvl3 { background: var(--bad-soft); color: var(--bad); }
+
+/* ---------- laboratorio: simuladores e calculadoras ---------- */
+.lab-grid { display: grid; grid-template-columns: minmax(270px, 350px) 1fr; gap: 20px; align-items: start; }
+@media (max-width: 860px) { .lab-grid { grid-template-columns: 1fr; } }
+.lab-panel {
+  background: var(--surface-1); border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 18px; box-shadow: var(--shadow-1);
+}
+.lab-chart {
+  background: var(--surface-1); border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 8px; box-shadow: var(--shadow-1); min-height: 380px;
+}
+.lab-row { display: flex; gap: 10px; }
+.lab-row .lab-field { flex: 1 1 0; min-width: 0; }
+.lab-field { margin-bottom: 13px; }
+.lab-field label {
+  display: block; font-size: 12.2px; font-weight: 650; color: var(--ink-2);
+  margin-bottom: 5px; letter-spacing: .01em;
+}
+.lab-field input, .lab-field select {
+  width: 100%; padding: 8px 10px; border: 1px solid var(--line); border-radius: var(--radius-s);
+  background: var(--surface-2); color: var(--ink); font: inherit; font-size: 14px;
+}
+.lab-field input:focus, .lab-field select:focus { outline: none; border-color: var(--accent); background: var(--surface-1); }
+.lab-check { display: flex; align-items: center; gap: 8px; font-size: 13.5px; color: var(--ink-2); margin: 4px 0 2px; }
+.lab-note { font-size: 12px; color: var(--ink-3); margin: 12px 0 0; line-height: 1.5; }
+.lab-verdict {
+  margin-top: 12px; padding: 10px 12px; border-radius: var(--radius-s);
+  font-size: 13.5px; font-weight: 650; line-height: 1.45;
+}
+.lab-verdict:empty { display: none; }
+.lab-verdict.good { background: var(--good-soft); color: var(--good); }
+.lab-verdict.warn { background: var(--warn-soft); color: var(--warn); }
+.lab-verdict.bad  { background: var(--bad-soft); color: var(--bad); }
 
 /* barra de progresso */
 .meter { height: 7px; border-radius: 999px; background: var(--surface-3); overflow: hidden; margin: 10px 0 8px; }
