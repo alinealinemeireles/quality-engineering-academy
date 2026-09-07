@@ -4,8 +4,8 @@
 [![Live site](https://img.shields.io/badge/Live_site-alinealinemeireles.github.io-35A0BA?style=flat-square&logo=googlechrome&logoColor=white&labelColor=10161A)](https://alinealinemeireles.github.io/quality-engineering-academy/)
 
 Plataforma de formação em Engenharia da Qualidade, Lean Six Sigma, Melhoria Contínua e Data
-Analytics, em HTML/CSS/JS, gerada a partir do *Manual de Engenharia da Qualidade, Lean Six Sigma
-e Quality Analytics — 4ª edição (2026)*.
+Analytics, em HTML/CSS/JS puro, baseada no *Manual de Engenharia da Qualidade, Lean Six Sigma e
+Quality Analytics — 4ª edição (2026)*.
 
 Não é um e-book com menus: o manual é a **fonte de conhecimento**, e a aplicação é a **estrutura
 de aprendizagem** — trilhas, módulos, aulas, avaliação, Practice Lab e mapa de competências.
@@ -13,10 +13,10 @@ de aprendizagem** — trilhas, módulos, aulas, avaliação, Practice Lab e mapa
 **Abrir:** `site/index.html` em qualquer navegador. Não precisa de servidor, não precisa de
 instalação, funciona offline.
 
-> **⚠️ Direitos reservados sobre o conteúdo.** O código-fonte da plataforma (HTML/CSS/JS em
-> `site/assets/`, `tools/`) está sob licença MIT — ver [`LICENSE`](LICENSE). O **conteúdo didático**
-> (capítulos, banco de questões, figuras e o manual de origem) é obra autoral de **Aline Meireles**,
-> com **todos os direitos reservados**: não é autorizada a cópia, reprodução, redistribuição ou
+> **⚠️ Direitos reservados sobre o conteúdo.** O código-fonte da plataforma (`site/assets/`,
+> `tools/`) está sob licença MIT — ver [`LICENSE`](LICENSE). O **conteúdo didático** (capítulos,
+> banco de questões, figuras e o manual de origem) é obra autoral de **Aline Meireles**, com
+> **todos os direitos reservados**: não é autorizada a cópia, reprodução, redistribuição ou
 > reutilização deste conteúdo, total ou parcial, sem autorização expressa da autora.
 
 ---
@@ -34,13 +34,6 @@ instalação, funciona offline.
 | Questões de certificação | 119 (60 CQE + 59 CSSBB, autorais) |
 | Tradução para inglês | 100% dos capítulos (182/182) e do banco de questões (119/119) |
 
-Estes números são recalculados a cada `python3 tools/build.py`, a partir do `manifest.js`
-gerado. Os 17 capítulos mais recentes (166–182, ver tabela abaixo) já têm fonte própria em
-`extra/*.md` e tradução em `i18n/en/*.md`, e estão registados em `tools/curriculum.py`
-(`EXTRA_CHAPTERS`) do mesmo jeito que o lote 1 (154–165) — não precisam de tratamento especial
-antes de rodar o build (verificado em 2026-09-03: rebuild completo reproduz os 182 capítulos
-sem perdas, `node tools/check_i18n.js` passa 182/182).
-
 ### Percursos
 
 1. **Engenharia da Qualidade** — alinhado ao BoK do ASQ CQE
@@ -57,16 +50,15 @@ sem perdas, `node tools/check_i18n.js` passa 182/182).
 - **Progresso** guardado no navegador, com exportação/importação em JSON.
 - **Busca** em todos os capítulos, tema claro/escuro, leitura em telemóvel, impressão limpa.
 - **Lupa** em qualquer figura (diagramas BPMN, VSM e cartas de controlo abrem em ecrã inteiro).
-- **Gráficos interativos** gerados em Python no build e servidos como JSON: hover com valores,
-  deslizadores, zoom e exportação em PNG — sem qualquer dependência de execução.
+- **Gráficos interativos** pré-calculados e servidos como JSON: hover com valores, deslizadores,
+  zoom e exportação em PNG — sem qualquer dependência de execução no navegador.
 - **Infográficos com tooltip**: passar o rato sobre um elemento do diagrama de tartaruga, por
   exemplo, mostra a cláusula da norma e o que o auditor procura ali.
 - **Código lado a lado** em separadores: Python · R · Excel · DAX/Power BI, com botão de copiar.
 
 ### Capítulos escritos de raiz para a edição web
 
-**Lote 1 (cap-154 a cap-165, 12 capítulos)** — passaram pelo pipeline completo: fonte em
-`extra/*.md`, compilados por `tools/build.py`, tradução em `i18n/en/cap-15X.md`.
+**Lote 1 (cap-154 a cap-165, 12 capítulos)**
 
 | Nº | Título | Módulo | Porquê |
 |---|---|---|---|
@@ -84,11 +76,7 @@ sem perdas, `node tools/check_i18n.js` passa 182/182).
 | 165 | Delineamentos de Um Fator — Blocos Aleatorizados e Quadrado Latino | `est-08` | DOE de um fator ausente entre os delineamentos fatoriais do manual |
 
 **Lote 2 (cap-166 a cap-182, 17 capítulos)** — resultado do diagnóstico de alinhamento com o
-projeto prático `manufacturing-performance-analytics` (ver `alinhamento-academy-vs-pratica.md`).
-Têm fonte em `extra/*.md`, tradução em `i18n/en/cap-1XX.md` e estão registados em
-`tools/curriculum.py` (`EXTRA_CHAPTERS`), no mesmo esquema do lote 1 — não vêm do
-`manual.ipynb` (são "escritos de raiz", por desenho, ver comentário em `curriculum.py`), mas
-isso não é um problema de pipeline: passam por `build.py` normalmente.
+projeto prático `manufacturing-performance-analytics`.
 
 | Nº | Título | Módulo | Porquê |
 |---|---|---|---|
@@ -125,76 +113,45 @@ isso não é um problema de pipeline: passam por `build.py` normalmente.
 │   │   └── vendor/           ← KaTeX + Mermaid + Plotly locais (sem CDN)
 │   └── content/
 │       ├── manifest.js       ← trilhas, módulos, índice de busca
-│       ├── bank.js           ← banco de questões
+│       ├── bank.js  bank_en.js  ← banco de questões (PT/EN)
 │       ├── figs.js           ← gráficos interativos pré-calculados
-│       └── ch/cap-NNN.js     ← um ficheiro por capítulo
-├── extra/                    ← 29 capítulos escritos de raiz (cap-154 a 182, lotes 1 e 2), ver tabela acima
-├── i18n/en/                  ← tradução EN capítulo a capítulo (cap-NNN.md) + bank.json (119 questões)
-│                                cobre cap-001 a 182 (100%)
+│       └── ch/cap-NNN.js, cap-NNN.en.js  ← um par de ficheiros por capítulo
+├── manual.ipynb               ← FONTE ÚNICA dos 182 capítulos em português (não
+│                                 versionado no git — ver .gitignore, só existe localmente)
+├── i18n/en/                   ← tradução EN capítulo a capítulo (cap-NNN.md) + bank.json
 ├── tools/
-│   ├── parse.py              ← lê o notebook e deteta partes/capítulos
-│   ├── curriculum.py         ← matriz trilha → módulo → capítulo → competência
-│   ├── build.py              ← pipeline notebook → site (também compila i18n/en/*.md)
-│   ├── enrich_bank.js        ← adiciona bokTopic/cognitiveLevel/chapterRef ao banco de questões
-│   ├── build_bank_en.js      ← gera content/bank_en.js a partir de bank.js + i18n/en/bank.json
-│   ├── check_i18n.js         ← verifica paridade PT/EN de capítulos, banco e traceability
-│   ├── figures.py            ← gera os gráficos Plotly (JSON, sem imagens)
-│   ├── mk_bpmn_svg.py        ← gera o diagrama BPMN autoral
-│   └── check.js check2.js    ← testes de navegador (Playwright)
-├── manual.ipynb              ← fonte principal do manual; usado pelo build e incluído no pacote de desenvolvimento
-└── AUDITORIA.md              ← o que foi encontrado no manual
+│   ├── parse.py               ← lê o notebook e deteta partes/capítulos
+│   ├── curriculum.py          ← matriz trilha → módulo → capítulo → competência
+│   ├── build.py               ← pipeline manual.ipynb (+ i18n/en/*.md) → site/content/
+│   ├── enrich_bank.js         ← adiciona bokTopic/cognitiveLevel/chapterRef ao banco
+│   ├── build_bank_en.js       ← gera content/bank_en.js a partir de bank.js + i18n/en/bank.json
+│   ├── check_i18n.js          ← verifica paridade PT/EN e rastreabilidade do banco (roda em CI)
+│   ├── figures.py             ← gera os gráficos Plotly (JSON, sem imagens)
+│   ├── mk_bpmn_svg.py         ← gera o diagrama BPMN autoral
+│   └── assessment_overrides.json
+├── CITATION.cff
+└── LICENSE
 ```
 
-### Reconstruir com segurança: os capítulos 166–182 já estão no pipeline
+### Editar o manual: sempre pelo notebook
 
-`tools/build.py` regenera `manifest.js`, `content/ch/cap-NNN.js` e `cap-NNN.en.js` **a partir do
-`manual.ipynb` + `extra/*.md` + `i18n/en/*.md`**, guiado por `tools/curriculum.py`. Os capítulos
-166 a 182 (lote 2) têm fonte em `extra/*.md`, tradução em `i18n/en/cap-1XX.md` e estão
-registados em `EXTRA_CHAPTERS` (`tools/curriculum.py`), incluindo o módulo novo `lss-15` já
-adicionado à trilha Lean Six Sigma. Não vêm do `manual.ipynb` — por desenho, não por lacuna: é o
-mesmo mecanismo usado pelo lote 1 (154–165) e por capítulos mais antigos como `gage_rr_anova`
-(módulo `eq-06`).
-
-**Verificado em 2026-09-03**: rebuild completo (`python3 tools/build.py && node tools/enrich_bank.js
-&& node tools/build_bank_en.js`) reproduz os 182 capítulos sem perdas, e `node tools/check_i18n.js`
-confirma paridade PT/EN 182/182. Se algum dia isto deixar de ser verdade (por exemplo, se um
-capítulo novo for adicionado direto em `site/content/ch/` sem passar por `extra/*.md` +
-`curriculum.py`, atalho usado historicamente antes desta correção), o sintoma será
-`check_i18n.js` falhando ou o capítulo desaparecendo do `manifest.js` — sempre correr esse
-comando e comparar `manifest.js` antes/depois de qualquer rebuild, como boa prática, não só
-quando há aviso explícito.
-
-### Reconstruir o site a partir do notebook
+**A partir de agora, qualquer alteração ou capítulo novo é feito no `manual.ipynb`, nunca
+editando diretamente os ficheiros em `site/content/ch/`.** Os capítulos 154–182 (antes em
+`extra/*.md`) e a abertura do site (antes em `extra/abertura.md`) já foram fundidos no próprio
+notebook — a PARTE XVIII e a célula marcada `## Abertura da edição web...`, respetivamente — e
+`tools/build.py` lê-os dali diretamente. `extra/` deixou de existir.
 
 ```bash
-pip install markdown pymdown-extensions
-python3 tools/build.py
-node tools/enrich_bank.js    # bank.js é regenerado a cada build.py: isto reaplica bokTopic/cognitiveLevel/chapterRef
-node tools/build_bank_en.js  # gera content/bank_en.js (tradução EN) a partir de bank.js + i18n/en/bank.json
+pip install -r requirements.txt
+python3 tools/build.py               # regenera manifest.js e content/ch/*.js a partir do notebook
+node tools/enrich_bank.js            # reaplica bokTopic/cognitiveLevel/chapterRef ao banco
+node tools/build_bank_en.js          # gera bank_en.js (tradução EN) a partir de bank.js + i18n/en/bank.json
+node tools/check_i18n.js             # confirma paridade PT/EN 182/182 antes de publicar
 ```
 
-O `build.py` extrai as 192 imagens embutidas para ficheiros (o notebook tinha ~5 MB de base64
-inline), converte o markdown em HTML, protege as fórmulas para o KaTeX, transforma os blocos
-` ```mermaid ` em diagramas renderizáveis, gera um ficheiro `.js` por capítulo e compila as
-traduções EN de `i18n/en/*.md` para `content/ch/cap-NNN.en.js`.
-
-Para alterar a organização curricular, edite **`tools/curriculum.py`** — é a única coisa que
-define trilhas, módulos e competências.
-
-### Testar
-
-```bash
-node tools/check_i18n.js                 # paridade PT/EN + rastreabilidade do banco (sem browser, corre em CI)
-
-cd site && python3 -m http.server 8899   # para os testes de browser, noutro terminal:
-node tools/check.js && node tools/check2.js
-```
-
-`check_i18n.js` corre automaticamente em CI a cada push/PR (`.github/workflows/check.yml`) e falha
-se algum capítulo ficar sem tradução EN ou alguma questão do banco perder a rastreabilidade
-(`bokTopic`/`cognitiveLevel`/`chapterRef`, gerados por `tools/enrich_bank.js` após cada
-`build.py`). `check.js`/`check2.js` precisam do Chromium do Playwright instalado localmente
-(`npx playwright install chromium`) e não correm em CI.
+A tradução para inglês continua em `i18n/en/*.md` (um ficheiro por capítulo) — o notebook é a
+fonte em português; ao adicionar ou alterar um capítulo, atualize também a tradução
+correspondente em `i18n/en/cap-NNN.md`, senão `check_i18n.js` falha.
 
 ---
 
@@ -205,13 +162,9 @@ para `main`. Depois do primeiro push:
 
 1. **Settings → Pages → Source: GitHub Actions**
 2. O site fica em `https://<utilizador>.github.io/<repositorio>/`
-3. **Antes de publicar em domínio próprio**: configure `canonical`, `og:url` e `sitemap.xml` para o domínio final
-   pelo domínio real em `site/robots.txt`, `site/sitemap.xml` e nas tags `canonical` / `og:url` /
-   `twitter:url` de `site/index.html` — foram deixadas com um domínio de exemplo porque o
-   repositório ainda não tem remote/publicação configurados.
-
-A pasta `site/` tem cerca de 17 MB (7,7 MB de conteúdo — PT + EN —, 3,8 MB de imagens, 5,3 MB de
-bibliotecas locais), bem dentro do confortável para o Pages.
+3. **Antes de publicar em domínio próprio**: configure `canonical`, `og:url` e `sitemap.xml` para o
+   domínio final em `site/robots.txt`, `site/sitemap.xml` e nas tags `canonical` / `og:url` /
+   `twitter:url` de `site/index.html`.
 
 ---
 
@@ -237,8 +190,7 @@ controlos ao vivo (sem recarregar a página) e não têm ligação ao banco de q
 
 **Python, R, Excel e Power BI.** Aparecem lado a lado em separadores, com botão de copiar, como
 referência para correr no VSCode, no RStudio, no Excel ou no Power BI. Nenhum código é executado no
-navegador — os gráficos são pré-calculados em `tools/figures.py` e os resultados numéricos já estão
-no texto, exatamente como os teria depois de correr o bloco correspondente.
+navegador — os gráficos e resultados numéricos já estão pré-calculados no texto e em `figs.js`.
 
 **Paleta.** Cinza chumbo → azul petróleo. As trilhas usam uma **rampa ordinal de petróleo**
 validada (`--ordinal`: monotonia de luminosidade, gaps ≥ 0,06, extremo claro acima de 2:1 sobre a
@@ -246,10 +198,9 @@ superfície) e os gráficos usam uma **paleta categórica** separada, validada p
 (ΔE CVD ≥ 8 em pares adjacentes, nos dois temas). Para trocar as trilhas para a paleta categórica,
 basta pôr `data-tp="cat"` no elemento `<html>`.
 
-**Gráficos.** São calculados em `tools/figures.py` e guardados como JSON de Plotly em
-`site/content/figs.js`. As cores saem como tokens (`"@series-1"`) que o `viz.js` resolve a partir
-das variáveis CSS — por isso o mesmo gráfico serve o tema claro e o escuro sem duplicação.
-Nada é executado em Python no navegador para desenhar um gráfico.
+**Gráficos.** Guardados como JSON de Plotly em `site/content/figs.js`. As cores saem como tokens
+(`"@series-1"`) que o `viz.js` resolve a partir das variáveis CSS — por isso o mesmo gráfico serve
+o tema claro e o escuro sem duplicação.
 
 **Armazenamento.** O progresso usa `localStorage` com fallback silencioso para memória (modo
 privado, `file://` restrito). A página *Progresso e backup* avisa quando o armazenamento não está
@@ -259,8 +210,8 @@ disponível e permite exportar em JSON.
 
 ## Propriedade intelectual
 
-O **código** (`site/assets`, `site/index.html`, `tools/`, `i18n/` enquanto infraestrutura) está sob
-licença MIT — ver [`LICENSE`](LICENSE).
+O **código** (`site/assets`, `site/index.html`, `tools/`, `i18n/` enquanto infraestrutura) está
+sob licença MIT — ver [`LICENSE`](LICENSE).
 
 O **conteúdo didático** — capítulos, banco de questões, figuras e o manual de origem — não está
 coberto por essa licença. É obra autoral da Aline Meireles, com todos os direitos reservados. O
@@ -269,9 +220,6 @@ itens publicados pela ASQ.
 
 Esta plataforma é **preparatória**. Não emite certificação ASQ nem Lean Six Sigma reconhecida — os
 certificados oficiais são emitidos exclusivamente pelos organismos certificadores.
-
-Antes de tornar o repositório público, reveja o aviso de propriedade intelectual na abertura do
-manual e confirme que todas as figuras reutilizadas têm origem compatível com publicação aberta.
 
 ## Referências verificadas
 

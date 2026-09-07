@@ -249,188 +249,162 @@ TRACKS = [
     },
 ]
 
-# Modulos extra escritos de raiz (nao vem do notebook)
+# Modulos extra escritos de raiz (nao vem do manual.ipynb original -- vivem na
+# PARTE XVIII do proprio manual.ipynb, nao mais em ficheiros extra/*.md
+# separados). Este dicionario so serve para: (1) mapear o nome curto usado em
+# TRACKS (ex.: "rca_capa") para o numero real do capitulo, e (2) marcar
+# 'new': True e o rotulo de 'part' correto em build.py.
 #
 # Lote 1 (cap-154 a 165): renumerados em 2026-09 de 900-911 para o intervalo
 # sequencial 154-165 -- a traducao em i18n/en/ ja segue essa numeracao
 # (ficheiros cap-154.md a cap-165.md).
 #
 # Lote 2 (cap-166 a 182): resultado do diagnostico de alinhamento com o
-# projeto pratico manufacturing-performance-analytics (ver
-# alinhamento-academy-vs-pratica.md, Etapa 4/6). Inclui o modulo novo lss-15.
+# projeto pratico manufacturing-performance-analytics. Inclui o modulo novo lss-15.
 EXTRA_CHAPTERS = {
     "bpmn": {
         "num": 154,
         "title": "BPMN 2.0 e Bizagi Modeler na prática",
-        "source": "extra/bpmn.md",
         "new": True,
     },
     "mapeamento_extra": {
         "num": 155,
         "title": "Esparguete, Makigami e Tartaruga — as três que faltavam",
-        "source": "extra/mapeamento_extra.md",
         "new": True,
     },
     "capability": {
         "num": 156,
         "title": "Estúdio de Capabilidade — Cp, Cpk, Pp, Ppk na prática",
-        "source": "extra/capability_estudio.md",
         "new": True,
     },
     "voz_cliente": {
         "num": 157,
         "title": "Voz do Cliente, Satisfação e o Elo com Lean Six Sigma",
-        "source": "extra/voz_cliente.md",
         "new": True,
     },
     "oee_avancado": {
         "num": 158,
         "title": "OEE Avançado — Decomposição de Perdas, Maturidade Digital e Dados em Tempo Real",
-        "source": "extra/oee_avancado.md",
         "new": True,
     },
     "5s_gestao_visual": {
         "num": 159,
         "title": "5S e Gestão Visual de Chão de Fábrica",
-        "source": "extra/5s_gestao_visual.md",
         "new": True,
     },
     "rca_capa": {
         "num": 160,
         "title": "Resolução Estruturada de Problemas — 5 Porquês, 8D e CAPA",
-        "source": "extra/rca_capa.md",
         "new": True,
     },
     "cluster_analysis": {
         "num": 161,
         "title": "Análise de Clusters — Hierárquica e K-Means na Qualidade",
-        "source": "extra/cluster_analysis.md",
         "new": True,
     },
     "barreiras_melhoria": {
         "num": 162,
         "title": "Barreiras à Melhoria da Qualidade",
-        "source": "extra/barreiras_melhoria.md",
         "new": True,
     },
     "msa_atributos": {
         "num": 163,
         "title": "MSA por Atributos — Kappa e Percentual de Concordância",
-        "source": "extra/msa_atributos.md",
         "new": True,
     },
     "multivariada_ii": {
         "num": 164,
         "title": "Análise Multivariada II — Fatorial, Discriminante e MANOVA",
-        "source": "extra/multivariada_ii.md",
         "new": True,
     },
     "doe_um_fator": {
         "num": 165,
         "title": "Delineamentos de Um Fator — Blocos Aleatorizados e Quadrado Latino",
-        "source": "extra/doe_um_fator.md",
         "new": True,
     },
     "mtbf_mttr": {
         "num": 166,
         "title": "MTBF, MTTR e Indicadores Básicos de Confiabilidade",
-        "source": "extra/mtbf_mttr.md",
         "new": True,
     },
     "confundimento_anova": {
         "num": 167,
         "title": "Confundimento: Por Que a ANOVA Sozinha Pode Enganar",
-        "source": "extra/confundimento_anova.md",
         "new": True,
     },
     "teste_bartlett": {
         "num": 168,
         "title": "Teste de Bartlett: Verificando a Pressuposição de Variâncias Iguais",
-        "source": "extra/teste_bartlett.md",
         "new": True,
     },
     "metricas_desbalanceamento": {
         "num": 169,
         "title": "Métricas de Classificação sob Desbalanceamento e Threshold de Decisão Econômico",
-        "source": "extra/metricas_desbalanceamento.md",
         "new": True,
     },
     "cv_temporal_hiperparametros": {
         "num": 170,
         "title": "Validação Cruzada Temporal e Busca de Hiperparâmetros (TimeSeriesSplit, GridSearchCV)",
-        "source": "extra/cv_temporal_hiperparametros.md",
         "new": True,
     },
     "arvore_modelos": {
         "num": 171,
         "title": "Modelos de Árvore: Random Forest e Gradient Boosting (XGBoost)",
-        "source": "extra/arvore_modelos.md",
         "new": True,
     },
     "shap_interpretabilidade": {
         "num": 172,
         "title": "Interpretabilidade com SHAP",
-        "source": "extra/shap_interpretabilidade.md",
         "new": True,
     },
     "seasonal_arima": {
         "num": 173,
         "title": "Decomposição Sazonal e Modelos ARIMA/SARIMA",
-        "source": "extra/seasonal_arima.md",
         "new": True,
     },
     "cross_correlation_leading": {
         "num": 174,
         "title": "Correlação Cruzada e Indicadores Antecedentes",
-        "source": "extra/cross_correlation_leading.md",
         "new": True,
     },
     "gage_rr_anova": {
         "num": 175,
         "title": "Gage R&R por ANOVA: o Método Recomendado pela AIAG MSA",
-        "source": "extra/gage_rr_anova.md",
         "new": True,
     },
     "python_db_sqlalchemy": {
         "num": 176,
         "title": "Conectando Python a Bancos de Dados: SQLAlchemy, pyodbc e Carga em Massa",
-        "source": "extra/python_db_sqlalchemy.md",
         "new": True,
     },
     "dimensional_modeling": {
         "num": 177,
         "title": "Modelagem Dimensional: Fato, Dimensão e Star Schema",
-        "source": "extra/dimensional_modeling.md",
         "new": True,
     },
     "medallion_architecture": {
         "num": 178,
         "title": "Arquitetura Medalhão: Bronze, Silver, Gold",
-        "source": "extra/medallion_architecture.md",
         "new": True,
     },
     "pandas_pipeline_engineering": {
         "num": 179,
         "title": "Engenharia de Pipeline em Pandas: groupby/transform, Matching de Intervalos e Sequenciamento Stateful",
-        "source": "extra/pandas_pipeline_engineering.md",
         "new": True,
     },
     "six_sigma_yield": {
         "num": 180,
         "title": "Métricas de Rendimento Six Sigma: DPU, DPMO, Nível Sigma, FPY/FTY e RTY",
-        "source": "extra/six_sigma_yield.md",
         "new": True,
     },
     "automated_pipeline_testing": {
         "num": 181,
         "title": "Testes Automatizados de Pipeline: da Lógica pytest ao dbt tests/Great Expectations",
-        "source": "extra/automated_pipeline_testing.md",
         "new": True,
     },
     "toc_theory_of_constraints": {
         "num": 182,
         "title": "Teoria das Restrições (TOC): os 5 Focusing Steps",
-        "source": "extra/toc_theory_of_constraints.md",
         "new": True,
     },
 }

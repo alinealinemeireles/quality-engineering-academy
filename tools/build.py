@@ -594,14 +594,16 @@ def main():
                 chapters[n] = {'num': n, 'title': ch['title'], 'part': p['title'], 'cells': list(ch['cells'])}
                 order.append(n)
 
-    # capitulos extra escritos de raiz
+    # capitulos escritos diretamente para a edicao web (154-182): vivem no
+    # proprio manual.ipynb (PARTE XVIII) e ja chegam ao dicionario `chapters`
+    # pelo loop acima, como qualquer outro capitulo do notebook. So precisamos
+    # reaplicar os metadados que os distinguem dos capitulos originais do
+    # manual -- antes vinham de extra/*.md, antes disso ser fundido no notebook.
     for key, meta in EXTRA_CHAPTERS.items():
-        path = os.path.join(ROOT, meta['source'])
-        if os.path.exists(path):
-            with open(path, encoding='utf-8') as f:
-                chapters[meta['num']] = {'num': meta['num'], 'title': meta['title'],
-                                         'part': 'Conteúdo novo (4ª edição web)',
-                                         'raw_md': f.read(), 'new': True}
+        n = meta['num']
+        if n in chapters:
+            chapters[n]['new'] = True
+            chapters[n]['part'] = 'Conteúdo novo (4ª edição web)'
 
     num_to_cid = {n: f'cap-{n:03d}' for n in chapters}
 
@@ -659,21 +661,27 @@ def main():
         t['modules'] = mods
         manifest_tracks.append(t)
 
-    # capitulos extra (EXTRA_CHAPTERS) nao vem da estrutura do notebook (`parts`),
-    # entao o indice navegavel do front matter precisa de uma parte sintetica
-    # para eles nao desaparecerem do "Manual Introduction" -- construida a
-    # partir do proprio EXTRA_CHAPTERS, nunca precisa de manutencao manual.
-    extra_nums = sorted(meta['num'] for meta in EXTRA_CHAPTERS.values() if meta['num'] in chapters)
+    # os capitulos 154-182 (EXTRA_CHAPTERS) agora vivem dentro do proprio
+    # manual.ipynb, na PARTE XVIII -- ja chegam a `parts` pela estrutura real
+    # do notebook, entao o indice navegavel nao precisa de uma parte sintetica.
     toc_parts = parts
-    if extra_nums:
-        extra_part = {'title': 'PARTE XVIII — Conteúdo Novo (4ª Edição Web)',
-                      'chapters': [{'num': n, 'title': chapters[n]['title']} for n in extra_nums]}
-        toc_parts = parts + [extra_part]
 
-    # front matter como capitulo 0 -- texto de abertura escrito a mao (extra/abertura.md)
-    # seguido do indice navegavel, gerado a partir da estrutura real dos capitulos
-    with open(os.path.join(ROOT, 'extra', 'abertura.md'), encoding='utf-8') as f:
-        fbody = md2html(f.read())
+    # front matter como capitulo 0 -- texto de abertura escrito a mao, guardado
+    # numa celula marcada do proprio manual.ipynb (nao segue o padrao "##
+    # Capitulo N:", entao nao aparece em `chapters`/`parts`; precisa de ser
+    # localizada pelo marcador). Seguido do indice navegavel, gerado a partir
+    # da estrutura real dos capitulos.
+    ABERTURA_MARK = '## Abertura da edição web (Capítulo 0 do site, `cap-000`)'
+    abertura_src = None
+    for c in cells:
+        if c['cell_type'] == 'markdown':
+            src = ''.join(c['source'])
+            if src.lstrip().startswith(ABERTURA_MARK):
+                abertura_src = src.split('\n', 1)[1].lstrip('\n')
+                break
+    if abertura_src is None:
+        raise SystemExit('celula de abertura (cap-000) nao encontrada no manual.ipynb')
+    fbody = md2html(abertura_src)
     fbody += build_toc_html(toc_parts)
     fbody, ftoc = add_anchors(fbody)
     with open(os.path.join(CHDIR, 'cap-000.js'), 'w', encoding='utf-8') as f:
