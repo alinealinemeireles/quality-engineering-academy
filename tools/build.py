@@ -467,13 +467,13 @@ PART_TITLE_EN = {
     'PARTE XVII — LABORATÓRIO AVANÇADO 2026': 'PART XVII — Advanced Laboratory 2026',
     'ENCERRAMENTO — PERCURSO DE CERTIFICAÇÃO E PROJETO FINAL 2026':
         'CLOSING — Certification Path and Final Project 2026',
-    'PARTE XVIII — Conteúdo Novo (4ª Edição Web)': 'PART XVIII — New Content (Web 4th Edition)',
+    'PARTE XVIII — Conteúdo Novo (Edição Web)': 'PART XVIII — New Content (Web Edition)',
 }
 
 def part_title_en(title):
     """Return the canonical English part label for generated EN artifacts."""
     return PART_TITLE_EN.get(title, {
-        'Conteúdo novo (4ª edição web)': 'New Content (Web 4th Edition)',
+        'Conteúdo novo (edição web)': 'New Content (Web Edition)',
         'Abertura': 'Introduction',
     }.get(title, title))
 
@@ -603,7 +603,7 @@ def main():
         n = meta['num']
         if n in chapters:
             chapters[n]['new'] = True
-            chapters[n]['part'] = 'Conteúdo novo (4ª edição web)'
+            chapters[n]['part'] = 'Conteúdo novo (edição web)'
 
     num_to_cid = {n: f'cap-{n:03d}' for n in chapters}
 
@@ -763,7 +763,7 @@ def main():
 
     manifest = {
         'title': 'Academy · Qualidade, Lean Six Sigma e Quality Analytics',
-        'source': 'Manual de Engenharia da Qualidade, Lean Six Sigma e Quality Analytics — 4ª edição (2026)',
+        'source': 'Manual de Engenharia da Qualidade, Lean Six Sigma e Quality Analytics — Edição Original (2026)',
         'tracks': manifest_tracks,
         'search': search_index,
         'searchEn': search_index_en,

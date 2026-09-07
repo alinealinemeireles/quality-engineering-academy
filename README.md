@@ -5,7 +5,7 @@
 
 Plataforma de formação em Engenharia da Qualidade, Lean Six Sigma, Melhoria Contínua e Data
 Analytics, em HTML/CSS/JS puro, baseada no *Manual de Engenharia da Qualidade, Lean Six Sigma e
-Quality Analytics — 4ª edição (2026)*.
+Quality Analytics — Edição Original (2026)*.
 
 Não é um e-book com menus: o manual é a **fonte de conhecimento**, e a aplicação é a **estrutura
 de aprendizagem** — trilhas, módulos, aulas, avaliação, Practice Lab e mapa de competências.
