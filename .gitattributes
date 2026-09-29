@@ -1,0 +1,5 @@
+# finais de linha LF em todo o projeto (evita falsos "modified" com core.autocrlf)
+* text=auto eol=lf
+*.png binary
+*.jpg binary
+*.woff2 binary
