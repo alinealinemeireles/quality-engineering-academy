@@ -108,7 +108,7 @@ window.ACADEMY_CONTENT_EN = {
      ja usa o titulo traduzido via o mecanismo existente de content/ch/*.en.js. */
   chapters: {
     'cap-154': "BPMN 2.0 and Bizagi Modeler in Practice",
-    'cap-155': "Spaghetti Diagram, Makigami and Turtle Diagram — the Three That Were Missing",
+    'cap-155': "Spaghetti Diagram, Makigami and Turtle Diagram",
     'cap-156': "Capability Studio — Cp, Cpk, Pp, Ppk in Practice",
     'cap-157': "Voice of the Customer, Satisfaction and the Link to Lean Six Sigma",
     'cap-158': "Advanced OEE — Loss Decomposition, Digital Maturity and Real-Time Data",
@@ -146,7 +146,7 @@ window.ACADEMY_CONTENT_EN = {
     'cap-028': "Lean Culture, Leadership, and Organizational Change Management",
     'cap-029': "Hoshin Kanri: Policy Deployment in Lean Management",
     'cap-030': "Lean Beyond Manufacturing: Services, Transactions, Government, and Healthcare",
-    'cap-031': "Lean and Lean Six Sigma — 2026 Update",
+    'cap-031': "Lean and Lean Six Sigma in Current Practice",
     'cap-032': "Selecting the Right Projects",
     'cap-033': "Introduction to DMAIC and DMADV",
     'cap-034': "Define",

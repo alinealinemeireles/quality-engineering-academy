@@ -527,10 +527,10 @@
       "<p>Hire a certified risk manager.</p>",
       "<p>Implement ISO 31000 and maintain a formal risk register.</p>"
     ],
-    "why": "<p>The standard requires the logic (determine → plan a proportional action → integrate into the process → evaluate effectiveness) and leaves the METHOD to the organization. Choosing and justifying a method proportional to the risk is an engineering competency; turning a specific tool into a universal requirement is a misreading of the standard.</p>\n<p><strong>Why the others are wrong:</strong></p>\n<ul>\n<li><strong>B</strong> — RPN is an FMEA metric — and even within FMEA, the AIAG-VDA reference replaced it with Action Priority.</li>\n<li><strong>C</strong> — No standard in the series requires a specific job title or credential.</li>\n<li><strong>D</strong> — ISO 9001 doesn't require ISO 31000 or a formal risk register, though both can be good choices.</li>\n</ul>\n<blockquote>\n<p><em>Traceability:</em> BoK domain VII · type: concept · see <strong>Chapter 80</strong> of this manual.</p>\n</blockquote>"
+    "why": "<p>The standard requires the logic (determine → plan a proportional action → integrate into the process → evaluate effectiveness) and leaves the METHOD to the organization. Choosing and justifying a method proportional to the risk is an engineering competency; turning a specific tool into a universal requirement is a misreading of the standard.</p>\n<p><strong>Why the others are wrong:</strong></p>\n<ul>\n<li><strong>B</strong> — RPN is an FMEA metric — and even within FMEA, the AIAG-VDA reference uses Action Priority in its place.</li>\n<li><strong>C</strong> — No standard in the series requires a specific job title or credential.</li>\n<li><strong>D</strong> — ISO 9001 doesn't require ISO 31000 or a formal risk register, though both can be good choices.</li>\n</ul>\n<blockquote>\n<p><em>Traceability:</em> BoK domain VII · type: concept · see <strong>Chapter 80</strong> of this manual.</p>\n</blockquote>"
   },
   "CQE-54": {
-    "q": "<p>The AIAG-VDA reference's Action Priority (AP) replaced the RPN mainly because the RPN:</p>",
+    "q": "<p>The AIAG-VDA reference prefers Action Priority (AP) over the RPN mainly because the RPN:</p>",
     "opts": [
       "<p>Was too slow to calculate.</p>",
       "<p>Collapses very different combinations into the same number and treats severity, occurrence, and detection as interchangeable.</p>",

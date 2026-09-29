@@ -109,28 +109,21 @@ is still a bad analysis.
 
 ---
 
-## Status of cited standards *(verified August 20, 2026)*
+## Cited standards
 
-| Standard | Status |
+| Standard | Scope |
 |---|---|
-| ISO 9001:2015 + Amd 1:2024 | In force; 6th edition expected September 2026 |
-| ISO 19011:2026 | 4th edition (May 2026); replaces the 2018 edition |
-| ISO 10012:2026 | 2nd edition (February 2026); replaces the 2003 edition |
-| ISO/IEC 42001:2023 · ISO/IEC 23894:2023 | AI management and risk; in force |
-| ISO 2859-1:2026 | 3rd edition (January 2026); introduces skip-lot. There is no "ISO 2859-1:2016" |
+| ISO 9001:2026 | Quality management systems — requirements |
+| ISO 14001:2026 | Environmental management systems — requirements |
+| ISO 19011:2026 | Guidelines for auditing management systems, including remote auditing |
+| ISO 10012:2026 | Measurement management systems |
+| ISO/IEC 42001:2023 · ISO/IEC 23894:2023 | AI management and risk |
+| ISO 2859-1:2026 | Attribute sampling indexed by AQL, with skip-lot |
 | ISO 31000:2018 / IEC 31010:2019 / ISO 31073:2022 | Risk principles / techniques / vocabulary; none is certifiable |
-| ISO 22301:2019 · ISO 22000:2018 | Business continuity · food safety; in force |
-| FSSC 22000 | V7 introduced in 2026 — confirm the version required by your customer |
+| ISO 22301:2019 · ISO 22000:2018 | Business continuity · food safety |
+| FSSC 22000 | Version 7 — confirm the version required by your customer |
 | Regulation (EU) 2024/1689 — AI Act | In force since 08/2024; general application from 08/02/2026; Annex III high-risk from 02/12/2027 and Annex I from 02/08/2028 (Ch. 152) |
 | AIAG Core Tools | APQP 3rd ed. (2024) · Control Plan 1st ed. (2024) · FMEA Handbook AIAG&amp;VDA · SPC Manual 1st ed. (2026) |
-
-**Maintenance note.** Rows marked "expected" or "in publication" (today: the ISO 9001 6th
-edition) describe a state that can change without notice in this text -- the verification date
-above only holds until the standard is actually published. Re-confirm this table every quarterly
-content review (or whenever chapters 80, 91, or 133 are edited) and update the date in this
-section's heading. Until the next re-confirmation, treat any "expected" entry here as subject to
-change, not as settled fact.
-
 
 > Never cite a normative requirement from this handbook in an official document without confirming
 > the edition currently in force at the primary source.

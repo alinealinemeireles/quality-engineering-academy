@@ -249,18 +249,11 @@ TRACKS = [
     },
 ]
 
-# Modulos extra escritos de raiz (nao vem do manual.ipynb original -- vivem na
-# PARTE XVIII do proprio manual.ipynb, nao mais em ficheiros extra/*.md
-# separados). Este dicionario so serve para: (1) mapear o nome curto usado em
-# TRACKS (ex.: "rca_capa") para o numero real do capitulo, e (2) marcar
-# 'new': True e o rotulo de 'part' correto em build.py.
-#
-# Lote 1 (cap-154 a 165): renumerados em 2026-09 de 900-911 para o intervalo
-# sequencial 154-165 -- a traducao em i18n/en/ ja segue essa numeracao
-# (ficheiros cap-154.md a cap-165.md).
-#
-# Lote 2 (cap-166 a 182): resultado do diagnostico de alinhamento com o
-# projeto pratico manufacturing-performance-analytics. Inclui o modulo novo lss-15.
+# Capitulos da PARTE XVIII do manual.ipynb (cap-154 a 182). Este dicionario so
+# serve para: (1) mapear o nome curto usado em TRACKS (ex.: "rca_capa") para o
+# numero real do capitulo, e (2) marcar 'new': True e o rotulo de 'part'
+# correto em build.py. Os capitulos 166-182 alinham-se com o projeto pratico
+# manufacturing-performance-analytics (inclui o modulo lss-15).
 EXTRA_CHAPTERS = {
     "bpmn": {
         "num": 154,
@@ -269,7 +262,7 @@ EXTRA_CHAPTERS = {
     },
     "mapeamento_extra": {
         "num": 155,
-        "title": "Esparguete, Makigami e Tartaruga — as três que faltavam",
+        "title": "Esparguete, Makigami e Tartaruga",
         "new": True,
     },
     "capability": {

@@ -30,7 +30,7 @@ const COGNITIVE = {
 
 // Heurística de dificuldade, derivada do cognitiveLevel já calculado acima (não é uma
 // classificação nova e independente — é um valor por omissão, documentado como tal, para dar
-// alguma triagem antes de uma revisão manual questão a questão). Mapeamento: Understand
+// alguma triagem antes de uma verificação manual questão a questão). Mapeamento: Understand
 // (recordar/definir) = fácil; Apply (aplicar fórmula/procedimento) = médio; Analyze (interpretar,
 // combinar informação, diagnosticar) = difícil. Quem revir uma questão manualmente pode substituir
 // este valor por um juízo próprio — o campo não é recalculado se já estiver definido à mão.

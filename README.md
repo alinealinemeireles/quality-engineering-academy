@@ -25,7 +25,7 @@ instalação, funciona offline.
 
 | | |
 |---|---|
-| Capítulos | 182 (153 do manual + 29 escritos de raiz) |
+| Capítulos | 182 |
 | Percursos (trilhas) | 6 |
 | Módulos | 62 |
 | Blocos de código (Python/R/SQL/DAX) | 233 |
@@ -56,47 +56,39 @@ instalação, funciona offline.
   exemplo, mostra a cláusula da norma e o que o auditor procura ali.
 - **Código lado a lado** em separadores: Python · R · Excel · DAX/Power BI, com botão de copiar.
 
-### Capítulos escritos de raiz para a edição web
+### PARTE XVIII — Tópicos Complementares e Aplicações (cap-154 a cap-182)
 
-**Lote 1 (cap-154 a cap-165, 12 capítulos)**
-
-| Nº | Título | Módulo | Porquê |
-|---|---|---|---|
-| 154 | BPMN 2.0 e Bizagi Modeler na prática | `lss-05` | O manual só tinha BPMN em imagens, sem texto |
-| 155 | Esparguete, Makigami e Tartaruga | `lss-05` | Três ferramentas de mapeamento ausentes |
-| 156 | Estúdio de Capabilidade | `eq-10` | Laboratório interativo de Cp/Cpk/Pp/Ppk |
-| 157 | Voz do Cliente, Satisfação e o Elo com Lean Six Sigma | `eq-05` | Liga VoC → ISO 9001 → Lean → Six Sigma → DMAIC/PDCA num ciclo fechado |
-| 158 | OEE Avançado — Decomposição de Perdas, Maturidade Digital | `lss-04` | Aprofunda o OEE do Capítulo 25 com cascata de perdas e maturidade digital |
-| 159 | 5S e Gestão Visual de Chão de Fábrica | `lss-01` | Disciplina de Sustain e ferramentas de gestão visual, além do 5S introdutório |
-| 160 | Resolução Estruturada de Problemas — 5 Porquês, 8D e CAPA | `eq-03` | Aprofunda o 5 Porquês do Capítulo 9 com o fluxo completo até o 8D e o CAPA |
-| 161 | Análise de Clusters — Hierárquica e K-Means | `est-07` | Técnica de agrupamento não supervisionado ausente do manual original |
-| 162 | Barreiras à Melhoria da Qualidade | `eq-04` | Cobre o tópico I.I do BoK CQE, sem capítulo dedicado na edição original |
-| 163 | MSA por Atributos — Kappa e Percentual de Concordância | `eq-06` | MSA do manual cobria só variáveis; faltava atributos |
-| 164 | Análise Multivariada II — Fatorial, Discriminante e MANOVA | `est-07` | Aprofunda a análise multivariada além do PCA/T² do Capítulo 56 |
-| 165 | Delineamentos de Um Fator — Blocos Aleatorizados e Quadrado Latino | `est-08` | DOE de um fator ausente entre os delineamentos fatoriais do manual |
-
-**Lote 2 (cap-166 a cap-182, 17 capítulos)** — resultado do diagnóstico de alinhamento com o
-projeto prático `manufacturing-performance-analytics`.
-
-| Nº | Título | Módulo | Porquê |
-|---|---|---|---|
-| 166 | MTBF, MTTR e Indicadores Básicos de Confiabilidade | `eq-13` | Degrau intermediário de confiabilidade ausente entre o TPM/OEE (nível 2) e Weibull/Kaplan-Meier (nível 3) |
-| 167 | Confundimento: Por Que a ANOVA Sozinha Pode Enganar | `est-05` | Ponte conceptual antes do confundimento causal, hoje só tratado no capstone (lab-04) |
-| 168 | Teste de Bartlett: Verificando a Pressuposição de Variâncias Iguais | `est-05` | Pressuposto de variâncias iguais da ANOVA nunca era testado explicitamente |
-| 169 | Métricas de Classificação sob Desbalanceamento e Threshold de Decisão Econômico | `qa-05` | Precision/Recall/F1/PR-AUC e custo assimétrico FP/FN ausentes do capítulo de ML |
-| 170 | Validação Cruzada Temporal e Busca de Hiperparâmetros | `qa-05` | `TimeSeriesSplit`/`GridSearchCV` ausentes; splits aleatórios vazam informação temporal |
-| 171 | Modelos de Árvore: Random Forest e Gradient Boosting (XGBoost) | `qa-05` | Nenhum modelo de árvore era ensinado; maior gap de uso no projeto prático |
-| 172 | Interpretabilidade com SHAP | `qa-05` | Interpretabilidade de modelos de árvore ausente |
-| 173 | Decomposição Sazonal e Modelos ARIMA/SARIMA | `est-07` | ARIMA/SARIMA nunca eram nomeados no capítulo de séries temporais |
-| 174 | Correlação Cruzada e Indicadores Antecedentes | `est-07` | Cross-correlation entre séries e leading indicators ausentes |
-| 175 | Gage R&R por ANOVA: o Método Recomendado pela AIAG MSA | `eq-06` | O método gráfico/manual hoje ensinado é tratado como legado pela norma AIAG MSA 4ª ed. |
-| 176 | Conectando Python a Bancos de Dados: SQLAlchemy, pyodbc e Carga em Massa | `qa-03` | SQL puro (SELECT/joins) já coberto; faltava acesso via Python/ORM em produção |
-| 177 | Modelagem Dimensional: Fato, Dimensão e Star Schema | `qa-04` | Modelagem dimensional (Kimball) era só conceitual, sem exercício hands-on |
-| 178 | Arquitetura Medalhão: Bronze, Silver, Gold | `qa-04` | Padrão Databricks de estágios de refinamento, complementar ao star schema |
-| 179 | Engenharia de Pipeline em Pandas: groupby/transform, Matching de Intervalos e Sequenciamento Stateful | `qa-04` | ETL era conceitual, com pouquíssimo código pandas |
-| 180 | Métricas de Rendimento Six Sigma: DPU, DPMO, Nível Sigma, FPY/FTY e RTY | `eq-10` | Cluster de métricas de rendimento (ASQ BoK) nunca era ensinado junto |
-| 181 | Testes Automatizados de Pipeline: da Lógica pytest ao dbt tests/Great Expectations | `qa-04` | Nenhum conteúdo de testes automatizados de dados/análises existia |
-| 182 | Teoria das Restrições (TOC): os 5 Focusing Steps | `lss-15` (módulo novo) | TOC não existia em nenhum track; só citada de forma genérica |
+| Nº | Título | Módulo |
+|---|---|---|
+| 154 | BPMN 2.0 e Bizagi Modeler na prática | `lss-05` |
+| 155 | Esparguete, Makigami e Tartaruga | `lss-05` |
+| 156 | Estúdio de Capabilidade | `eq-10` |
+| 157 | Voz do Cliente, Satisfação e o Elo com Lean Six Sigma | `eq-05` |
+| 158 | OEE Avançado — Decomposição de Perdas, Maturidade Digital | `lss-04` |
+| 159 | 5S e Gestão Visual de Chão de Fábrica | `lss-01` |
+| 160 | Resolução Estruturada de Problemas — 5 Porquês, 8D e CAPA | `eq-03` |
+| 161 | Análise de Clusters — Hierárquica e K-Means | `est-07` |
+| 162 | Barreiras à Melhoria da Qualidade | `eq-04` |
+| 163 | MSA por Atributos — Kappa e Percentual de Concordância | `eq-06` |
+| 164 | Análise Multivariada II — Fatorial, Discriminante e MANOVA | `est-07` |
+| 165 | Delineamentos de Um Fator — Blocos Aleatorizados e Quadrado Latino | `est-08` |
+| 166 | MTBF, MTTR e Indicadores Básicos de Confiabilidade | `eq-13` |
+| 167 | Confundimento: Por Que a ANOVA Sozinha Pode Enganar | `est-05` |
+| 168 | Teste de Bartlett: Verificando a Pressuposição de Variâncias Iguais | `est-05` |
+| 169 | Métricas de Classificação sob Desbalanceamento e Threshold de Decisão Econômico | `qa-05` |
+| 170 | Validação Cruzada Temporal e Busca de Hiperparâmetros | `qa-05` |
+| 171 | Modelos de Árvore: Random Forest e Gradient Boosting (XGBoost) | `qa-05` |
+| 172 | Interpretabilidade com SHAP | `qa-05` |
+| 173 | Decomposição Sazonal e Modelos ARIMA/SARIMA | `est-07` |
+| 174 | Correlação Cruzada e Indicadores Antecedentes | `est-07` |
+| 175 | Gage R&R por ANOVA: o Método Recomendado pela AIAG MSA | `eq-06` |
+| 176 | Conectando Python a Bancos de Dados: SQLAlchemy, pyodbc e Carga em Massa | `qa-03` |
+| 177 | Modelagem Dimensional: Fato, Dimensão e Star Schema | `qa-04` |
+| 178 | Arquitetura Medalhão: Bronze, Silver, Gold | `qa-04` |
+| 179 | Engenharia de Pipeline em Pandas: groupby/transform, Matching de Intervalos e Sequenciamento Stateful | `qa-04` |
+| 180 | Métricas de Rendimento Six Sigma: DPU, DPMO, Nível Sigma, FPY/FTY e RTY | `eq-10` |
+| 181 | Testes Automatizados de Pipeline: da Lógica pytest ao dbt tests/Great Expectations | `qa-04` |
+| 182 | Teoria das Restrições (TOC): os 5 Focusing Steps | `lss-15` |
 
 ---
 
@@ -135,11 +127,10 @@ projeto prático `manufacturing-performance-analytics`.
 
 ### Editar o manual: sempre pelo notebook
 
-**A partir de agora, qualquer alteração ou capítulo novo é feito no `manual.ipynb`, nunca
-editando diretamente os ficheiros em `site/content/ch/`.** Os capítulos 154–182 (antes em
-`extra/*.md`) e a abertura do site (antes em `extra/abertura.md`) já foram fundidos no próprio
-notebook — a PARTE XVIII e a célula marcada `## Abertura da edição web...`, respetivamente — e
-`tools/build.py` lê-os dali diretamente. `extra/` deixou de existir.
+**Qualquer alteração ou capítulo novo é feito no `manual.ipynb`, nunca editando diretamente os
+ficheiros em `site/content/ch/`.** Os capítulos 154–182 estão na PARTE XVIII do notebook e a
+abertura do site na célula marcada `## Abertura do site...`; `tools/build.py` lê-os dali
+diretamente.
 
 ```bash
 pip install -r requirements.txt
@@ -149,7 +140,7 @@ node tools/build_bank_en.js          # gera bank_en.js (tradução EN) a partir 
 node tools/check_i18n.js             # confirma paridade PT/EN 182/182 antes de publicar
 ```
 
-A tradução para inglês continua em `i18n/en/*.md` (um ficheiro por capítulo) — o notebook é a
+A tradução para inglês está em `i18n/en/*.md` (um ficheiro por capítulo) — o notebook é a
 fonte em português; ao adicionar ou alterar um capítulo, atualize também a tradução
 correspondente em `i18n/en/cap-NNN.md`, senão `check_i18n.js` falha.
 

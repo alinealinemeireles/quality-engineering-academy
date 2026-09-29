@@ -118,7 +118,6 @@ def restore_math(html, store):
 _HEADING_RE = re.compile(r'<h([234])(?:\s[^>]*)?>(.*?)</h\1>', re.S)
 _TAG_RE = re.compile(r'<[^>]+>')
 _BOX_RULES = [
-    (re.compile(r'^(revis[ãa]o\s+t[ée]cnica\s+2026|2026\s+technical\s+review)\b', re.I), 'strip'),
     (re.compile(r'^(erros?\s+com(um|uns)|common\s+mistakes?)\b', re.I), 'box-mistake'),
     (re.compile(r'\b(exemplos?|examples?)\b', re.I), 'box-example'),
     (re.compile(r'\b(exerc[íi]cios?|exercises?)\b', re.I), 'box-exercise'),
@@ -160,10 +159,9 @@ def apply_boxes(html):
     out, pos = [], 0
     for start, end, action in kept:
         out.append(html[pos:start])
-        if action != 'strip':
-            out.append('<div class="box ' + action + '">')
-            out.append(html[start:end])
-            out.append('</div>')
+        out.append('<div class="box ' + action + '">')
+        out.append(html[start:end])
+        out.append('</div>')
         pos = end
     out.append(html[pos:])
     return ''.join(out)
@@ -467,13 +465,13 @@ PART_TITLE_EN = {
     'PARTE XVII — LABORATÓRIO AVANÇADO 2026': 'PART XVII — Advanced Laboratory 2026',
     'ENCERRAMENTO — PERCURSO DE CERTIFICAÇÃO E PROJETO FINAL 2026':
         'CLOSING — Certification Path and Final Project 2026',
-    'PARTE XVIII — Conteúdo Novo (Edição Web)': 'PART XVIII — New Content (Web Edition)',
+    'PARTE XVIII — Tópicos Complementares e Aplicações': 'PART XVIII — Complementary Topics and Applications',
 }
 
 def part_title_en(title):
     """Return the canonical English part label for generated EN artifacts."""
     return PART_TITLE_EN.get(title, {
-        'Conteúdo novo (edição web)': 'New Content (Web Edition)',
+        'Tópicos complementares e aplicações': 'Complementary Topics and Applications',
         'Abertura': 'Introduction',
     }.get(title, title))
 
@@ -594,16 +592,14 @@ def main():
                 chapters[n] = {'num': n, 'title': ch['title'], 'part': p['title'], 'cells': list(ch['cells'])}
                 order.append(n)
 
-    # capitulos escritos diretamente para a edicao web (154-182): vivem no
-    # proprio manual.ipynb (PARTE XVIII) e ja chegam ao dicionario `chapters`
-    # pelo loop acima, como qualquer outro capitulo do notebook. So precisamos
-    # reaplicar os metadados que os distinguem dos capitulos originais do
-    # manual -- antes vinham de extra/*.md, antes disso ser fundido no notebook.
+    # capitulos da PARTE XVIII (154-182): chegam ao dicionario `chapters` pelo
+    # loop acima, como qualquer outro capitulo do notebook. So precisamos de
+    # aplicar os metadados proprios desta parte (EXTRA_CHAPTERS).
     for key, meta in EXTRA_CHAPTERS.items():
         n = meta['num']
         if n in chapters:
             chapters[n]['new'] = True
-            chapters[n]['part'] = 'Conteúdo novo (edição web)'
+            chapters[n]['part'] = 'Tópicos complementares e aplicações'
 
     num_to_cid = {n: f'cap-{n:03d}' for n in chapters}
 
@@ -671,7 +667,7 @@ def main():
     # Capitulo N:", entao nao aparece em `chapters`/`parts`; precisa de ser
     # localizada pelo marcador). Seguido do indice navegavel, gerado a partir
     # da estrutura real dos capitulos.
-    ABERTURA_MARK = '## Abertura da edição web (Capítulo 0 do site, `cap-000`)'
+    ABERTURA_MARK = '## Abertura do site (Capítulo 0, `cap-000`)'
     abertura_src = None
     for c in cells:
         if c['cell_type'] == 'markdown':
