@@ -46,6 +46,18 @@ instalação, funciona offline.
 ### Funcionalidades
 
 - **Avaliação por módulo** com feedback imediato e análise dos distratores; mínimo recomendado 70%.
+- **Practice Lab (ASQ CQE e CSSBB)** — banco com o mesmo número de questões por domínio que o
+  exame real, em três modos:
+  - **Estudo** — feedback imediato, com filtro por domínio do BoK;
+  - **Simulado** — 25, 50 questões ou exame completo, em ordem aleatória e com amostra
+    estratificada pelo peso de cada domínio; cronómetro ao ritmo-alvo (1,8 min/questão no CQE,
+    1,7 no CSSBB) com pontos de controlo a 25/50/75%, correção só no fim e resultado por domínio;
+  - **Rever erradas** — refaz apenas as questões em que a última resposta foi errada.
+
+  O painel mostra o **blueprint do exame com diagnóstico por domínio** (taxa de acerto e leitura:
+  consolidado, aceitável, lacuna real, prioridade máxima), uma secção de **estratégia de prova** e
+  um **mapa de estudo do BoK CSSBB** com as notas do *Six Sigma Study Guide*; as mesmas notas
+  aparecem como "leitura de apoio" na explicação das questões.
 - **Mapa de competências** — mostra o que ainda falta, não só o que foi feito.
 - **Progresso** guardado no navegador, com exportação/importação em JSON.
 - **Busca** em todos os capítulos, tema claro/escuro, leitura em telemóvel, impressão limpa.
@@ -100,6 +112,7 @@ instalação, funciona offline.
 │   ├── index.html
 │   ├── assets/
 │   │   ├── app.css  app.js   ← núcleo: router, progresso, quiz, busca
+│   │   ├── exam.js           ← blueprint dos exames e mapa de estudo do Practice Lab
 │   │   ├── viz.js            ← Plotly, tooltips de infográfico, separadores de código
 │   │   ├── hl.js             ← realce de sintaxe (4 KB, offline)
 │   │   └── vendor/           ← KaTeX + Mermaid + Plotly locais (sem CDN)
