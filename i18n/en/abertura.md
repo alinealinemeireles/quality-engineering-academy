@@ -1,6 +1,6 @@
 # Handbook of Quality Engineering, Lean Six Sigma and Quality Analytics
 
-**4th Edition — 2026 · Excel · Minitab · Python · R · Power BI · SQL**
+**Original Edition — 2026 · Excel · Minitab · Python · R · Power BI · SQL**
 
 Integrated technical preparation for **Quality Engineer (ASQ CQE)** and **Six Sigma Black Belt (ASQ
 CSSBB)**, with an additional layer of **Lean, data engineering, and analytics applied to

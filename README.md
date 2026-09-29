@@ -1,5 +1,7 @@
 # Quality Engineering Academy
 
+**Português** · [English](README.en.md)
+
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-alinemeireles-35A0BA?style=flat-square&logo=linkedin&logoColor=white&labelColor=10161A)](https://www.linkedin.com/in/alinemeireles/)
 [![Live site](https://img.shields.io/badge/Live_site-alinealinemeireles.github.io-35A0BA?style=flat-square&logo=googlechrome&logoColor=white&labelColor=10161A)](https://alinealinemeireles.github.io/quality-engineering-academy/)
 
