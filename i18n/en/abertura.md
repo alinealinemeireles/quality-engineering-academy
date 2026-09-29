@@ -10,7 +10,7 @@ competencies.
 
 > **Not official material**, approved or endorsed by ASQ, ISO, IATF, or AIAG, and it does
 > not guarantee passing any certification exam. The question bank
-> (119 questions, Part XV) is **entirely original** — it does not reproduce items published by ASQ.
+> (310 questions, Part XV) is **entirely original** — it does not reproduce items published by ASQ.
 
 ---
 

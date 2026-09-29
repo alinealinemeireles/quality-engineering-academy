@@ -1,7 +1,7 @@
 /* Quality Engineering Academy — service worker: cache do essencial (app shell)
    + cache dinamica (stale-while-revalidate) de assets/ e content/ para leitura
    offline dos capitulos, figuras e bibliotecas ja visitados. */
-const CACHE = 'qea-v2';
+const CACHE = 'qea-v3';
 const CORE = [
   './',
   './index.html',
@@ -16,6 +16,7 @@ const CORE = [
   './content/manifest.js',
   './content/bank.js',
   './content/bank_en.js',
+  './assets/exam.js',
   './content/figs.js',
   './assets/img/icon-192.png',
   './assets/img/icon-512.png'

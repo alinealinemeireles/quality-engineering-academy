@@ -478,7 +478,7 @@ def part_title_en(title):
 
 TOC_SPECIAL_PARTS_EN = {
     'PARTE XV — Preparação para Certificação':
-        '<li><a href="#/certificacao">Question bank (119 questions, CQE and CSSBB)</a></li>',
+        '<li><a href="#/certificacao">Question bank (310 questions, CQE and CSSBB)</a></li>',
     'PARTE XVI — Metodologia, Fontes e Bibliografia':
         '<li><a href="#/aula/cap-132">132. About This Handbook: Methodology and Sources</a></li>'
         '<li><a href="#/aula/cap-133">133. Complete Bibliography</a></li>',

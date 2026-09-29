@@ -31,8 +31,8 @@ instalação, funciona offline.
 | Blocos de código (Python/R/SQL/DAX) | 233 |
 | Figuras e diagramas | 256 |
 | Gráficos interativos (Plotly) | 21 figuras (composições registadas em `figs.js`; cada figura pode ter mais de uma série — 65 séries no total: 34 scatter, 14 bar, 14 line, 2 log, 1 contour), com hover e deslizadores |
-| Questões de certificação | 119 (60 CQE + 59 CSSBB, autorais) |
-| Tradução para inglês | 100% dos capítulos (182/182) e do banco de questões (119/119) |
+| Questões de certificação | 310 (160 CQE + 150 CSSBB, autorais, com a distribuição por domínio do exame real) |
+| Tradução para inglês | 100% dos capítulos (182/182) e do banco de questões (310/310) |
 
 ### Percursos
 

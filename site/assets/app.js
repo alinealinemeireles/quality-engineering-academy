@@ -324,6 +324,9 @@
   function enhance(root) {
     renderMath(root); renderMermaid(root); highlight(root); zoomable(root);
     if (window.ACADEMY_VIZ) window.ACADEMY_VIZ.all(root);
+    $$('a[href^="http"]', root).forEach(function (a) {
+      if (a.hostname !== location.hostname) { a.target = '_blank'; a.rel = 'noopener'; }
+    });
     $$('.btn-copy', root).forEach(function (b) {
       b.textContent = T('copy.btn');
       b.addEventListener('click', function () {
@@ -750,73 +753,268 @@
       '<strong>📘 ' + T('bank.lang.notice') + '</strong></div>';
   }
 
-  function viewBank() {
-    var pick = (location.hash.split('?')[1] || '');
-    var bank = /cssbb/i.test(pick) ? 'CSSBB' : (/cqe/i.test(pick) ? 'CQE' : null);
-    if (!bank) {
-      var counts = { CQE: 0, CSSBB: 0 };
-      BANK.forEach(function (q) { counts[q.bank] = (counts[q.bank] || 0) + 1; });
-      var h = '<div class="page"><div class="page-head">' +
-        '<div class="eyebrow"><i class="dot"></i>' + T('bank.eyebrow') + '</div>' +
-        '<h1>' + T('bank.title') + '</h1>' +
-        '<p class="lede">' + T('bank.lede') + '</p></div>';
-      h += bankLangNote();
+  /* ---------- banco de certificacao: modos, diagnostico e simulado ----------
+     #/certificacao                         -> painel (blueprint, estrategia, mapa de estudo)
+     #/certificacao?cqe[&dom=VI]            -> modo estudo (feedback imediato)
+     #/certificacao?cqe&mode=review         -> rever as questoes erradas
+     #/certificacao?cqe&mode=exam[&n=50]    -> simulado cronometrado            */
+  var EXAM = window.ACADEMY_EXAM || { blueprint: {}, studyMap: {} };
+  if (!P.qa) P.qa = {};
 
-      h += '<h2 style="font-size:16px;margin:0 0 3px">' + T('bank.perf.title') + '</h2>';
-      h += '<p style="font-size:13.4px;color:var(--ink-3);margin:0 0 12px">' + T('bank.perf.lede') + '</p>';
-      h += '<div class="hbars" style="margin-bottom:26px">';
-      MAN.tracks.forEach(function (t) {
-        var s = trackPerf(t);
-        h += '<div class="hbar' + (s == null ? ' no-data' : '') + '" style="--c:' + trackColor(t) + '">' +
-             '<span class="lab">' + esc(trTitle(t)) + '</span>' +
-             '<span class="track">' + (s == null ? '' : '<i style="width:' + s + '%"></i>') + '</span>' +
-             '<span class="val">' + (s == null ? T('bank.perf.empty') : s + '%') + '</span></div>';
+  function bankParams() {
+    var q = (location.hash.split('?')[1] || '').split('&'), o = {};
+    o.bank = /^cssbb$/i.test(q[0]) ? 'CSSBB' : (/^cqe$/i.test(q[0]) ? 'CQE' : null);
+    q.slice(1).forEach(function (kv) { var p = kv.split('='); o[p[0]] = decodeURIComponent(p[1] || ''); });
+    return o;
+  }
+  function bankHref(bank, extra) {
+    return '#/certificacao?' + bank.toLowerCase() + (extra ? '&' + extra : '');
+  }
+  function domKey(q) { return (q.domain || '').split(' ')[0]; }
+  function shuffle(a) {
+    a = a.slice();
+    for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; }
+    return a;
+  }
+  function domStats(bank) {
+    var s = {};
+    BANK.forEach(function (q) {
+      if (q.bank !== bank) return;
+      var d = domKey(q), r = P.qa[q.id];
+      if (!s[d]) s[d] = { n: 0, done: 0, ok: 0 };
+      s[d].n++;
+      if (r) { s[d].done++; if (r.ok) s[d].ok++; }
+    });
+    return s;
+  }
+  function reading(p) {
+    if (p == null) return '<span style="color:var(--ink-3)">' + T('bank.read.none') + '</span>';
+    var k = p >= 85 ? '85' : p >= 70 ? '70' : p >= 50 ? '50' : 'lt50';
+    var c = p >= 70 ? 'var(--good)' : 'var(--bad)';
+    return '<span style="color:' + c + ';font-weight:600">' + T('bank.read.' + k) + '</span>';
+  }
+  function blueprintTable(bank, s) {
+    var bp = EXAM.blueprint[bank];
+    if (!bp) return '';
+    var h = '<div class="prose" style="max-width:none"><div class="table-wrap"><table><thead><tr>' +
+            '<th>' + T('bank.bp.col.domain') + '</th><th>' + T('bank.bp.col.q') + '</th>' +
+            '<th>' + T('bank.bp.col.acc') + '</th><th>' + T('bank.bp.col.read') + '</th></tr></thead><tbody>';
+    bp.domains.forEach(function (d) {
+      var x = s[d[0]] || { n: 0, done: 0, ok: 0 };
+      var p = x.done ? Math.round(x.ok / x.done * 100) : null;
+      h += '<tr><td><a href="' + bankHref(bank, 'dom=' + d[0]) + '">' + d[0] + ' — ' + esc(d[1]) + '</a></td>' +
+           '<td>' + x.n + '</td><td>' + (p == null ? '—' : p + '% <span style="color:var(--ink-3)">(' + x.ok + '/' + x.done + ')</span>') +
+           '</td><td>' + reading(p) + '</td></tr>';
+    });
+    return h + '</tbody></table></div></div>';
+  }
+  function recordAnswer(q, ok) {
+    P.qa[q.id] = { ok: ok ? 1 : 0, at: Date.now() };
+  }
+
+  function viewBank() {
+    var prm = bankParams(), bank = prm.bank;
+    if (!bank) return viewBankHome();
+    var all = BANK.filter(function (q) { return q.bank === bank; });
+    var mode = prm.mode === 'exam' ? 'exam' : (prm.mode === 'review' ? 'review' : 'study');
+    var color = bank === 'CQE' ? 'var(--series-1)' : 'var(--series-2)';
+    var crumb = '<a href="#/certificacao">' + T('nav.certification') + '</a>';
+
+    // barra de modos + filtro por dominio
+    var bar = '<div style="display:flex;flex-wrap:wrap;gap:8px;margin:0 0 12px">';
+    [['study', ''], ['exam', 'mode=exam'], ['review', 'mode=review']].forEach(function (m) {
+      bar += '<a class="btn sm' + (mode === m[0] ? '' : ' sec') + '" href="' + bankHref(bank, m[1]) + '">' + T('quiz.mode.' + m[0]) + '</a>';
+    });
+    bar += '</div>';
+    if (mode === 'study') {
+      var st = domStats(bank);
+      bar += '<div class="chips" style="margin:0 0 16px">';
+      bar += '<a class="chip' + (prm.dom ? '' : ' on') + '" style="text-decoration:none" href="' + bankHref(bank) + '">' + T('quiz.filter.all') + '</a>';
+      (EXAM.blueprint[bank] ? EXAM.blueprint[bank].domains : []).forEach(function (d) {
+        var x = st[d[0]], p = x && x.done ? ' · ' + Math.round(x.ok / x.done * 100) + '%' : '';
+        bar += '<a class="chip' + (prm.dom === d[0] ? ' on' : '') + '" style="text-decoration:none" title="' + esc(d[1]) + '" href="' +
+               bankHref(bank, 'dom=' + d[0]) + '">' + d[0] + p + '</a>';
+      });
+      bar += '</div>';
+    }
+
+    if (mode === 'exam') return viewExam(bank, all, prm, color, crumb, bar);
+
+    var qs = mode === 'review'
+      ? all.filter(function (q) { return P.qa[q.id] && !P.qa[q.id].ok; })
+      : all.filter(function (q) { return !prm.dom || domKey(q) === prm.dom; });
+    if (mode === 'review' && !qs.length) {
+      return show('<div class="page"><div class="page-head"><div class="crumb">' + crumb + '</div><h1>' +
+                  esc(T('quiz.bank.title', { bank: bank })) + '</h1></div>' + bar +
+                  '<div class="empty">' + T('quiz.review.empty') + '</div></div>');
+    }
+    renderQuiz({
+      title: T('quiz.bank.title', { bank: bank }) + (prm.dom ? ' · ' + T('quiz.domain', { d: prm.dom }) : ''),
+      crumb: crumb, color: color, note: bankLangNote(), controls: bar,
+      questions: qs.map(localizeQuestion), showDomain: true,
+      onAnswer: function (q, ok) { recordAnswer(q, ok); save(); },
+      onDone: function (score) {
+        if (mode === 'study' && !prm.dom) { P.quiz['bank-' + bank] = { score: score, at: Date.now(), n: qs.length }; save(); }
+      }
+    });
+  }
+
+  function viewBankHome() {
+    var counts = { CQE: 0, CSSBB: 0 };
+    BANK.forEach(function (q) { counts[q.bank] = (counts[q.bank] || 0) + 1; });
+    var h = '<div class="page"><div class="page-head">' +
+      '<div class="eyebrow"><i class="dot"></i>' + T('bank.eyebrow') + '</div>' +
+      '<h1>' + T('bank.title') + '</h1>' +
+      '<p class="lede">' + T('bank.lede', { n: BANK.length }) + '</p></div>';
+    h += bankLangNote();
+
+    h += '<h2 style="font-size:16px;margin:0 0 3px">' + T('bank.perf.title') + '</h2>';
+    h += '<p style="font-size:13.4px;color:var(--ink-3);margin:0 0 12px">' + T('bank.perf.lede') + '</p>';
+    h += '<div class="hbars" style="margin-bottom:26px">';
+    MAN.tracks.forEach(function (t) {
+      var s = trackPerf(t);
+      h += '<div class="hbar' + (s == null ? ' no-data' : '') + '" style="--c:' + trackColor(t) + '">' +
+           '<span class="lab">' + esc(trTitle(t)) + '</span>' +
+           '<span class="track">' + (s == null ? '' : '<i style="width:' + s + '%"></i>') + '</span>' +
+           '<span class="val">' + (s == null ? T('bank.perf.empty') : s + '%') + '</span></div>';
+    });
+    h += '</div>';
+
+    h += '<div class="note warn">' + T('bank.howto') + '</div>';
+    h += '<div class="cards">';
+    [['CQE', 'var(--series-1)', 'bank.cqe.desc'], ['CSSBB', 'var(--series-2)', 'bank.cssbb.desc']].forEach(function (b) {
+      h += '<div class="card" style="--c:' + b[1] + '"><h3>ASQ ' + b[0] + '</h3>' +
+           '<p>' + T(b[2]) + '</p>' +
+           '<div class="card-meta"><span>' + T('bank.questions', { n: counts[b[0]] }) + '</span></div>' +
+           '<div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:12px">' +
+           '<a class="btn sm" href="' + bankHref(b[0]) + '">' + T('quiz.mode.study') + '</a>' +
+           '<a class="btn sm sec" href="' + bankHref(b[0], 'mode=exam') + '">' + T('quiz.mode.exam') + '</a>' +
+           '<a class="btn sm sec" href="' + bankHref(b[0], 'mode=review') + '">' + T('quiz.mode.review') + '</a>' +
+           '</div></div>';
+    });
+    h += '</div>';
+
+    // blueprint + diagnostico por dominio
+    h += '<h2 style="font-size:19px;margin:30px 0 4px">' + T('bank.bp.title') + '</h2>';
+    h += '<p style="font-size:13.6px;color:var(--ink-3);margin:0 0 6px">' + T('bank.bp.lede') + '</p>';
+    ['CQE', 'CSSBB'].forEach(function (b) {
+      h += '<h3 style="font-size:15px;margin:18px 0 0">ASQ ' + b + '</h3>' + blueprintTable(b, domStats(b));
+    });
+
+    // estrategia de prova
+    h += '<h2 style="font-size:19px;margin:30px 0 4px">' + T('bank.strat.title') + '</h2>';
+    h += '<div class="note info">' + T('bank.strat.body', { url: EXAM.strategyUrl || '#' }) + '</div>';
+
+    // mapa de estudo (leituras de apoio por dominio do BoK CSSBB)
+    var sm = EXAM.studyMap || {}, bpd = EXAM.blueprint.CSSBB ? EXAM.blueprint.CSSBB.domains : [];
+    if (bpd.length) {
+      h += '<h2 style="font-size:19px;margin:30px 0 4px">' + T('bank.map.title') + '</h2>';
+      h += '<p style="font-size:13.6px;color:var(--ink-3);margin:0 0 10px">' + T('bank.map.lede') + '</p><div class="prose" style="max-width:none">';
+      bpd.forEach(function (d) {
+        var links = sm[d[0]] || [];
+        if (!links.length) return;
+        h += '<details><summary>' + d[0] + ' — ' + esc(d[1]) + ' <span style="color:var(--ink-3);font-weight:400">· ' +
+             T('bank.map.count', { n: links.length }) + '</span></summary><div class="chips" style="margin:0 0 10px">';
+        links.forEach(function (l) {
+          h += '<a class="chip" style="text-decoration:none" href="' + EXAM.guideBase + l[1] + '/">' + esc(l[0]) + '</a>';
+        });
+        h += '</div></details>';
       });
       h += '</div>';
+    }
 
-      h += '<div class="note warn">' + T('bank.howto') + '</div>';
+    h += '<div class="note info" style="margin-top:24px">' + T('bank.note') + '</div>';
+    h += '</div>';
+    return show(h);
+  }
+
+  /* ---------- simulado: amostra estratificada pelo peso do BoK, cronometro, correcao no fim ---------- */
+  function examSample(bank, all, n) {
+    if (n >= all.length) return shuffle(all);
+    var byDom = {};
+    all.forEach(function (q) { (byDom[domKey(q)] = byDom[domKey(q)] || []).push(q); });
+    var pick = [];
+    Object.keys(byDom).forEach(function (d) {
+      var k = Math.max(1, Math.round(byDom[d].length / all.length * n));
+      pick = pick.concat(shuffle(byDom[d]).slice(0, k));
+    });
+    return shuffle(pick).slice(0, n);
+  }
+
+  function fmtTime(sec) {
+    sec = Math.max(0, Math.round(sec));
+    var h = Math.floor(sec / 3600), m = Math.floor(sec % 3600 / 60), s = sec % 60;
+    return (h ? h + ':' + (m < 10 ? '0' : '') : '') + m + ':' + (s < 10 ? '0' : '') + s;
+  }
+
+  function viewExam(bank, all, prm, color, crumb, bar) {
+    var pace = (EXAM.blueprint[bank] && EXAM.blueprint[bank].pace) || 1.8;
+    var n = parseInt(prm.n, 10);
+    if (!n) {
+      var h = '<div class="page"><div class="page-head"><div class="crumb">' + crumb + '</div>' +
+              '<h1>' + esc(T('quiz.bank.title', { bank: bank })) + ' · ' + T('quiz.mode.exam') + '</h1>' +
+              '<p class="lede">' + T('quiz.exam.setup', { pace: String(pace).replace('.', window.ACADEMY_I18N.lang() === 'en' ? '.' : ',') }) + '</p></div>' + bar;
       h += '<div class="cards">';
-      h += '<a class="card" href="#/certificacao?cqe" style="--c:var(--series-1)"><h3>ASQ CQE</h3>' +
-           '<p>' + T('bank.cqe.desc') + '</p>' +
-           '<div class="card-meta"><span>' + T('bank.questions', { n: counts.CQE }) + '</span>' +
-           '<span class="badge">' + T('bank.startbtn') + '</span></div></a>';
-      h += '<a class="card" href="#/certificacao?cssbb" style="--c:var(--series-2)"><h3>ASQ CSSBB</h3>' +
-           '<p>' + T('bank.cssbb.desc') + '</p>' +
-           '<div class="card-meta"><span>' + T('bank.questions', { n: counts.CSSBB }) + '</span>' +
-           '<span class="badge">' + T('bank.startbtn') + '</span></div></a>';
-      h += '</div>';
-      h += '<div class="note info" style="margin-top:24px">' + T('bank.note') + '</div>';
-      h += '</div>';
+      [25, 50, all.length].forEach(function (k) {
+        var mins = Math.round(k * pace);
+        h += '<a class="card" style="--c:' + color + '" href="' + bankHref(bank, 'mode=exam&n=' + k) + '"><h3>' +
+             (k === all.length ? T('quiz.exam.full', { n: k }) : T('quiz.exam.n', { n: k })) + '</h3>' +
+             '<p>' + T('quiz.exam.cardline', { t: fmtTime(mins * 60) }) + '</p>' +
+             '<div class="card-meta"><span></span><span class="badge">' + T('quiz.exam.start') + '</span></div></a>';
+      });
+      h += '</div><div class="note info" style="margin-top:20px">' + T('bank.strat.body', { url: EXAM.strategyUrl || '#' }) + '</div></div>';
       return show(h);
     }
-    var qs = BANK.filter(function (q) { return q.bank === bank; }).map(localizeQuestion);
+    var qs = examSample(bank, all, n).map(localizeQuestion);
+    var target = qs.length * pace * 60;
     renderQuiz({
-      title: T('quiz.bank.title', { bank: bank }), crumb: '<a href="#/certificacao">' + T('nav.certification') + '</a>',
-      color: bank === 'CQE' ? 'var(--series-1)' : 'var(--series-2)',
-      note: bankLangNote(),
-      questions: qs, showDomain: true,
-      onDone: function (score) { P.quiz['bank-' + bank] = { score: score, at: Date.now(), n: qs.length }; save(); }
+      title: T('quiz.bank.title', { bank: bank }) + ' · ' + T('quiz.exam.n', { n: qs.length }),
+      crumb: crumb, color: color, note: bankLangNote(), controls: bar,
+      questions: qs, showDomain: false, exam: true, target: target,
+      onAnswer: function (q, ok) { recordAnswer(q, ok); },
+      onDone: function (score, res) {
+        P.quiz['exam-' + bank] = { score: score, at: Date.now(), n: qs.length };
+        save();
+        var s = {};
+        qs.forEach(function (q, i) {
+          var d = domKey(q);
+          if (!s[d]) s[d] = { n: 0, done: 0, ok: 0 };
+          s[d].n++; s[d].done++;
+          if (res[i]) s[d].ok++;
+        });
+        return '<h2 style="font-size:17px;margin:8px 0 0">' + T('quiz.exam.bydomain') + '</h2>' + blueprintTable(bank, s);
+      }
     });
   }
 
   function renderQuiz(cfg) {
     var qs = cfg.questions;
     if (!qs.length) {
-      return show('<div class="page"><div class="empty">' + T('quiz.empty') + '<br>' +
+      return show('<div class="page"><div class="page-head"><div class="crumb">' + cfg.crumb + '</div></div>' + (cfg.controls || '') +
+                  '<div class="empty">' + T('quiz.empty') + '<br>' +
                   '<a class="btn sec" style="margin-top:16px" href="#/certificacao">' + T('quiz.gotobank') + '</a></div></div>');
     }
-    var answered = 0, correct = 0;
+    var answered = 0, correct = 0, exam = !!cfg.exam, picks = [], started = Date.now(), timer = null;
     var h = '<div class="page"><div class="page-head">';
     h += '<div class="crumb">' + cfg.crumb + '</div>';
     h += '<h1>' + esc(cfg.title) + '</h1>';
-    h += '<p class="lede">' + T('quiz.lede', { n: qs.length }) + '</p></div>';
+    h += '<p class="lede">' + (exam ? T('quiz.exam.lede', { n: qs.length, t: fmtTime(cfg.target) }) : T('quiz.lede', { n: qs.length })) + '</p></div>';
     if (cfg.note) h += cfg.note;
-    h += '<div class="score" id="score"><span class="big" id="scoreV">' + T('quiz.scoredefault') + '</span>' +
-         '<span style="color:var(--ink-3);font-size:13.5px">' + T('quiz.scorehint') + '</span></div>';
+    if (cfg.controls) h += cfg.controls;
+    if (exam) {
+      h += '<div class="score" id="score" style="position:sticky;top:var(--topbar-h);z-index:5">' +
+           '<span class="big" id="scoreV">0:00</span>' +
+           '<span style="color:var(--ink-3);font-size:13.5px" id="scoreL">' + T('quiz.exam.status', { a: 0, n: qs.length, t: fmtTime(cfg.target) }) + '</span>' +
+           '<button class="btn sm" type="button" id="examEnd" style="margin-left:auto">' + T('quiz.exam.finish') + '</button></div>';
+      h += '<div id="examRes"></div>';
+    } else {
+      h += '<div class="score" id="score"><span class="big" id="scoreV">' + T('quiz.scoredefault') + '</span>' +
+           '<span style="color:var(--ink-3);font-size:13.5px">' + T('quiz.scorehint') + '</span></div>';
+    }
     h += '<div class="quiz">';
     qs.forEach(function (q, i) {
       h += '<div class="qcard" data-q="' + i + '">';
-      h += '<div class="qhead"><span class="badge">' + esc(q.id) + '</span>' +
+      h += '<div class="qhead"><span class="badge">' + esc(exam ? T('quiz.exam.qn', { i: i + 1 }) : q.id) + '</span>' +
            (cfg.showDomain && q.domain ? '<span>' + esc(q.domain) + '</span>' : '') +
            '<span style="margin-left:auto">' + (i + 1) + ' / ' + qs.length + '</span></div>';
       h += '<div class="qstem">' + q.q + '</div><div class="opts">';
@@ -829,6 +1027,81 @@
     h += '</div></div>';
     show(h);
 
+    function reveal(card, q, pickI) {
+      $$('.opt', card).forEach(function (x, j) {
+        x.disabled = true;
+        x.classList.remove('sel');
+        if (j === q.ans) x.classList.add('ok');
+        else if (j === pickI) x.classList.add('no');
+      });
+      $('.qwhy', card).hidden = false;
+      enhance(card);
+    }
+
+    if (exam) {
+      var marks = [0.25, 0.5, 0.75], hit = {};
+      timer = setInterval(function () {
+        var v = $('#scoreV');
+        if (!v) { clearInterval(timer); return; }
+        var el2 = (Date.now() - started) / 1000;
+        v.textContent = fmtTime(el2);
+        v.style.color = el2 > cfg.target ? 'var(--bad)' : '';
+      }, 1000);
+      var status = function () {
+        var el2 = (Date.now() - started) / 1000, msg = T('quiz.exam.status', { a: answered, n: qs.length, t: fmtTime(cfg.target) });
+        marks.forEach(function (m) {
+          if (answered >= Math.ceil(qs.length * m) && !hit[m]) hit[m] = el2;
+        });
+        var last = marks.filter(function (m) { return hit[m] != null; }).pop();
+        if (last != null) {
+          var ahead = hit[last] <= cfg.target * last;
+          msg += '<br>' + T('quiz.exam.checkpoint', { pct: Math.round(last * 100), t: fmtTime(hit[last]), goal: fmtTime(cfg.target * last) }) +
+                 ' <b style="color:' + (ahead ? 'var(--good)' : 'var(--bad)') + '">' + T(ahead ? 'quiz.exam.ontime' : 'quiz.exam.late') + '</b>';
+        }
+        $('#scoreL').innerHTML = msg;
+      };
+      $$('.qcard').forEach(function (card) {
+        var i = +card.getAttribute('data-q');
+        $$('.opt', card).forEach(function (b) {
+          b.addEventListener('click', function () {
+            if (b.disabled) return;
+            if (picks[i] == null) answered++;
+            picks[i] = +b.getAttribute('data-i');
+            $$('.opt', card).forEach(function (x) { x.classList.toggle('sel', x === b); });
+            status();
+          });
+        });
+      });
+      $('#examEnd').addEventListener('click', function () {
+        var btn = this;
+        if (answered < qs.length && !btn.getAttribute('data-armed')) {
+          btn.setAttribute('data-armed', '1');
+          btn.textContent = T('quiz.exam.confirm', { n: qs.length - answered });
+          return;
+        }
+        clearInterval(timer);
+        var res = [];
+        $$('.qcard').forEach(function (card) {
+          var i = +card.getAttribute('data-q'), q = qs[i], ok = picks[i] === q.ans;
+          res[i] = ok;
+          if (ok) correct++;
+          if (picks[i] != null && cfg.onAnswer) cfg.onAnswer(q, ok);
+          reveal(card, q, picks[i]);
+        });
+        var s = Math.round(correct / qs.length * 100), el2 = (Date.now() - started) / 1000;
+        $('#examEnd').remove();
+        $('#score').style.position = 'static';
+        $('#scoreV').textContent = s + '%';
+        $('#scoreV').style.color = s >= 70 ? 'var(--good)' : 'var(--bad)';
+        $('#scoreL').innerHTML = T('quiz.exam.done', { c: correct, n: qs.length, t: fmtTime(el2), goal: fmtTime(cfg.target) }) +
+                                 '<br>' + (s >= 70 ? T('quiz.above') : T('quiz.below'));
+        var extra = cfg.onDone ? cfg.onDone(s, res) : '';
+        if (extra) { $('#examRes').innerHTML = extra; }
+        window.scrollTo(0, 0);
+      });
+      return;
+    }
+
     $$('.qcard').forEach(function (card) {
       var i = +card.getAttribute('data-q');
       var q = qs[i];
@@ -837,13 +1110,9 @@
           if (card.getAttribute('data-ans')) return;
           var pickI = +b.getAttribute('data-i');
           card.setAttribute('data-ans', pickI);
-          $$('.opt', card).forEach(function (x, j) {
-            x.disabled = true;
-            if (j === q.ans) x.classList.add('ok');
-            else if (j === pickI) x.classList.add('no');
-          });
-          $('.qwhy', card).hidden = false;
+          reveal(card, q, pickI);
           answered++; if (pickI === q.ans) correct++;
+          if (cfg.onAnswer) cfg.onAnswer(q, pickI === q.ans);
           var s = Math.round(correct / answered * 100);
           $('#scoreV').textContent = s + '%';
           $('#scoreV').style.color = s >= 70 ? 'var(--good)' : 'var(--bad)';
@@ -852,7 +1121,6 @@
             verdict: s >= 70 ? T('quiz.above') : T('quiz.below')
           });
           if (answered === qs.length && cfg.onDone) cfg.onDone(s);
-          enhance(card);
         });
       });
     });

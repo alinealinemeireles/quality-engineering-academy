@@ -582,6 +582,8 @@ h1 { font-size: clamp(24px, 3.3vw, 33px); line-height: 1.2; margin: 0 0 8px; let
 .opt.no { border-color: var(--bad); background: var(--bad-soft); }
 .opt.no .ltr { color: var(--bad); }
 .opt:disabled { cursor: default; }
+.opt.sel { border-color: var(--accent); background: var(--accent-soft); }
+.opt.sel .ltr { color: var(--accent-ink); }
 .qwhy {
   margin-top: 14px; padding: 14px 16px; border-radius: var(--radius-s);
   background: var(--surface-2); border-left: 3px solid var(--accent); font-size: 14.6px;
